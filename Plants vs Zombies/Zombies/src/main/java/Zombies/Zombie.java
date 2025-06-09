@@ -30,7 +30,7 @@ public class Zombie {
         zombieView.setFitWidth(cell_size * 1.5);
         zombieView.setFitHeight(cell_size * 1.5);
         zombieView.setX(1500);
-        zombieView.setY(col * cell_size + 20);
+        zombieView.setY(col * cell_size + 30);
     }
 
     public void run(){

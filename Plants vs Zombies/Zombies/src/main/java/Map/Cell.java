@@ -9,7 +9,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Cell extends StackPane {
     private int row , col;
-    private Rectangle border;
+    public Rectangle border;
     private ImageView cellView;
     public static int cell_size = 140;
 
@@ -24,5 +24,7 @@ public class Cell extends StackPane {
 
     public void setCellView(ImageView cellView) {
         this.cellView = cellView;
+        this.getChildren().add(cellView);
     }
+
 }

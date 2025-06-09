@@ -1,11 +1,13 @@
 
+import Plants.Peashooter;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import Zombies.*;
@@ -15,6 +17,7 @@ import Map.*;
 public class Main extends Application {
     public static double screenHeight;
     public static double screenWidth;
+    private AnimationTimer gameUpdate;
     @Override
     public void start(Stage primaryStage) {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -28,11 +31,26 @@ public class Main extends Application {
         background.setFitWidth(screenWidth);
         Map m = new Map();
         m.buildMap();
-        Pane pane = new Pane( background , z.getZombieView() , z2.getZombieView(), m.getGridPane());
+        Pane pane = new Pane( background , m.getGridPane(), z.getZombieView() , z2.getZombieView() );
         z.run();
         z2.run();
-        m.update();
+        Peashooter p = new Peashooter(0,1);
+        Cell[][] c = m.getCells();
+        c[0][0].setCellView(p.getPlantView());
+        c[2][1].border.setFill(Color.BLACK);
         Scene scene = new Scene(pane , 800 , 600);
+        GameManager g = new GameManager(m , pane);
+        g.spawnZombie();
+        g.spawnSun();
+
+        gameUpdate = new AnimationTimer() {//game loop
+            @Override
+            public void handle(long now) {
+                g.updateGame();
+            }
+        };
+        gameUpdate.start();
+
         scene.setOnMouseClicked(e -> {
             double x = e.getSceneX();
             double y = e.getSceneY();
