@@ -1,14 +1,22 @@
 package Plants;
 
+import Map.Cell;
+import Map.GameManager;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+
 import static Map.Cell.cell_size;
 
 public class Peashooter extends Plant{
+    private ArrayList<Pea> peas = new ArrayList<>();
+    private Timeline shoot;
 
     public Peashooter(int row, int col) {
         super(row, col);
@@ -19,8 +27,9 @@ public class Peashooter extends Plant{
         plantView = new ImageView(plantImage[0]);
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
-        this.getChildren().add(plantView);
+        this.getChildren().addAll(plantView );
         animPeashooter();
+        shooting();
     }
 
     @Override
@@ -47,4 +56,16 @@ public class Peashooter extends Plant{
         tl.play();
     }
 
+    private void shooting(){
+        shoot = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
+            peas.add(new Pea(this));
+            GameManager.getGamePane().getChildren().add(peas.get(peas.size() -1).getPeaView());
+        }));
+        shoot.setCycleCount(Animation.INDEFINITE);
+        shoot.play();
+    }
+
+    public ArrayList<Pea> getPeas() {
+        return peas;
+    }
 }

@@ -7,8 +7,10 @@ import static Map.Cell.cell_size;
 
 public class ConeheadZombie extends Zombie{
 
-    public ConeheadZombie(int hp, int speed, int col) {
-        super(hp, speed, col);
+    public ConeheadZombie(int col) {
+        super(col);
+        HP = 9;
+        speed = 20;
     }
 
     @Override
@@ -20,7 +22,7 @@ public class ConeheadZombie extends Zombie{
         zombieView = new ImageView(zombieImages[0]);
         zombieView.setFitWidth(cell_size * 1.5);
         zombieView.setFitHeight(cell_size * 1.5);
-        zombieView.setX(1500);
-        zombieView.setY(col * 140 + 20);
+        zombieView.setLayoutX(1500);
+        zombieView.setLayoutY(col * 140 + 20);
     }
 }

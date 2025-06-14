@@ -1,5 +1,6 @@
 package Zombies;
 
+import Map.GameManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -14,9 +15,9 @@ public class Zombie {
     protected Image[] zombieImages;
     protected ImageView zombieView;
 
-    public Zombie(int hp, int speed , int col){
-        HP = hp;
-        this.speed = speed;
+    public Zombie(int col){
+        HP = 7;
+        this.speed = 15;
         this.col = col;
         setZombieImages();
     }
@@ -29,8 +30,8 @@ public class Zombie {
         zombieView = new ImageView(zombieImages[0]);
         zombieView.setFitWidth(cell_size * 1.5);
         zombieView.setFitHeight(cell_size * 1.5);
-        zombieView.setX(1500);
-        zombieView.setY(col * cell_size + 30);
+        zombieView.setLayoutX(1500);
+        zombieView.setLayoutY(col * cell_size + 30);
     }
 
     public void run(){
@@ -41,8 +42,13 @@ public class Zombie {
         timeline.getKeyFrames().add(
                 new KeyFrame(Duration.millis(100), e -> {
                     zombieView.setImage(zombieImages[frameIndex[0]]);
-                    zombieView.setX(zombieView.getX() - 1.5);
+                    zombieView.setLayoutX(zombieView.getLayoutX() - 1.5);
                     frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
+                    if(HP < 0){
+                        timeline.stop();
+                        GameManager.getZombies().remove(this);
+                        zombieView.setVisible(false);
+                    }
                 })
 
         );
@@ -51,5 +57,25 @@ public class Zombie {
 
     public ImageView getZombieView() {
         return zombieView;
+    }
+
+    public void setHP(int HP) {
+        this.HP = HP;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public int getHP() {
+        return HP;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public int getCol() {
+        return col;
     }
 }

@@ -1,5 +1,6 @@
 package Plants;
 
+import Map.Sizes;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -9,7 +10,6 @@ import javafx.util.Duration;
 
 import static Map.Cell.cell_size;
 import static Map.GameManager.sunPoint;
-import static Map.Map.*;
 
 public class Sun extends Plant{
     private Timeline lifeTimeline;
@@ -71,13 +71,13 @@ public class Sun extends Plant{
         animTimeline.setCycleCount(Timeline.INDEFINITE);
         final int[] frameIndex = new int[1];
 
-        plantView.setX(cell_size * col + startXPane);
+        plantView.setX(cell_size * col + Sizes.START_X_GRID);
         plantView.setY(0);
 
         animTimeline.getKeyFrames().add(
                 new KeyFrame(Duration.millis(100), e -> {
                     plantView.setImage(plantImage[frameIndex[0]]);
-                    if(plantView.getY() < row * cell_size + startYPane)
+                    if(plantView.getY() < row * cell_size + Sizes.START_Y_GRID)
                         plantView.setY(plantView.getY() + 10);
                     frameIndex[0] = (frameIndex[0] + 1) % plantImage.length;
                 })

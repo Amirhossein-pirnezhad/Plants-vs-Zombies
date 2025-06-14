@@ -15,32 +15,25 @@ import Map.*;
 
 
 public class Main extends Application {
-    public static double screenHeight;
-    public static double screenWidth;
     private AnimationTimer gameUpdate;
     @Override
     public void start(Stage primaryStage) {
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        screenHeight = screenBounds.getHeight();
-        screenWidth = screenBounds.getWidth();
-
-        Zombie z = new Zombie(1 , 2 , 4);
-        ConeheadZombie z2 = new ConeheadZombie(1 , 2 , 0);
+        Zombie z = new Zombie( 4);
+//        ConeheadZombie z2 = new ConeheadZombie( 0);
         ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/Items/Background/Background_0.jpg")));
-        background.setFitHeight(screenHeight);
-        background.setFitWidth(screenWidth);
-        Map m = new Map();
-        m.buildMap();
-        Pane pane = new Pane( background , m.getGridPane(), z.getZombieView() , z2.getZombieView() );
+        background.setFitHeight(Sizes.SCREEN_HEIGHT);
+        background.setFitWidth(Sizes.SCREEN_WIDTH);
+        System.out.println(Sizes.SCREEN_HEIGHT);
+        System.out.println(Sizes.SCREEN_WIDTH);
+        Pane pane = new Pane( background , z.getZombieView()  );
         z.run();
-        z2.run();
         Peashooter p = new Peashooter(0,1);
-        Cell[][] c = m.getCells();
-        c[0][0].setCellView(p.getPlantView());
-        c[2][1].border.setFill(Color.BLACK);
-        Scene scene = new Scene(pane , 800 , 600);
-        GameManager g = new GameManager(m , pane);
+        GameManager g = new GameManager(pane);
+        Scene scene = new Scene(GameManager.getGamePane() , 800 , 600);
         g.spawnZombie();
+
+        Cell[][] c = g.getCells();
+        c[0][1].setCellView(p.getPlantView());
         g.spawnSun();
 
         gameUpdate = new AnimationTimer() {//game loop
