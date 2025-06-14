@@ -1,6 +1,10 @@
 package Zombies;
 
+import Map.Cell;
 import Map.GameManager;
+import Map.Sizes;
+import Plants.Plant;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -15,10 +19,12 @@ public class Zombie {
     protected Image[] zombieImages;
     protected ImageView zombieView;
     protected Timeline deadZombie;
+    protected Timeline runZombie;
+    protected Timeline eating;
 
     public Zombie(int col){
         HP = 5;
-        this.speed = 15;
+        this.speed = cell_size/4;
         this.col = col;
         setZombieImages();
     }
@@ -36,23 +42,54 @@ public class Zombie {
     }
 
     public void run(){
-        Timeline timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        runZombie = new Timeline();
+        runZombie.setCycleCount(Timeline.INDEFINITE);
         final int[] frameIndex = new int[1];
 
-        timeline.getKeyFrames().add(
+        runZombie.getKeyFrames().add(
                 new KeyFrame(Duration.millis(100), e -> {
                     zombieView.setImage(zombieImages[frameIndex[0]]);
                     zombieView.setLayoutX(zombieView.getLayoutX() - 1.5);
                     frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
+
+                    if_touch_plant();
+
                     if(HP <= 0){
-                        timeline.stop();
+                        runZombie.stop();
                         deadZombie();
                     }
                 })
 
         );
-        timeline.play();
+        runZombie.play();
+    }
+
+    protected void attackZombie(){
+        zombieImages = new Image[20];
+        for (int i = 0; i < zombieImages.length; i++) {
+            zombieImages[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" + i + ".png"));
+        }
+
+        final int[] frameIndex = new int[1];
+
+        eating = new Timeline(new KeyFrame(Duration.millis(500) , event -> {
+            zombieView.setImage(zombieImages[frameIndex[0]]);
+            frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
+        }));
+
+        eating.setCycleCount(4);
+        eating.play();
+    }
+
+    protected void if_touch_plant(){
+        for (Plant p : GameManager.getPlants()){
+            if(this.col == p.getCol()){
+                if(Math.abs((p.getRow() * cell_size + Sizes.START_X_GRID) - this.zombieView.getLayoutX()) < 1){
+                    p.setHP(p.getHP() - 1);
+                    attackZombie();
+                }
+            }
+        }
     }
 
     protected void deadZombie(){

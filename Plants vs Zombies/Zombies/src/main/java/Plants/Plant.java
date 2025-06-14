@@ -22,4 +22,28 @@ public abstract class Plant extends StackPane {
     }
 
     public abstract void dead();
+
+    public void setHP(int HP) {
+        this.HP = HP;
+    }
+
+    public int getHP() {
+        return HP;
+    }
+
+    public Image[] getPlantImage() {
+        return plantImage;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
 }

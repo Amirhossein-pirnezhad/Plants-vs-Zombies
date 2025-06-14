@@ -17,7 +17,7 @@ import java.util.List;
 public class GameManager {
     private static Pane gamePane;
     private static List<Zombie> zombies = new ArrayList<>();
-    private List<Plant> plants = new ArrayList<>();
+    private static List<Plant> plants = new ArrayList<>();
     private List<Sun> suns = new ArrayList<>();
     private GridPane gridPane;
     private int map_row , map_col;
@@ -53,9 +53,9 @@ public class GameManager {
         z.run();
     }
 
-    public void addPlant(Plant p, int row, int col) {
+    public void addPlant(Plant p) {
         plants.add(p);
-        cells[row][col].setCellView(p.getPlantView());
+        cells[p.getRow()][p.getCol()].setCellView(p.getPlantView());
     }
 
     public void addSun(Sun sun , int row , int col){
@@ -104,5 +104,9 @@ public class GameManager {
 
     public static List<Zombie> getZombies() {
         return zombies;
+    }
+
+    public static List<Plant> getPlants() {
+        return plants;
     }
 }
