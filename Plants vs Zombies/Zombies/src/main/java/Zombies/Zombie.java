@@ -14,9 +14,10 @@ public class Zombie {
     protected int col;
     protected Image[] zombieImages;
     protected ImageView zombieView;
+    protected Timeline deadZombie;
 
     public Zombie(int col){
-        HP = 7;
+        HP = 5;
         this.speed = 15;
         this.col = col;
         setZombieImages();
@@ -44,15 +45,34 @@ public class Zombie {
                     zombieView.setImage(zombieImages[frameIndex[0]]);
                     zombieView.setLayoutX(zombieView.getLayoutX() - 1.5);
                     frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
-                    if(HP < 0){
+                    if(HP <= 0){
                         timeline.stop();
-                        GameManager.getZombies().remove(this);
-                        zombieView.setVisible(false);
+                        deadZombie();
                     }
                 })
 
         );
         timeline.play();
+    }
+
+    protected void deadZombie(){
+        zombieImages = new Image[9];
+        for (int i = 0; i < zombieImages.length; i++) {
+            zombieImages[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieDie/ZombieDie_" + i + ".png"));
+        }
+        final int[] frame = new int[1];
+        deadZombie = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
+            zombieView.setImage(zombieImages[frame[0]]);
+            frame[0] = (frame[0] + 1) % zombieImages.length;
+        }));
+        deadZombie.setCycleCount(zombieImages.length);
+        deadZombie.play();
+        deadZombie = new Timeline(new KeyFrame(Duration.millis(500) , event -> {
+            GameManager.getZombies().remove(this);
+            zombieView.setVisible(false);
+        }));
+        deadZombie.setCycleCount(1);
+        deadZombie.play();
     }
 
     public ImageView getZombieView() {

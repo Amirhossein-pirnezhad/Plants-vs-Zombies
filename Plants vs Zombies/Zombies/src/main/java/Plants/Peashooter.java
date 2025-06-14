@@ -2,6 +2,7 @@ package Plants;
 
 import Map.Cell;
 import Map.GameManager;
+import Zombies.Zombie;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -56,13 +57,23 @@ public class Peashooter extends Plant{
         tl.play();
     }
 
-    private void shooting(){
+    protected void shooting(){
         shoot = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
-            peas.add(new Pea(this));
-            GameManager.getGamePane().getChildren().add(peas.get(peas.size() -1).getPeaView());
+            if(if_Zombie_exist()) {
+                peas.add(new Pea(this));
+                GameManager.getGamePane().getChildren().add(peas.get(peas.size() - 1).getPeaView());
+            }
         }));
         shoot.setCycleCount(Animation.INDEFINITE);
         shoot.play();
+    }
+
+    protected boolean if_Zombie_exist(){
+        for (Zombie z : GameManager.getZombies()){
+            if(z.getCol() == col)
+                return true;
+        }
+        return false;
     }
 
     public ArrayList<Pea> getPeas() {

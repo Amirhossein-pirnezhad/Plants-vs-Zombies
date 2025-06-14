@@ -9,7 +9,7 @@ public class ConeheadZombie extends Zombie{
 
     public ConeheadZombie(int col) {
         super(col);
-        HP = 9;
+        HP = 7;
         speed = 20;
     }
 

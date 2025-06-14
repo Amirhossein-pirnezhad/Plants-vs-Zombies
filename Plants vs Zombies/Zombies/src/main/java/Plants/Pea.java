@@ -43,7 +43,7 @@ public class Pea {
                 if(z.getCol() == peashooter.col){
                     if(Math.abs(peaView.getLayoutX() - z.getZombieView().getLayoutX()) < 1) {
                         System.out.println(peaView.getLayoutX());
-                        z.setHP(z.getHP() - 1);
+                        z.setHP(z.getHP() - 1); //zombie health
                         dead();
                         break;
                     }
@@ -53,14 +53,17 @@ public class Pea {
 
     private void dead(){
         isAlive = false;
-        shot = new Timeline(new KeyFrame(Duration.millis(500), event -> {
+        shot = new Timeline(new KeyFrame(Duration.millis(500), event -> {//boom!
             peaView.setImage(new Image(getClass().getResourceAsStream("/Bullets/PeaNormalExplode/PeaNormalExplode_0.png")));
         }));
         shot.setCycleCount(1);
         shot.play();
-        peashooter.getPeas().remove(this);
-        GameManager.getGamePane().getChildren().remove(peaView);
-        shot.stop();
+        shot = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {//for delete pea
+            peashooter.getPeas().remove(this);
+            GameManager.getGamePane().getChildren().remove(peaView);
+        }));
+        shot.setCycleCount(1);
+        shot.play();
     }
 
     public ImageView getPeaView() {
