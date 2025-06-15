@@ -1,0 +1,162 @@
+package Map;
+
+import Plants.Plant;
+import Plants.Sun;
+import Zombies.ConeheadZombie;
+import Zombies.Zombie;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GameManager {
+    private static Pane gamePane;
+    private static List<Zombie> zombies = new ArrayList<>();
+    private static List<Plant> plants = new ArrayList<>();
+    private List<Sun> suns = new ArrayList<>();
+    private GridPane gridPane;
+    private int map_row , map_col;
+    private Cell[][] cells;
+    public static int sunPoint;
+    private VBox plantMenuVBox;
+    private static Label sunPointLabel;
+
+
+    public GameManager(Pane gamePane) {
+        this.gamePane = gamePane;
+        this.sunPoint = 0;
+        gridPane = new GridPane();
+        map_row = 9;
+        map_col = 5;
+        cells = new Cell[map_row][map_col];
+        gridPane.setTranslateX(Sizes.START_X_GRID);
+        gridPane.setTranslateY(Sizes.START_Y_GRID);
+        gridPane.setGridLinesVisible(true);
+        buildMap();
+        initializePlantMenu();
+
+    }
+
+    private void initializePlantMenu() {
+        plantMenuVBox = new VBox(8);
+        plantMenuVBox.setLayoutX(0);
+        plantMenuVBox.setLayoutY(85);
+        plantMenuVBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.3); -fx-padding: 10;");
+
+        String[] plantImages = {
+                "/Screen/sun.png",
+                "/Screen/shooter.png",
+                "/Screen/sun.png",
+                "/Screen/shooter.png",
+                "/Screen/sun.png",
+                "/Screen/shooter.png",
+        };
+
+        for (String imagePath : plantImages) {
+            try {
+                Image image = new Image(getClass().getResourceAsStream(imagePath));
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(180);
+                imageView.setPreserveRatio(true);
+
+                plantMenuVBox.getChildren().add(imageView);
+            } catch (Exception e) {
+                System.err.println("error" + imagePath);
+            }
+        }
+
+        gamePane.getChildren().add(plantMenuVBox);
+    }
+
+    public static void setSunPointLabel(Label label) {
+        sunPointLabel = label;
+        updateSunPointLabel();
+    }
+
+    public static void updateSunPointLabel() {
+        if (sunPointLabel != null) {
+            sunPointLabel.setText("" + sunPoint);
+        }
+    }
+
+    public void buildMap(){
+        for (int i = 0; i < map_row; i++) {
+            for (int j = 0; j < map_col; j++) {
+                cells[i][j] = new Cell(i , j);
+                gridPane.add(cells[i][j] , i , j);
+            }
+        }
+        gamePane.getChildren().add(gridPane);
+    }
+
+    public void addZombie(Zombie z) {
+        zombies.add(z);
+        gamePane.getChildren().add(z.getZombieView());
+        z.run();
+    }
+
+    public void addPlant(Plant p) {
+        plants.add(p);
+        cells[p.getRow()][p.getCol()].setCellView(p.getPlantView());
+    }
+
+    public void addSun(Sun sun , int row , int col){
+        suns.add(sun);
+        ImageView view = sun.getPlantView();
+        gamePane.getChildren().add(view);
+    }
+
+    public void updateGame() {
+
+    }
+
+    public void spawnZombie(){
+        Timeline spawnZombies = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            int row = (int)(Math.random() * 100) % 5;
+            int type = (int)(Math.random() * 100) % 2;
+            Zombie z = type == 0 ? new Zombie(row) : new ConeheadZombie(row);
+            addZombie(z);
+        }));
+        spawnZombies.setCycleCount(Timeline.INDEFINITE);
+        spawnZombies.play();
+    }
+
+    public void spawnSun(){
+        Timeline tlSun = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
+            int row = (int)(Math.random() * 100) % 5;
+            int col = (int)(Math.random() * 100) % 12;
+            Sun s = new Sun(row , col);
+            addSun(s , row , col);
+        }));
+        tlSun.setCycleCount(Timeline.INDEFINITE);
+        tlSun.play();
+    }
+
+    public static void addImageView(ImageView imageView){
+        gamePane.getChildren().add(imageView);
+    }
+
+    public Cell[][] getCells() {
+        return cells;
+    }
+
+    public static Pane getGamePane() {
+        return gamePane;
+    }
+
+    public static List<Zombie> getZombies() {
+        return zombies;
+    }
+
+    public static List<Plant> getPlants() {
+        return plants;
+    }
+}
