@@ -1,5 +1,6 @@
 package Plants;
 
+import Map.GameManager;
 import Map.Sizes;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,6 +31,7 @@ public class Sun extends Plant{
 
         plantView.setOnMouseClicked(e -> {
             sunPoint += point;
+            GameManager.updateSunPointLabel();
             lifeTimeline.stop();
             dead();
         });
@@ -43,7 +45,7 @@ public class Sun extends Plant{
         isAlive = false;
         animTimeline.stop();
         if (this.plantView.getParent() instanceof Pane) {
-            ((Pane) this.plantView.getParent()).getChildren().remove(plantView);// remove image sun
+            ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image sun
         }
         plantView.setOnMouseClicked(null);//don't click again
     }

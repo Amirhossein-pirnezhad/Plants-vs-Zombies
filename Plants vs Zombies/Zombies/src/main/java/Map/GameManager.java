@@ -2,13 +2,17 @@ package Map;
 
 import Plants.Plant;
 import Plants.Sun;
+import javafx.scene.shape.Rectangle;
 import Zombies.ConeheadZombie;
 import Zombies.Zombie;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -23,6 +27,9 @@ public class GameManager {
     private int map_row , map_col;
     private Cell[][] cells;
     public static int sunPoint;
+    private VBox plantMenuVBox;
+    private static Label sunPointLabel;
+
 
     public GameManager(Pane gamePane) {
         this.gamePane = gamePane;
@@ -35,6 +42,63 @@ public class GameManager {
         gridPane.setTranslateY(Sizes.START_Y_GRID);
         gridPane.setGridLinesVisible(true);
         buildMap();
+        initializePlantMenu();
+
+    }
+
+    private void initializePlantMenu() {
+        plantMenuVBox = new VBox(8);
+        plantMenuVBox.setLayoutX(0);
+        plantMenuVBox.setLayoutY(90);
+        // plantMenuVBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.3); -fx-padding: 10;");
+
+        plantMenuVBox.setStyle(
+                "-fx-background-color: #8B4513;" +
+                        "-fx-background-radius: 12;" +
+                        "-fx-border-radius: 12;" +
+                        "-fx-padding: 10;" +
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);" // سایه زیبا
+        );
+
+        String[] plantImages = {
+                "/Screen/sun.png",
+                "/Screen/shooter.png",
+                "/Screen/snowPea.png",
+                "/Screen/WallNut.png",
+                "/Screen/sun.png",
+                "/Screen/shooter.png",
+        };
+
+        for (String imagePath : plantImages) {
+            try {
+                Image image = new Image(getClass().getResourceAsStream(imagePath));
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(180);
+                imageView.setPreserveRatio(true);
+
+                Rectangle clip = new Rectangle(180, image.getHeight() * (180 / image.getWidth()));
+                clip.setArcWidth(30);
+                clip.setArcHeight(30);
+                imageView.setClip(clip);
+
+                plantMenuVBox.getChildren().add(imageView);
+            } catch (Exception e) {
+                System.err.println("error" + imagePath);
+            }
+        }
+
+        gamePane.getChildren().add(plantMenuVBox);
+    }
+
+    public static void setSunPointLabel(Label label) {
+        sunPointLabel = label;
+        updateSunPointLabel();
+    }
+
+    public static void updateSunPointLabel() {
+        if (sunPointLabel != null) {
+            sunPointLabel.setText("" + sunPoint);
+        }
     }
 
     public void buildMap(){
@@ -67,7 +131,6 @@ public class GameManager {
     public void updateGame() {
 
     }
-
     public void spawnZombie(){
         Timeline spawnZombies = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             int row = (int)(Math.random() * 100) % 5;
@@ -82,7 +145,7 @@ public class GameManager {
     public void spawnSun(){
         Timeline tlSun = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
             int row = (int)(Math.random() * 100) % 5;
-            int col = (int)(Math.random() * 100) % 12;
+            int col = (int)(Math.random() * 100) % 9;
             Sun s = new Sun(row , col);
             addSun(s , row , col);
         }));

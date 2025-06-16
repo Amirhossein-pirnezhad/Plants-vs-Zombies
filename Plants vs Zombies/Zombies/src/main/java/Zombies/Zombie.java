@@ -17,15 +17,19 @@ public class Zombie {
     protected double speed;
     protected int col;
     protected Image[] zombieImages;
+    protected Image[] zombieAttack;
     protected ImageView zombieView;
     protected Timeline deadZombie;
     protected Timeline runZombie;
     protected Timeline eating;
+    protected boolean isAttacking;
+    protected Plant targetPlant;
 
     public Zombie(int col){
         HP = 5;
         this.speed = cell_size/4;
         this.col = col;
+        isAttacking = false;
         setZombieImages();
     }
 
@@ -48,15 +52,19 @@ public class Zombie {
 
         runZombie.getKeyFrames().add(
                 new KeyFrame(Duration.millis(100), e -> {
-                    zombieView.setImage(zombieImages[frameIndex[0]]);
-                    zombieView.setLayoutX(zombieView.getLayoutX() - 1.5);
-                    frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
-
-                    if_touch_plant();
-
-                    if(HP <= 0){
+                    if (HP <= 0) {
                         runZombie.stop();
                         deadZombie();
+                    }
+                    if((targetPlant = if_touch_plant()) == null) {
+                        zombieView.setImage(zombieImages[frameIndex[0]]);
+                        zombieView.setLayoutX(zombieView.getLayoutX() - 1.5);
+
+                        frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
+
+                    }
+                    else {
+                        attackZombie();
                     }
                 })
 
@@ -65,31 +73,48 @@ public class Zombie {
     }
 
     protected void attackZombie(){
-        zombieImages = new Image[20];
-        for (int i = 0; i < zombieImages.length; i++) {
-            zombieImages[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" + i + ".png"));
+        if (eating != null && eating.getStatus() == Animation.Status.RUNNING) return;
+        isAttacking = true;
+        zombieAttack = new Image[20];
+        for (int i = 0; i < zombieAttack.length; i++) {
+            zombieAttack[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" + i + ".png"));
         }
 
         final int[] frameIndex = new int[1];
 
-        eating = new Timeline(new KeyFrame(Duration.millis(500) , event -> {
-            zombieView.setImage(zombieImages[frameIndex[0]]);
-            frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
+        eating = new Timeline(new KeyFrame(Duration.millis(70) , event -> {//animation eating
+                System.out.println(isAttacking);
+                zombieView.setImage(zombieAttack[frameIndex[0]]);
+                frameIndex[0] = (frameIndex[0] + 1) % zombieAttack.length;
         }));
-
-        eating.setCycleCount(4);
+        eating.setCycleCount(Animation.INDEFINITE);
         eating.play();
+
+        Timeline[] damage = new Timeline[1];
+
+        damage[0] = new Timeline(new KeyFrame(Duration.seconds(1), e -> {//get damage plant
+            if (targetPlant != null && targetPlant.isAlive()) {
+                targetPlant.setHP(targetPlant.getHP() - 1);
+            } else {
+                isAttacking = false;
+                targetPlant = null;
+                eating.stop();
+                damage[0].stop();
+            }
+        }));
+        damage[0].setCycleCount(Animation.INDEFINITE);
+        damage[0].play();
     }
 
-    protected void if_touch_plant(){
+    protected Plant if_touch_plant(){
         for (Plant p : GameManager.getPlants()){
             if(this.col == p.getCol()){
                 if(Math.abs((p.getRow() * cell_size + Sizes.START_X_GRID) - this.zombieView.getLayoutX()) < 1){
-                    p.setHP(p.getHP() - 1);
-                    attackZombie();
+                    return p;
                 }
             }
         }
+        return null;
     }
 
     protected void deadZombie(){

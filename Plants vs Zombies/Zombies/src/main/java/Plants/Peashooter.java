@@ -15,8 +15,9 @@ import java.util.ArrayList;
 import static Map.Cell.cell_size;
 
 public class Peashooter extends Plant{
-    private ArrayList<Pea> peas = new ArrayList<>();
-    private Timeline shoot;
+    protected ArrayList<Pea> peas = new ArrayList<>();
+    protected Timeline shoot;
+    protected Timeline animPeashooter;
     protected int peaInSecond;
 
     public Peashooter(int row, int col) {
@@ -41,8 +42,12 @@ public class Peashooter extends Plant{
     @Override
     public void dead() {
         isAlive = false;
+        System.out.println("plant dead");
+        shoot.stop();
+        animPeashooter.stop();
         if (this.plantView.getParent() instanceof Pane) {
-            ((Pane) this.plantView.getParent()).getChildren().remove(plantView);// remove image
+            ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image
+            GameManager.getPlants().remove(this);
         }
         plantView.setOnMouseClicked(null);//don't click again
     }
@@ -50,20 +55,20 @@ public class Peashooter extends Plant{
     protected void animPeashooter(){
         if(isAlive)
             shooting();
-            Timeline tl = new Timeline();
-            tl.setCycleCount(Timeline.INDEFINITE);
+            animPeashooter = new Timeline();
+            animPeashooter.setCycleCount(Timeline.INDEFINITE);
             final int[] frameIndex = new int[1];
 
-            tl.getKeyFrames().add(
+            animPeashooter.getKeyFrames().add(
                     new KeyFrame(Duration.millis(100), e -> {
                         plantView.setImage(plantImage[frameIndex[0]]);
-                        if(HP <= 0){
+                        if(HP == 0){
                             dead();
                         }
                         frameIndex[0] = (frameIndex[0] + 1) % plantImage.length;
                     })
             );
-            tl.play();
+            animPeashooter.play();
     }
 
     protected void shooting(){
