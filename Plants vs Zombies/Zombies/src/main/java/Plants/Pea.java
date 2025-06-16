@@ -27,11 +27,11 @@ public class Pea {
     }
 
     public void animPea(){
-        peaView.setLayoutX(peashooter.row * CELL_SIZE + START_X_GRID);
-        peaView.setLayoutY((peashooter.col + 1)* CELL_SIZE);
+        peaView.setLayoutX(peashooter.row * CELL_SIZE + START_X_GRID + 30);
+        peaView.setLayoutY((peashooter.col + 1)* CELL_SIZE - 15);
         shot = new Timeline(new KeyFrame(Duration.millis(10) , event -> {
-            peaView.setLayoutX(peaView.getLayoutX() + 2);
             if_touch_Zombie();
+            peaView.setLayoutX(peaView.getLayoutX() + 2);
         }));
         shot.setCycleCount(Animation.INDEFINITE);
         shot.play();
@@ -41,7 +41,7 @@ public class Pea {
         if(isAlive)
             for (Zombie z : GameManager.getZombies()){
                 if(z.getCol() == peashooter.col){
-                    if(Math.abs(peaView.getLayoutX() - z.getZombieView().getLayoutX()) < 1) {
+                    if(Math.abs(peaView.getLayoutX() - z.getZombieView().getLayoutX()) < 5) {
                         System.out.println(peaView.getLayoutX());
                         z.setHP(z.getHP() - 1); //zombie health
                         dead();
@@ -60,7 +60,7 @@ public class Pea {
         shot.play();
         shot = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {//for delete pea
             peashooter.getPeas().remove(this);
-            GameManager.getGamePane().getChildren().remove(peaView);
+            GameManager.getPanePeas().getChildren().remove(peaView);
         }));
         shot.setCycleCount(1);
         shot.play();

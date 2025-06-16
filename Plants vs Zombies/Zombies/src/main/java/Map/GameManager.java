@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
-    private static Pane gamePane;
+    private static Pane background , panePlantVsZombie = new Pane() , panePeas = new Pane();
     private static List<Zombie> zombies = new ArrayList<>();
     private static List<Plant> plants = new ArrayList<>();
     private List<Sun> suns = new ArrayList<>();
@@ -32,7 +32,7 @@ public class GameManager {
 
 
     public GameManager(Pane gamePane) {
-        this.gamePane = gamePane;
+        this.background = gamePane;
         this.sunPoint = 0;
         gridPane = new GridPane();
         map_row = 9;
@@ -50,14 +50,13 @@ public class GameManager {
         plantMenuVBox = new VBox(8);
         plantMenuVBox.setLayoutX(0);
         plantMenuVBox.setLayoutY(90);
-        // plantMenuVBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.3); -fx-padding: 10;");
 
         plantMenuVBox.setStyle(
                 "-fx-background-color: #8B4513;" +
                         "-fx-background-radius: 12;" +
                         "-fx-border-radius: 12;" +
                         "-fx-padding: 10;" +
-                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);" // سایه زیبا
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);"
         );
 
         String[] plantImages = {
@@ -87,7 +86,7 @@ public class GameManager {
             }
         }
 
-        gamePane.getChildren().add(plantMenuVBox);
+        background.getChildren().add(plantMenuVBox);
     }
 
     public static void setSunPointLabel(Label label) {
@@ -108,12 +107,12 @@ public class GameManager {
                 gridPane.add(cells[i][j] , i , j);
             }
         }
-        gamePane.getChildren().add(gridPane);
+        panePlantVsZombie.getChildren().add(gridPane);
     }
 
     public void addZombie(Zombie z) {
         zombies.add(z);
-        gamePane.getChildren().add(z.getZombieView());
+        panePlantVsZombie.getChildren().add(z.getZombieView());
         z.run();
     }
 
@@ -125,12 +124,13 @@ public class GameManager {
     public void addSun(Sun sun , int row , int col){
         suns.add(sun);
         ImageView view = sun.getPlantView();
-        gamePane.getChildren().add(view);
+        background.getChildren().add(view);
     }
 
     public void updateGame() {
 
     }
+
     public void spawnZombie(){
         Timeline spawnZombies = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             int row = (int)(Math.random() * 100) % 5;
@@ -154,15 +154,23 @@ public class GameManager {
     }
 
     public static void addImageView(ImageView imageView){
-        gamePane.getChildren().add(imageView);
+        background.getChildren().add(imageView);
     }
 
     public Cell[][] getCells() {
         return cells;
     }
 
-    public static Pane getGamePane() {
-        return gamePane;
+    public static Pane getPanePlantVsZombie() {
+        return panePlantVsZombie;
+    }
+
+    public static Pane getPanePeas() {
+        return panePeas;
+    }
+
+    public static Pane getBackground() {
+        return background;
     }
 
     public static List<Zombie> getZombies() {

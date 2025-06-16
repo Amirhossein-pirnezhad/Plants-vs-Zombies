@@ -3,7 +3,6 @@ import Plants.Peashooter;
 import Plants.Repeater;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -11,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import Zombies.*;
 import Map.*;
@@ -47,9 +45,14 @@ public class Main extends Application {
         Repeater p2 = new Repeater(0 , 2);
         GameManager g = new GameManager(pane);
 
+        pane.getChildren().addAll(
+            GameManager.getPanePeas() ,
+                GameManager.getPanePlantVsZombie()
+        );
+
         GameManager.setSunPointLabel(sunLabel);
 
-        Scene scene = new Scene(GameManager.getGamePane() , 800 , 600);
+        Scene scene = new Scene(GameManager.getBackground() , 800 , 600);
         g.spawnZombie();
         g.addPlant(p);
         g.addPlant(p2);

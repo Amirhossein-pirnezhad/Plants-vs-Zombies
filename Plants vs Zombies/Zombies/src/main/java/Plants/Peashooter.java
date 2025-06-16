@@ -77,7 +77,7 @@ public class Peashooter extends Plant{
                 if(if_Zombie_exist()) {
                         Timeline tl =  new Timeline(new KeyFrame(Duration.millis(200) , event1 -> {
                             peas.add(new Pea(this));
-                            GameManager.getGamePane().getChildren().add(peas.get(peas.size() - 1).getPeaView());
+                            GameManager.getPanePeas().getChildren().add(peas.get(peas.size() - 1).getPeaView());
                         }));
                         tl.setCycleCount(peaInSecond);
                         tl.play();
