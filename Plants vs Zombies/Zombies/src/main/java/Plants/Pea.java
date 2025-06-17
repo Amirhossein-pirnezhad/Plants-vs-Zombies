@@ -11,12 +11,12 @@ import javafx.util.Duration;
 import static Map.Sizes.*;
 
 public class Pea {
-    private Image peaImage;
-    private ImageView peaView;
-    private double speed;
-    private Timeline shot;
-    private Peashooter peashooter;
-    private boolean isAlive;
+    protected Image peaImage;
+    protected ImageView peaView;
+    protected double speed;
+    protected Timeline shot;
+    protected Peashooter peashooter;
+    protected boolean isAlive;
 
     public Pea(Peashooter peashooter){
         peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
@@ -37,7 +37,7 @@ public class Pea {
         shot.play();
     }
 
-    private void if_touch_Zombie(){
+    protected void if_touch_Zombie(){
         if(isAlive)
             for (Zombie z : GameManager.getZombies()){
                 if(z.getCol() == peashooter.col){
@@ -51,7 +51,7 @@ public class Pea {
             }
     }
 
-    private void dead(){
+    protected void dead(){
         isAlive = false;
         shot = new Timeline(new KeyFrame(Duration.millis(500), event -> {//boom!
             peaView.setImage(new Image(getClass().getResourceAsStream("/Bullets/PeaNormalExplode/PeaNormalExplode_0.png")));

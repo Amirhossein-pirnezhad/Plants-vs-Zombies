@@ -1,6 +1,7 @@
 
 import Plants.Peashooter;
 import Plants.Repeater;
+import Plants.SnowPea;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -19,7 +20,7 @@ public class Main extends Application {
     private AnimationTimer gameUpdate;
     @Override
     public void start(Stage primaryStage) {
-        Zombie z = new Zombie( 4);
+        ConeheadZombie z = new ConeheadZombie( 4);
 //        ConeheadZombie z2 = new ConeheadZombie( 0);
         ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/Items/Background/Background_0.jpg")));
         background.setFitHeight(Sizes.SCREEN_HEIGHT);
@@ -59,6 +60,7 @@ public class Main extends Application {
         System.out.println(p.getPlantView().getLayoutX());
         g.addPlant(new Peashooter(7 , 4));
         g.addPlant(new Peashooter(7,3));
+        g.addPlant(new SnowPea(1 , 4));
         g.spawnSun();
 
         gameUpdate = new AnimationTimer() {//game loop

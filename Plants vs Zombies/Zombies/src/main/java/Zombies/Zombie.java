@@ -1,6 +1,5 @@
 package Zombies;
 
-import Map.Cell;
 import Map.GameManager;
 import Map.Sizes;
 import Plants.Plant;
@@ -31,18 +30,25 @@ public class Zombie {
         this.col = col;
         isAttacking = false;
         setZombieImages();
+        zombieView.setLayoutX(1500);
+        zombieView.setLayoutY(col * cell_size + 30);
     }
 
     protected void setZombieImages(){
         zombieImages = new Image[21];
-        for (int i = 0; i < 21; i++) {
+        for (int i = 0; i < zombieImages.length; i++) {
             zombieImages[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/Zombie/Zombie_" + i + ".png"));
         }
         zombieView = new ImageView(zombieImages[0]);
         zombieView.setFitWidth(cell_size * 1.5);
         zombieView.setFitHeight(cell_size * 1.5);
-        zombieView.setLayoutX(1500);
-        zombieView.setLayoutY(col * cell_size + 30);
+    }
+
+    protected void setZombieImageAttack(){
+        zombieAttack = new Image[20];
+        for (int i = 0; i < zombieAttack.length; i++) {
+            zombieAttack[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" + i + ".png"));
+        }
     }
 
     public void run(){
@@ -50,16 +56,21 @@ public class Zombie {
         runZombie.setCycleCount(Timeline.INDEFINITE);
         final int[] frameIndex = new int[1];
 
+        int[] fps = new int[]{zombieImages.length};
+        double[] frameIntervalMs = new double[]{(1000.0/fps[0])};
+        double[] dxPerFrame = new double[]{speed / fps[0]};
+
         runZombie.getKeyFrames().add(
-                new KeyFrame(Duration.millis(100), e -> {
+                new KeyFrame(Duration.millis(frameIntervalMs[0]), e -> {
+                    dxPerFrame[0] = speed/fps[0];
                     if (HP <= 0) {
                         runZombie.stop();
                         deadZombie();
                     }
                     if((targetPlant = if_touch_plant()) == null) {
-                        zombieView.setImage(zombieImages[frameIndex[0]]);
-                        zombieView.setLayoutX(zombieView.getLayoutX() - 1.5);
 
+                        zombieView.setImage(zombieImages[frameIndex[0]]);
+                        zombieView.setLayoutX(zombieView.getLayoutX() - dxPerFrame[0]);
                         frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
 
                     }
@@ -75,10 +86,8 @@ public class Zombie {
     protected void attackZombie(){
         if (eating != null && eating.getStatus() == Animation.Status.RUNNING) return;
         isAttacking = true;
-        zombieAttack = new Image[20];
-        for (int i = 0; i < zombieAttack.length; i++) {
-            zombieAttack[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" + i + ".png"));
-        }
+
+        setZombieImageAttack();
 
         final int[] frameIndex = new int[1];
 
@@ -93,7 +102,7 @@ public class Zombie {
         Timeline[] damage = new Timeline[1];
 
         damage[0] = new Timeline(new KeyFrame(Duration.seconds(1), e -> {//get damage plant
-            if (targetPlant != null && targetPlant.isAlive()) {
+            if (targetPlant != null && targetPlant.isAlive() ) {
                 targetPlant.setHP(targetPlant.getHP() - 1);
             } else {
                 isAttacking = false;
@@ -118,6 +127,9 @@ public class Zombie {
     }
 
     protected void deadZombie(){
+        if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
+            runZombie.stop();
+        }
         zombieImages = new Image[9];
         for (int i = 0; i < zombieImages.length; i++) {
             zombieImages[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieDie/ZombieDie_" + i + ".png"));
@@ -129,7 +141,7 @@ public class Zombie {
         }));
         deadZombie.setCycleCount(zombieImages.length);
         deadZombie.play();
-        deadZombie = new Timeline(new KeyFrame(Duration.millis(500) , event -> {
+        deadZombie = new Timeline(new KeyFrame(Duration.millis(1000) , event -> {
             GameManager.getZombies().remove(this);
             zombieView.setVisible(false);
         }));

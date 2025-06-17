@@ -27,7 +27,7 @@ public class Peashooter extends Plant{
         peaInSecond = 1;
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
-        this.getChildren().addAll(plantView );
+        this.getChildren().addAll(plantView);
         animPeashooter();
     }
 
@@ -62,7 +62,7 @@ public class Peashooter extends Plant{
             animPeashooter.getKeyFrames().add(
                     new KeyFrame(Duration.millis(100), e -> {
                         plantView.setImage(plantImage[frameIndex[0]]);
-                        if(HP == 0){
+                        if(HP <= 0){
                             dead();
                         }
                         frameIndex[0] = (frameIndex[0] + 1) % plantImage.length;
