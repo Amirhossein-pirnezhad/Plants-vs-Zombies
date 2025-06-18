@@ -22,7 +22,7 @@ public class GameManager {
     private static Pane background , panePlantVsZombie = new Pane() , panePeas = new Pane();
     private static List<Zombie> zombies = new ArrayList<>();
     private static List<Plant> plants = new ArrayList<>();
-    private List<Sun> suns = new ArrayList<>();
+    private static List<Sun> suns = new ArrayList<>();
     private GridPane gridPane;
     private int map_row , map_col;
     private Cell[][] cells;
@@ -121,7 +121,7 @@ public class GameManager {
         cells[p.getRow()][p.getCol()].setCellView(p.getPlantView());
     }
 
-    public void addSun(Sun sun , int row , int col){
+    public static void addSun(Sun sun , int row , int col){
         suns.add(sun);
         ImageView view = sun.getPlantView();
         background.getChildren().add(view);
@@ -146,7 +146,7 @@ public class GameManager {
         Timeline tlSun = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
             int row = (int)(Math.random() * 100) % 5;
             int col = (int)(Math.random() * 100) % 9;
-            Sun s = new Sun(row , col);
+            Sun s = new Sun(row , col , 0);
             addSun(s , row , col);
         }));
         tlSun.setCycleCount(Timeline.INDEFINITE);

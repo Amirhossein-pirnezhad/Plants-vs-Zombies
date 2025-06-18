@@ -18,15 +18,10 @@ public class Sun extends Plant{
     private int point = 50;
     private int lifeTime = 10;
 
-    public Sun(int row, int col) {
+    public Sun(int row, int col , double sty) {
         super(row, col);
-        plantImage = new Image[21];
-        for (int i = 0; i < 21; i++) {
-            plantImage[i] = new Image(getClass().getResourceAsStream("/Plants/Sun/Sun_" + i + ".png"));
-        }
-        plantView = new ImageView(plantImage[0]);
-        plantView.setFitHeight(cell_size * 0.75);
-        plantView.setFitWidth(cell_size * 0.75);
+        setImage("/Plants/Sun/Sun_" , 21);
+
         this.getChildren().add(plantView);
 
         plantView.setOnMouseClicked(e -> {
@@ -36,7 +31,7 @@ public class Sun extends Plant{
             dead();
         });
 
-        animSun();
+        animSun(cell_size * col + Sizes.START_X_GRID , sty);
         startLifeTime();
     }
 
@@ -60,26 +55,18 @@ public class Sun extends Plant{
         lifeTimeline.play();
     }
 
-//    public int clickHandle(){
-//        plantView.setOnMouseClicked(event -> {
-//            dead();
-//            lifeTimeline.stop();
-//        });
-//        return 50;
-//    }
-
-    private void animSun(){
+    private void animSun(double startX , double startY){
         animTimeline = new Timeline();
         animTimeline.setCycleCount(Timeline.INDEFINITE);
         final int[] frameIndex = new int[1];
 
-        plantView.setX(cell_size * col + Sizes.START_X_GRID);
-        plantView.setY(0);
+        plantView.setX(startX);
+        plantView.setY(startY);
 
         animTimeline.getKeyFrames().add(
                 new KeyFrame(Duration.millis(100), e -> {
                     plantView.setImage(plantImage[frameIndex[0]]);
-                    if(plantView.getY() < row * cell_size + Sizes.START_Y_GRID)
+                    if(plantView.getY() < row * cell_size + Sizes.START_Y_GRID + 30)
                         plantView.setY(plantView.getY() + 10);
                     frameIndex[0] = (frameIndex[0] + 1) % plantImage.length;
                 })

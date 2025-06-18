@@ -20,7 +20,10 @@ public class PeaIce extends Pea{
                     if(Math.abs(peaView.getLayoutX() - z.getZombieView().getLayoutX()) < 5) {
                         System.out.println(peaView.getLayoutX());
                         z.setHP(z.getHP() - 1); //zombie health
-                        z.setSpeed(z.getSpeed()/2);
+                        if(!z.isSpeedHalf()) {
+                            z.setSpeed(z.getSpeed() / 2);
+                            z.setSpeedHalf(true);
+                        }
                         dead();
                         break;
                     }

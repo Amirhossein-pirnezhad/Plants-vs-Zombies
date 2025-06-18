@@ -1,7 +1,5 @@
 
-import Plants.Peashooter;
-import Plants.Repeater;
-import Plants.SnowPea;
+import Plants.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -61,6 +59,8 @@ public class Main extends Application {
         g.addPlant(new Peashooter(7 , 4));
         g.addPlant(new Peashooter(7,3));
         g.addPlant(new SnowPea(1 , 4));
+        g.addPlant(new WallNut(4 , 4));
+        g.addPlant(new SunFlower(0 , 0));
         g.spawnSun();
 
         gameUpdate = new AnimationTimer() {//game loop

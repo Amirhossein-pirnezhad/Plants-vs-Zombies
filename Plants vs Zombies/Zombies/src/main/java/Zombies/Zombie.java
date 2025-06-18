@@ -17,18 +17,21 @@ public class Zombie {
     protected int col;
     protected Image[] zombieImages;
     protected Image[] zombieAttack;
+    protected Image[] zombieDei;
     protected ImageView zombieView;
     protected Timeline deadZombie;
     protected Timeline runZombie;
     protected Timeline eating;
     protected boolean isAttacking;
     protected Plant targetPlant;
+    protected boolean isSpeedHalf;
 
     public Zombie(int col){
         HP = 5;
         this.speed = cell_size/4;
         this.col = col;
         isAttacking = false;
+        isSpeedHalf = false;
         setZombieImages();
         zombieView.setLayoutX(1500);
         zombieView.setLayoutY(col * cell_size + 30);
@@ -57,11 +60,12 @@ public class Zombie {
         final int[] frameIndex = new int[1];
 
         int[] fps = new int[]{zombieImages.length};
-        double[] frameIntervalMs = new double[]{(1000.0/fps[0])};
+        double[] frameIntervalMs = new double[]{(speed*30/fps[0])};
         double[] dxPerFrame = new double[]{speed / fps[0]};
 
         runZombie.getKeyFrames().add(
                 new KeyFrame(Duration.millis(frameIntervalMs[0]), e -> {
+                    frameIntervalMs[0] = speed*30/fps[0];
                     dxPerFrame[0] = speed/fps[0];
                     if (HP <= 0) {
                         runZombie.stop();
@@ -130,16 +134,16 @@ public class Zombie {
         if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
         }
-        zombieImages = new Image[9];
-        for (int i = 0; i < zombieImages.length; i++) {
-            zombieImages[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieDie/ZombieDie_" + i + ".png"));
+        zombieDei = new Image[9];
+        for (int i = 0; i < zombieDei.length; i++) {
+            zombieDei[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieDie/ZombieDie_" + i + ".png"));
         }
         final int[] frame = new int[1];
         deadZombie = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
-            zombieView.setImage(zombieImages[frame[0]]);
-            frame[0] = (frame[0] + 1) % zombieImages.length;
+            zombieView.setImage(zombieDei[frame[0]]);
+            frame[0] = (frame[0] + 1) % zombieDei.length;
         }));
-        deadZombie.setCycleCount(zombieImages.length);
+        deadZombie.setCycleCount(zombieDei.length);
         deadZombie.play();
         deadZombie = new Timeline(new KeyFrame(Duration.millis(1000) , event -> {
             GameManager.getZombies().remove(this);
@@ -171,5 +175,13 @@ public class Zombie {
 
     public int getCol() {
         return col;
+    }
+
+    public boolean isSpeedHalf() {
+        return isSpeedHalf;
+    }
+
+    public void setSpeedHalf(boolean speedHalf) {
+        isSpeedHalf = speedHalf;
     }
 }

@@ -5,8 +5,6 @@ import Zombies.Zombie;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
@@ -22,21 +20,13 @@ public class Peashooter extends Plant{
 
     public Peashooter(int row, int col) {
         super(row, col);
-        setImage();
+        setImage("/Plants/Peashooter/Peashooter_" , 12);
         HP = 4;
         peaInSecond = 1;
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
         this.getChildren().addAll(plantView);
         animPeashooter();
-    }
-
-    protected void setImage(){
-        plantImage = new Image[12];
-        for (int i = 0; i < 12; i++) {
-            plantImage[i] = new Image(getClass().getResourceAsStream("/Plants/Peashooter/Peashooter_" + i + ".png"));
-        }
-        plantView = new ImageView(plantImage[0]);
     }
 
     @Override

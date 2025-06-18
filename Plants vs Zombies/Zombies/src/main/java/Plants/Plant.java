@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
+import static Map.Cell.cell_size;
+
 public abstract class Plant extends StackPane {
     protected int HP;
     protected Image[] plantImage;
@@ -16,7 +18,15 @@ public abstract class Plant extends StackPane {
         this.col = col;
         isAlive = true;
     }
-
+    protected void setImage(String path , int len){
+        plantImage = new Image[len];
+        for (int i = 0; i < len; i++) {
+            plantImage[i] = new Image(getClass().getResourceAsStream(path + i + ".png"));
+        }
+        plantView = new ImageView(plantImage[0]);
+        plantView.setFitHeight(cell_size * 0.75);
+        plantView.setFitWidth(cell_size * 0.75);
+    }
     public ImageView getPlantView() {
         return plantView;
     }

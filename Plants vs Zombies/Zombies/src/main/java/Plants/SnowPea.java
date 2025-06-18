@@ -4,23 +4,15 @@ import Map.GameManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class SnowPea extends Peashooter{
 
     public SnowPea(int row, int col) {
         super(row, col);
+        setImage("/Plants/SnowPea/SnowPea_" , 14);
     }
-    @Override
-    protected void setImage(){
-        plantImage = new Image[14];
-        for (int i = 0; i < plantImage.length; i++) {
-            plantImage[i] = new Image(getClass().getResourceAsStream("/Plants/SnowPea/SnowPea_" + i + ".png"));
-        }
-        plantView = new ImageView(plantImage[0]);
-    }
+
     @Override
     protected void shooting(){
         if(isAlive)
