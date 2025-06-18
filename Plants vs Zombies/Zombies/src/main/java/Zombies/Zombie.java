@@ -32,26 +32,21 @@ public class Zombie {
         this.col = col;
         isAttacking = false;
         isSpeedHalf = false;
-        setZombieImages();
+        zombieView = new ImageView();
+        zombieImages = setZombieImages("/Zombies/NormalZombie/Zombie/Zombie_" , 22);
+        zombieAttack = setZombieImages("/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" , 21);
         zombieView.setLayoutX(1500);
         zombieView.setLayoutY(col * cell_size + 30);
     }
 
-    protected void setZombieImages(){
-        zombieImages = new Image[21];
-        for (int i = 0; i < zombieImages.length; i++) {
-            zombieImages[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/Zombie/Zombie_" + i + ".png"));
+    protected Image[] setZombieImages(String path , int len){
+        Image[] images = new Image[len];
+        for (int i = 0; i < len; i++) {
+            images[i] = new Image(getClass().getResourceAsStream(path + i + ".png"));
         }
-        zombieView = new ImageView(zombieImages[0]);
         zombieView.setFitWidth(cell_size * 1.5);
         zombieView.setFitHeight(cell_size * 1.5);
-    }
-
-    protected void setZombieImageAttack(){
-        zombieAttack = new Image[20];
-        for (int i = 0; i < zombieAttack.length; i++) {
-            zombieAttack[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" + i + ".png"));
-        }
+        return images;
     }
 
     public void run(){
@@ -90,8 +85,6 @@ public class Zombie {
     protected void attackZombie(){
         if (eating != null && eating.getStatus() == Animation.Status.RUNNING) return;
         isAttacking = true;
-
-        setZombieImageAttack();
 
         final int[] frameIndex = new int[1];
 
@@ -134,23 +127,30 @@ public class Zombie {
         if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
         }
-        zombieDei = new Image[9];
-        for (int i = 0; i < zombieDei.length; i++) {
-            zombieDei[i] = new Image(getClass().getResourceAsStream("/Zombies/NormalZombie/ZombieDie/ZombieDie_" + i + ".png"));
-        }
-        final int[] frame = new int[1];
+        zombieDei = setZombieImages("/Zombies/NormalZombie/ZombieDie/ZombieDie_" , 10);
+        Image[] zombieLostHead = setZombieImages("/Zombies/NormalZombie/ZombieHead/ZombieHead_" , 11);
+        ImageView lostHead = new ImageView(zombieLostHead[0]);
+        GameManager.getPanePlantVsZombie().getChildren().add(lostHead);
+
+        final int[] frame = new int[]{0};
+        final int[] frame1 = new int[]{0};
+
         deadZombie = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
             zombieView.setImage(zombieDei[frame[0]]);
+            lostHead.setImage(zombieLostHead[frame1[0]]);
             frame[0] = (frame[0] + 1) % zombieDei.length;
+            frame1[0] = (frame1[0] + 1) % zombieLostHead.length;
         }));
+
         deadZombie.setCycleCount(zombieDei.length);
         deadZombie.play();
-        deadZombie = new Timeline(new KeyFrame(Duration.millis(1000) , event -> {
+
+        Timeline dead = new Timeline(new KeyFrame(Duration.millis(200* zombieDei.length) , event -> {
             GameManager.getZombies().remove(this);
-            zombieView.setVisible(false);
+            GameManager.getPanePlantVsZombie().getChildren().removeAll(zombieView, lostHead);
         }));
-        deadZombie.setCycleCount(1);
-        deadZombie.play();
+        dead.setCycleCount(1);
+        dead.play();
     }
 
     public ImageView getZombieView() {

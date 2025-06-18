@@ -10,7 +10,7 @@ public class SnowPea extends Peashooter{
 
     public SnowPea(int row, int col) {
         super(row, col);
-        setImage("/Plants/SnowPea/SnowPea_" , 14);
+        setImage("/Plants/SnowPea/SnowPea_" , 15);
     }
 
     @Override

@@ -60,7 +60,9 @@ public class Main extends Application {
         g.addPlant(new Peashooter(7,3));
         g.addPlant(new SnowPea(1 , 4));
         g.addPlant(new WallNut(4 , 4));
+        g.addPlant(new WallNut(7 , 3));
         g.addPlant(new SunFlower(0 , 0));
+        g.addPlant(new SunFlower(4 , 1));
         g.spawnSun();
 
         gameUpdate = new AnimationTimer() {//game loop

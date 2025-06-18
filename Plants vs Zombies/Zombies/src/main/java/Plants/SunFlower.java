@@ -17,7 +17,7 @@ public class SunFlower extends Plant{
     public SunFlower(int row, int col) {
         super(row, col);
         HP = 4;
-        setImage("/Plants/SunFlower/SunFlower_" , 17);
+        setImage("/Plants/SunFlower/SunFlower_" , 18);
         animSunFlower();
         buildSun();
     }
@@ -38,7 +38,7 @@ public class SunFlower extends Plant{
 
     private void buildSun(){
         buildSun = new Timeline(new KeyFrame(Duration.seconds(timeBuild) , event -> {
-            GameManager.addSun(new Sun(row, col , cell_size * row + Sizes.START_Y_GRID ) , row , col);
+            GameManager.addSun(new Sun(col, row , cell_size * col + Sizes.START_Y_GRID ) , row , col);
         }));
         buildSun.setCycleCount(Animation.INDEFINITE);
         buildSun.play();
@@ -46,6 +46,7 @@ public class SunFlower extends Plant{
 
     @Override
     public void dead() {
+        buildSun.stop();
         isAlive = false;
         System.out.println("plant dead");
         if (this.plantView.getParent() instanceof Pane) {

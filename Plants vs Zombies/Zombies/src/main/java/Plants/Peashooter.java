@@ -20,7 +20,7 @@ public class Peashooter extends Plant{
 
     public Peashooter(int row, int col) {
         super(row, col);
-        setImage("/Plants/Peashooter/Peashooter_" , 12);
+        setImage("/Plants/Peashooter/Peashooter_" , 13);
         HP = 4;
         peaInSecond = 1;
         plantView.setFitHeight(cell_size * 0.75);

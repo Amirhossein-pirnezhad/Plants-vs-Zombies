@@ -20,7 +20,7 @@ public class Sun extends Plant{
 
     public Sun(int row, int col , double sty) {
         super(row, col);
-        setImage("/Plants/Sun/Sun_" , 21);
+        setImage("/Plants/Sun/Sun_" , 22);
 
         this.getChildren().add(plantView);
 
