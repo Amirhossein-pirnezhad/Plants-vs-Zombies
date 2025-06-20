@@ -63,7 +63,7 @@ public class Main extends Application {
         g.addPlant(new WallNut(7 , 3));
         g.addPlant(new SunFlower(0 , 0));
         g.addPlant(new SunFlower(4 , 1));
-        g.addPlant(new CherryBomb(7 , 1));
+        g.addPlant(new CherryBomb(7 , 2));
         g.addPlant(new Jalapeno(1,0));
         g.spawnSun();
 

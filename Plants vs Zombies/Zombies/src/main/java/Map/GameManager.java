@@ -2,6 +2,8 @@ package Map;
 
 import Plants.Plant;
 import Plants.Sun;
+import Zombies.ImpZombie;
+import Zombies.ScreenDoorZombie;
 import javafx.scene.shape.Rectangle;
 import Zombies.ConeheadZombie;
 import Zombies.Zombie;
@@ -199,9 +201,17 @@ public class GameManager {
 
     public void spawnZombie(){
         Timeline spawnZombies = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            int row = (int)(Math.random() * 100) % 5;
-            int type = (int)(Math.random() * 100) % 2;
-            Zombie z = type == 0 ? new Zombie(row) : new ConeheadZombie(row);
+            int col = (int)(Math.random() * 100) % 5;
+            int type = (int)(Math.random() * 100) % 4;
+            Zombie z;
+            if(type == 0)
+                z = new Zombie(col);
+            else if(type == 1)
+                z = new ConeheadZombie(col);
+            else if(type  == 2)
+                z = new ScreenDoorZombie(col);
+            else
+                z = new ImpZombie(col);
             addZombie(z);
         }));
         spawnZombies.setCycleCount(Timeline.INDEFINITE);

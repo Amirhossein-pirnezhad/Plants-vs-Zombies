@@ -21,7 +21,7 @@ public class Zombie {
     protected ImageView zombieView;
     protected Timeline deadZombie;
     protected Timeline runZombie;
-    protected Timeline eating;
+    protected Timeline eating = new Timeline();
     protected boolean isAttacking;
     protected Plant targetPlant;
     protected boolean isSpeedHalf;
@@ -55,13 +55,14 @@ public class Zombie {
         final int[] frameIndex = new int[1];
 
         int[] fps = new int[]{zombieImages.length};
-        double[] frameIntervalMs = new double[]{(speed*30/fps[0])};
+        double[] frameIntervalMs = new double[]{((1000000)/(fps[0] * speed * 30))};
         double[] dxPerFrame = new double[]{speed / fps[0]};
 
         runZombie.getKeyFrames().add(
                 new KeyFrame(Duration.millis(frameIntervalMs[0]), e -> {
-                    frameIntervalMs[0] = speed*30/fps[0];
+                    frameIntervalMs[0] = ((1000000)/(fps[0] * speed * 30));
                     dxPerFrame[0] = speed/fps[0];
+
                     if (HP <= 0) {
                         runZombie.stop();
                         deadZombie();
@@ -82,6 +83,12 @@ public class Zombie {
         runZombie.play();
     }
 
+    public void speedIsHalf(){
+        isSpeedHalf = true;
+        speed = speed/2;
+        zombieImages = setZombieImages("/Zombies/NormalZombie/ZombieIce/Zombie_" , 22);
+    }
+
     protected void attackZombie(){
         if (eating != null && eating.getStatus() == Animation.Status.RUNNING) return;
         isAttacking = true;
@@ -89,7 +96,10 @@ public class Zombie {
         final int[] frameIndex = new int[1];
 
         eating = new Timeline(new KeyFrame(Duration.millis(70) , event -> {//animation eating
-                System.out.println(isAttacking);
+                if (HP <= 0) {
+                    eating.stop();
+                    deadZombie();
+                }
                 zombieView.setImage(zombieAttack[frameIndex[0]]);
                 frameIndex[0] = (frameIndex[0] + 1) % zombieAttack.length;
         }));
@@ -101,6 +111,7 @@ public class Zombie {
         damage[0] = new Timeline(new KeyFrame(Duration.seconds(1), e -> {//get damage plant
             if (targetPlant != null && targetPlant.isAlive() ) {
                 targetPlant.setHP(targetPlant.getHP() - 1);
+                System.out.println("eating :" + damage[0].getCycleCount());
             } else {
                 isAttacking = false;
                 targetPlant = null;
@@ -127,11 +138,14 @@ public class Zombie {
         if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
         }
+        if(eating != null || (eating.getStatus() == Animation.Status.RUNNING)){
+            eating.stop();
+        }
         zombieDei = setZombieImages("/Zombies/NormalZombie/ZombieDie/ZombieDie_" , 10);
 
         Image[] zombieLostHead = setZombieImages("/Zombies/NormalZombie/ZombieHead/ZombieHead_" , 11);//anim lost head
         ImageView lostHead = new ImageView(zombieLostHead[0]);
-        lostHead.setLayoutX(zombieView.getLayoutX() + 20);
+        lostHead.setLayoutX(zombieView.getLayoutX() + 30);
         lostHead.setLayoutY(zombieView.getLayoutY() + 20);
         lostHead.setFitWidth(cell_size * 1.5);
         lostHead.setFitWidth(cell_size * 1.5);

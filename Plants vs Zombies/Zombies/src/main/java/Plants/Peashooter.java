@@ -35,8 +35,11 @@ public class Peashooter extends Plant{
     public void dead() {
         isAlive = false;
         System.out.println("plant dead");
-        shoot.stop();
-        animPeashooter.stop();
+        if(shoot.getStatus() == Animation.Status.RUNNING)
+            shoot.stop();
+        if(animPeashooter.getStatus() == Animation.Status.RUNNING)
+            animPeashooter.stop();
+
         if (this.plantView.getParent() instanceof Pane) {
             ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image
             GameManager.getPlants().remove(this);

@@ -46,7 +46,10 @@ public class SunFlower extends Plant{
 
     @Override
     public void dead() {
-        buildSun.stop();
+        if(buildSun.getStatus() == Animation.Status.RUNNING)
+            buildSun.stop();
+        if (anim.getStatus() == Animation.Status.RUNNING)
+            anim.stop();
         isAlive = false;
         System.out.println("plant dead");
         if (this.plantView.getParent() instanceof Pane) {

@@ -27,7 +27,7 @@ public class Pea {
     }
 
     public void animPea(){
-        peaView.setLayoutX(peashooter.row * CELL_SIZE + START_X_GRID + 30);
+        peaView.setLayoutX(peashooter.row * CELL_SIZE + START_X_GRID );
         peaView.setLayoutY((peashooter.col + 1)* CELL_SIZE - 15);
         shot = new Timeline(new KeyFrame(Duration.millis(10) , event -> {
             if_touch_Zombie();
