@@ -186,7 +186,7 @@ public class GameManager {
 
     public void addPlant(Plant p) {
         plants.add(p);
-        cells[p.getRow()][p.getCol()].setCellView(p.getPlantView());
+        cells[p.getRow()][p.getCol()].setPlant(p);
     }
 
     public static void addSun(Sun sun , int row , int col){

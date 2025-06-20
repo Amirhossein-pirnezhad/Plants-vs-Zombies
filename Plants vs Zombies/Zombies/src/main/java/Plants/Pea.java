@@ -28,7 +28,7 @@ public class Pea {
 
     public void animPea(){
         peaView.setLayoutX(peashooter.row * CELL_SIZE + START_X_GRID );
-        peaView.setLayoutY((peashooter.col + 1)* CELL_SIZE - 15);
+        peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
         shot = new Timeline(new KeyFrame(Duration.millis(10) , event -> {
             if_touch_Zombie();
             peaView.setLayoutX(peaView.getLayoutX() + 2);
@@ -40,7 +40,7 @@ public class Pea {
     protected void if_touch_Zombie(){
         if(isAlive)
             for (Zombie z : GameManager.getZombies()){
-                if(z.getCol() == peashooter.col){
+                if(z.getCol() == peashooter.col && z.isAlive()){
                     if(Math.abs(peaView.getLayoutX() - z.getZombieView().getLayoutX()) < 5) {
                         System.out.println(peaView.getLayoutX());
                         z.setHP(z.getHP() - 1); //zombie health

@@ -56,11 +56,12 @@ public class Main extends Application {
         g.addPlant(p);
         g.addPlant(p2);
         System.out.println(p.getPlantView().getLayoutX());
+        g.addZombie(new ImpZombie(3));
         g.addPlant(new Peashooter(7 , 4));
-        g.addPlant(new Peashooter(7,3));
+        g.addPlant(new Peashooter(6,3));
         g.addPlant(new SnowPea(1 , 4));
         g.addPlant(new WallNut(4 , 4));
-        g.addPlant(new WallNut(7 , 3));
+        g.addPlant(new WallNut(7 , 0));
         g.addPlant(new SunFlower(0 , 0));
         g.addPlant(new SunFlower(4 , 1));
         g.addPlant(new CherryBomb(7 , 2));

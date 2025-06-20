@@ -12,6 +12,6 @@ public class Sizes {
         SCREEN_WIDTH = screenBounds.getWidth();
         START_X_GRID = SCREEN_WIDTH/4.4;
         START_Y_GRID = SCREEN_HEIGHT/8.52;
-        CELL_SIZE = 140;
+        CELL_SIZE = (SCREEN_WIDTH - START_X_GRID)/9;
     }
 }
