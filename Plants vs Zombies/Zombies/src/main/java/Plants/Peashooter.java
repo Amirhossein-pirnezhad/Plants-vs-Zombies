@@ -16,13 +16,15 @@ public class Peashooter extends Plant{
     protected ArrayList<Pea> peas = new ArrayList<>();
     protected Timeline shoot;
     protected Timeline animPeashooter;
-    protected int peaInSecond;
+    protected int peaInCircle;
+    protected double secondInCircle = 1.5;
+
 
     public Peashooter(int row, int col) {
         super(row, col);
         setImage("/Plants/Peashooter/Peashooter_" , 13);
         HP = 4;
-        peaInSecond = 1;
+        peaInCircle = 1;
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
         this.getChildren().addAll(plantView);
@@ -63,13 +65,13 @@ public class Peashooter extends Plant{
 
     protected void shooting(){
         if(isAlive)
-            shoot = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
+            shoot = new Timeline(new KeyFrame(Duration.seconds(secondInCircle) , event -> {
                 if(if_Zombie_exist()) {
                         Timeline tl =  new Timeline(new KeyFrame(Duration.millis(200) , event1 -> {
                             peas.add(new Pea(this));
                             GameManager.getPanePeas().getChildren().add(peas.get(peas.size() - 1).getPeaView());
                         }));
-                        tl.setCycleCount(peaInSecond);
+                        tl.setCycleCount(peaInCircle);
                         tl.play();
                 }
             }));

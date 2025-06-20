@@ -24,11 +24,17 @@ public class GameManager {
     private static List<Plant> plants = new ArrayList<>();
     private static List<Sun> suns = new ArrayList<>();
     private GridPane gridPane;
-    private int map_row , map_col;
-    private Cell[][] cells;
+    private static int map_row , map_col;
+    private static Cell[][] cells;
     public static int sunPoint;
     private VBox plantMenuVBox;
     private static Label sunPointLabel;
+
+    private GridPane cardSelectionGrid;
+    private VBox selectedCardsBox;
+    private List<Cart> selectedCards = new ArrayList<>();
+    private Runnable onCardsSelectedCallback;
+    private Pane cardSelectionPane;
 
 
     public GameManager(Pane gamePane) {
@@ -44,6 +50,66 @@ public class GameManager {
         buildMap();
         initializePlantMenu();
 
+    }
+
+    public void initializeCardSelection(Runnable onCardsSelected) {
+        cardSelectionPane = new Pane();
+        cardSelectionPane.setPrefSize(600, 400);
+        cardSelectionPane.setLayoutX(100);
+        cardSelectionPane.setLayoutY(100);
+
+        ImageView frame = new ImageView(new Image(getClass().getResourceAsStream("/Cards/cardMenu.png")));
+        frame.setFitWidth(600);
+        frame.setFitHeight(400);
+        cardSelectionPane.getChildren().add(frame);
+
+        double[][] positions = {
+                {50, 50}, {150, 50}, {250, 50}, {350, 50}, {450, 50},
+                {50, 200}, {150, 200}, {250, 200}, {350, 200}, {450, 200}
+        };
+
+        for (int i = 0; i < 10; i++) {
+            String cardName = "card" + (i + 1);
+            Image img = new Image(getClass().getResourceAsStream("/Plants/Sun/Sun_" + i + ".png"));
+            Cart card = new Cart(cardName, img);
+
+            ImageView cardView = new ImageView(img);
+            cardView.setFitWidth(80);
+            cardView.setFitHeight(100);
+            cardView.setLayoutX(positions[i][0]);
+            cardView.setLayoutY(positions[i][1]);
+
+            cardView.setOnMouseClicked(e -> {
+                if (selectedCards.size() < 5 && !selectedCards.contains(card)) {
+                    selectedCards.add(card);
+
+                    ImageView selectedView = new ImageView(card.getCardImage());
+                    selectedView.setFitWidth(80);
+                    selectedView.setFitHeight(100);
+                    selectedCardsBox.getChildren().add(selectedView);
+
+                    if (selectedCards.size() == 5) {
+                        background.getChildren().remove(cardSelectionPane);
+                        background.getChildren().remove(selectedCardsBox);
+                        if (onCardsSelected != null) onCardsSelected.run();
+                    }
+                }
+            });
+
+            cardSelectionPane.getChildren().add(cardView);
+        }
+
+        selectedCardsBox = new VBox(10);
+        selectedCardsBox.setPrefWidth(150);
+        selectedCardsBox.setLayoutX(20);
+        selectedCardsBox.setLayoutY(100);
+        selectedCardsBox.setStyle("-fx-background-color: rgba(200,200,200,0.7); -fx-padding: 10; -fx-border-color: black;");
+
+        background.getChildren().addAll(cardSelectionPane, selectedCardsBox);
+    }
+
+    private void removeCardSelectionUI() {
+        background.getChildren().removeAll(cardSelectionGrid, selectedCardsBox);
     }
 
     private void initializePlantMenu() {
@@ -157,7 +223,7 @@ public class GameManager {
         background.getChildren().add(imageView);
     }
 
-    public Cell[][] getCells() {
+    public static Cell[][] getCells() {
         return cells;
     }
 
@@ -179,5 +245,13 @@ public class GameManager {
 
     public static List<Plant> getPlants() {
         return plants;
+    }
+
+    public static int getMap_row() {
+        return map_row;
+    }
+
+    public static int getMap_col() {
+        return map_col;
     }
 }

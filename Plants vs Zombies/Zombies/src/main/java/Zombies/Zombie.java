@@ -128,8 +128,13 @@ public class Zombie {
             runZombie.stop();
         }
         zombieDei = setZombieImages("/Zombies/NormalZombie/ZombieDie/ZombieDie_" , 10);
-        Image[] zombieLostHead = setZombieImages("/Zombies/NormalZombie/ZombieHead/ZombieHead_" , 11);
+
+        Image[] zombieLostHead = setZombieImages("/Zombies/NormalZombie/ZombieHead/ZombieHead_" , 11);//anim lost head
         ImageView lostHead = new ImageView(zombieLostHead[0]);
+        lostHead.setLayoutX(zombieView.getLayoutX() + 20);
+        lostHead.setLayoutY(zombieView.getLayoutY() + 20);
+        lostHead.setFitWidth(cell_size * 1.5);
+        lostHead.setFitWidth(cell_size * 1.5);
         GameManager.getPanePlantVsZombie().getChildren().add(lostHead);
 
         final int[] frame = new int[]{0};
@@ -145,9 +150,32 @@ public class Zombie {
         deadZombie.setCycleCount(zombieDei.length);
         deadZombie.play();
 
-        Timeline dead = new Timeline(new KeyFrame(Duration.millis(200* zombieDei.length) , event -> {
+        Timeline dead = new Timeline(new KeyFrame(Duration.millis(200 * zombieDei.length) , event -> {
             GameManager.getZombies().remove(this);
             GameManager.getPanePlantVsZombie().getChildren().removeAll(zombieView, lostHead);
+        }));
+        dead.setCycleCount(1);
+        dead.play();
+    }
+
+    public void bomDie(){
+        if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
+            runZombie.stop();
+        }
+        zombieDei = setZombieImages("/Zombies/NormalZombie/BoomDie/BoomDie_" , 19);
+
+        final int[] frame = new int[]{0};
+
+        deadZombie = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
+            zombieView.setImage(zombieDei[frame[0]]);
+            frame[0] = (frame[0] + 1) % zombieDei.length;
+        }));
+        deadZombie.setCycleCount(zombieDei.length);
+        deadZombie.play();
+
+        Timeline dead = new Timeline(new KeyFrame(Duration.millis(200 * zombieDei.length) , event -> {
+            GameManager.getZombies().remove(this);
+            GameManager.getPanePlantVsZombie().getChildren().removeAll(zombieView);
         }));
         dead.setCycleCount(1);
         dead.play();

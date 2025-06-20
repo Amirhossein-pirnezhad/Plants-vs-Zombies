@@ -59,6 +59,7 @@ public class WallNut extends Plant{
     }
 
     protected void changeImage(Image [] images){
+        if(frame >= images.length) frame = 0;
         plantView.setImage(images[frame]);
         frame = (frame + 1) % images.length;
     }

@@ -22,7 +22,7 @@ public class SnowPea extends Peashooter{
                         peas.add(new PeaIce(this));
                         GameManager.getPanePeas().getChildren().add(peas.get(peas.size() - 1).getPeaView());
                     }));
-                    tl.setCycleCount(peaInSecond);
+                    tl.setCycleCount(peaInCircle);
                     tl.play();
                 }
             }));
