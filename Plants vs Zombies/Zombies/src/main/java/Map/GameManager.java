@@ -1,10 +1,9 @@
 package Map;
 
-import Plants.Peashooter;
-import Plants.Plant;
-import Plants.Sun;
+import Plants.*;
 import Zombies.ImpZombie;
 import Zombies.ScreenDoorZombie;
+import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
 import Zombies.ConeheadZombie;
 import Zombies.Zombie;
@@ -21,6 +20,8 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Map.CardsType.*;
+
 public class GameManager {
     private static Pane background , panePlantVsZombie = new Pane() , panePeas = new Pane();
     private static List<Zombie> zombies = new ArrayList<>();
@@ -32,15 +33,13 @@ public class GameManager {
     public static int sunPoint;
     private VBox plantMenuVBox;
     private static Label sunPointLabel;
+    private static Cart savedCart = null;
 
-    private GridPane cardSelectionGrid;
-    private VBox selectedCardsBox;
     private List<Cart> selectedCards = new ArrayList<>();
-    private Runnable onCardsSelectedCallback;
-    private Pane cardSelectionPane;
 
 
-    public GameManager(Pane gamePane) {
+    public GameManager(Pane gamePane , List<Cart> selectedCards) {
+        this.selectedCards = selectedCards;
         this.background = gamePane;
         this.sunPoint = 0;
         gridPane = new GridPane();
@@ -55,73 +54,11 @@ public class GameManager {
 
     }
 
-//    public void initializeCardSelection(Runnable onCardsSelected) {
-//        cardSelectionPane = new Pane();
-//        cardSelectionPane.setPrefSize(600, 400);
-//        cardSelectionPane.setLayoutX(100);
-//        cardSelectionPane.setLayoutY(100);
-//
-//        ImageView frame = new ImageView(new Image(getClass().getResourceAsStream("/Cards/cardSelection.png")));
-//        frame.setFitWidth(600);
-//        frame.setFitHeight(400);
-//        cardSelectionPane.getChildren().add(frame);
-//
-//        double[][] positions = {
-//                {50, 50}, {150, 50}, {250, 50}, {350, 50}, {450, 50},
-//                {50, 200}, {150, 200}, {250, 200}, {350, 200}, {450, 200}
-//        };
-//
-//        for (int i = 0; i < 10; i++) {
-//            String cardName = "card_" + i ;
-//            Image img = new Image(getClass().getResourceAsStream("/Cards/card_" + i + ".png"));
-//            Cart card = new Cart(cardName, img);
-//
-//            ImageView cardView = new ImageView(img);
-//            cardView.setFitWidth(80);
-//            cardView.setFitHeight(100);
-//            cardView.setLayoutX(positions[i][0]);
-//            cardView.setLayoutY(positions[i][1]);
-//
-//            cardView.setOnMouseClicked(e -> {
-//                if (selectedCards.size() < 7 && !selectedCards.contains(card) ) {
-//                    selectedCards.add(card);
-//                    System.out.println("price cart " + card.getPrice());
-//
-//                    ImageView selectedView = new ImageView(card.getCardImage());
-//                    selectedView.setFitWidth(80);
-//                    selectedView.setFitHeight(100);
-//                    selectedCardsBox.getChildren().add(selectedView);
-//
-//                    if (selectedCards.size() == 6) {
-//                        background.getChildren().remove(cardSelectionPane);
-//                        background.getChildren().remove(selectedCardsBox);
-//                        if (onCardsSelected != null) onCardsSelected.run();
-//                    }
-//                }
-//            });
-//
-//            cardSelectionPane.getChildren().add(cardView);
-//        }
-//
-//        selectedCardsBox = new VBox(10);
-//        selectedCardsBox.setPrefWidth(150);
-//        selectedCardsBox.setLayoutX(20);
-//        selectedCardsBox.setLayoutY(100);
-//        selectedCardsBox.setStyle("-fx-background-color: rgba(200,200,200,0.7); -fx-padding: 10; -fx-border-color: black;");
-//
-//        background.getChildren().add(cardSelectionPane);
-//        background.getChildren().add(selectedCardsBox);
-//    }
-
-    private void removeCardSelectionUI() {
-        background.getChildren().removeAll(cardSelectionGrid, selectedCardsBox);
-    }
 
     private void initializePlantMenu() {
         plantMenuVBox = new VBox(8);
         plantMenuVBox.setLayoutX(0);
         plantMenuVBox.setLayoutY(90);
-        // plantMenuVBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.3); -fx-padding: 10;");
 
         plantMenuVBox.setStyle(
                 "-fx-background-color: #8B4513;" +
@@ -131,19 +68,10 @@ public class GameManager {
                         "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);"
         );
 
-        String[] plantImages = {
-                "/Screen/sun.png",
-                "/Screen/shooter.png",
-                "/Screen/sun.png",
-                "/Screen/shooter.png",
-                "/Screen/sun.png",
-                "/Screen/shooter.png",
-        };
 
-        for (String imagePath : plantImages) {
-            try {
-                Image image = new Image(getClass().getResourceAsStream(imagePath));
-                ImageView imageView = new ImageView(image);
+        for (Cart cart : selectedCards) {
+                Image image = cart.getCardImageView().getImage();
+                ImageView imageView = cart.getCardImageView();
                 imageView.setFitWidth(180);
                 imageView.setPreserveRatio(true);
 
@@ -152,13 +80,14 @@ public class GameManager {
                 clip.setArcHeight(30);
                 imageView.setClip(clip);
 
-                plantMenuVBox.getChildren().add(imageView);
-            } catch (Exception e) {
-                System.err.println("error" + imagePath);
-            }
+                plantMenuVBox.getChildren().add(cart.getCardImageView());
+                cart.setImageView(imageView);
         }
+        panePlantVsZombie.getChildren().add(plantMenuVBox);
+    }
 
-        background.getChildren().add(plantMenuVBox);
+    public static void setSavedCart(Cart c){
+        savedCart = c;
     }
 
     public static void setSunPointLabel(Label label) {
@@ -209,21 +138,35 @@ public class GameManager {
     }
 
     public void updateGame() {
-        for(Cart cart : selectedCards){
-            cart.setOnMouseClicked(event -> {
-                System.out.println("clicked");
-            });
-        }
         for (int i = 0; i < map_row; i++) {
             for (int j = 0; j < map_col; j++) {
                 int finalI = i;
                 int finalJ = j;
                 cells[i][j].setOnMouseClicked(event -> {
-                    addPlant(new Peashooter(finalI, finalJ));
-
+                    choice(finalI , finalJ);
                 });
             }
         }
+    }
+
+    private void choice(int i , int j){
+        if(savedCart == null || !canBuild()) return;
+        switch (savedCart.getPlantType()){
+            case SUNFLOWER:   addPlant(new SunFlower(i , j));   break;
+            case PEASHOOTRER: addPlant(new Peashooter(i,j));    break;
+            case REPEATER:    addPlant(new Repeater(i,j));      break;
+            case TALLNUT:     addPlant(new TallNut(i,j));       break;
+            case WALLNUT:     addPlant(new WallNut(i,j));       break;
+            case CHERRYBOMB:  addPlant(new CherryBomb(i,j));    break;
+            case JALAPENO:    addPlant(new Jalapeno(i,j));      break;
+            case SNOWPEA:     addPlant(new SnowPea(i,j));       break;
+            default:break;
+        }
+        savedCart = null;
+    }
+
+    private boolean canBuild(){
+        return savedCart.isReady() && (sunPoint >= savedCart.getPrice());
     }
 
     public void spawnZombie(){

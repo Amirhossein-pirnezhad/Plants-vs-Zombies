@@ -1,5 +1,6 @@
 package Map;
 
+import Plants.Plant;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -9,35 +10,37 @@ import java.util.concurrent.TimeUnit;
 
 
 public class Cart extends StackPane {
-    private final String cardName;
-    private final ImageView imageView;
+    private ImageView imageView;
     private final CardsType plantType;
     private int price ;
     private ScheduledExecutorService scheduler;
     private int rechargeTime;
     private boolean isReady;
+    private boolean isAdded;
 
 
-    public Cart(String cardName, Image image) {
-        this.cardName = cardName;
-        switch (cardName){
-            case "card_0" : this.price = 50;  this.rechargeTime = 11; plantType = CardsType.SUNFLOWER;  break;//اینا رو الکی فعلا زدم
-            case "card_1" : this.price = 100; this.rechargeTime = 20; plantType = CardsType.PEASHOOTRER;break;
-            case "card_2" : this.price = 200; this.rechargeTime = 50; plantType = CardsType.REPEATER;   break;
-            case "card_3" : this.price = 125; this.rechargeTime = 20; plantType = CardsType.TALLNUT;    break;
-            case "card_4" : this.price = 50;  this.rechargeTime = 10; plantType = CardsType.WALLNUT;    break;
-            case "card_5" : this.price = 150; this.rechargeTime = 30; plantType = CardsType.JALAPENO;   break;
-            case "card_6" : this.price = 200; this.rechargeTime = 15; plantType = CardsType.CHERRYBOMB; break;
-            case "card_7" : this.price = 175; this.rechargeTime = 14; plantType = CardsType.SNOWPEA;    break;
-            case "card_8" : this.price = 250; this.rechargeTime = 19; plantType = CardsType.CHERRYBOMB; break;
-            case "card_9" : this.price = 50;  this.rechargeTime = 10; plantType = CardsType.SUNFLOWER;  break;
-            default:plantType = CardsType.CHERRYBOMB;
+    public Cart(CardsType cardsType, Image image) {
+        isAdded = false;
+        plantType = cardsType;
+        switch (cardsType){
+            case SUNFLOWER: this.price = 50;  this.rechargeTime = 11;   break;
+            case PEASHOOTRER: this.price = 100; this.rechargeTime = 20; break;
+            case REPEATER: this.price = 200; this.rechargeTime = 50;    break;
+            case TALLNUT: this.price = 125; this.rechargeTime = 20;     break;
+            case WALLNUT: this.price = 50;  this.rechargeTime = 10;     break;
+            case CHERRYBOMB: this.price = 150; this.rechargeTime = 30;  break;
+            case JALAPENO: this.price = 200; this.rechargeTime = 15;    break;
+            case SNOWPEA: this.price = 175; this.rechargeTime = 14;     break;
         }
+
         this.imageView = new ImageView(image);
         imageView.setFitWidth(80);
         imageView.setFitHeight(100);
         this.getChildren().add(imageView);
-
+        this.imageView.setOnMouseClicked(event -> {
+            GameManager.setSavedCart(this);
+            System.out.println("Yes");
+        });
         startRechargeTimer();
     }
 
@@ -46,26 +49,37 @@ public class Cart extends StackPane {
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.schedule(() -> {
             isReady = true;
-            System.out.println(cardName + " is now ready to use!");
         }, rechargeTime, TimeUnit.SECONDS);
     }
 
-    public String getCardName() {
-        return cardName;
-    }
-
-    public Image getCardImage() {
-        return imageView.getImage();
+    public ImageView getCardImageView() {
+        return imageView;
     }
 
     public int getPrice() {
         return price;
     }
 
+    public CardsType getPlantType() {
+        return plantType;
+    }
+
     public void stopTimer() {
         if (scheduler != null) {
             scheduler.shutdown();
         }
+    }
+
+    public void setAdded(boolean added) {
+        isAdded = added;
+    }
+
+    public boolean isAdded() {
+        return isAdded;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 
     public boolean isReady() {
