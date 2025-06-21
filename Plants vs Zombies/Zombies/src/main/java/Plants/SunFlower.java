@@ -52,10 +52,7 @@ public class SunFlower extends Plant{
             anim.stop();
         isAlive = false;
         System.out.println("plant dead");
-        if (this.plantView.getParent() instanceof Pane) {
-            ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image
-            GameManager.getPlants().remove(this);
-        }
+        GameManager.removePlant(this);
         plantView.setOnMouseClicked(null);//don't click again
     }
 }

@@ -40,10 +40,8 @@ public class Peashooter extends Plant{
         if(animPeashooter.getStatus() == Animation.Status.RUNNING)
             animPeashooter.stop();
 
-        if (this.plantView.getParent() instanceof Pane) {
-            ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image
-            GameManager.getPlants().remove(this);
-        }
+        GameManager.removePlant(this);
+
         plantView.setOnMouseClicked(null);//don't click again
     }
 

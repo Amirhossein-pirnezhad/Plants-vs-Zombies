@@ -1,0 +1,6 @@
+package Map;
+
+public enum CardsType {
+    PEASHOOTRER , REPEATER , SNOWPEA , SUNFLOWER , WALLNUT,
+    TALLNUT , CHERRYBOMB , JALAPENO
+}

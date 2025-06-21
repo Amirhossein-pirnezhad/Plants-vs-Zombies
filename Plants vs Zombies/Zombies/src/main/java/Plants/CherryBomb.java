@@ -63,10 +63,7 @@ public class CherryBomb extends Plant{
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(200), event -> {
             if(timerBomb.getStatus() != Animation.Status.RUNNING) {
                 isAlive = false;
-                if (this.plantView.getParent() instanceof Pane) {
-                    ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image
-                    GameManager.getPlants().remove(this);
-                }
+                GameManager.removePlant(this);
             }
         }));
         timeline.setCycleCount(1);

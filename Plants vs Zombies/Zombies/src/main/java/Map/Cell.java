@@ -29,7 +29,11 @@ public class Cell extends StackPane {
             this.plant = plant;
             setCellView(plant.getPlantView());
         }
-        else System.out.println("can't");
+    }
+
+    public void removePlant(){
+        getChildren().remove(plant.getPlantView());
+        plant = null;
     }
 
     private void setCellView(ImageView cellView) {
@@ -37,7 +41,7 @@ public class Cell extends StackPane {
         this.getChildren().add(cellView);
     }
 
-    private boolean canSetPlant(){
+    public boolean canSetPlant(){
         return (plant == null);
     }
 }

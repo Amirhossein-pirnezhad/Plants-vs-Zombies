@@ -43,10 +43,10 @@ public class WallNut extends Plant{
             if(HP <= 0){
                 dead();
             }
-            else if(HP > 9){
+            else if(HP > initialHp * 0.6){
                 changeImage(plantImage);
             }
-            else if(HP > 5){
+            else if(HP > initialHp * 0.3){
                 changeImage(wallCracked1);
             }
             else{
@@ -70,10 +70,9 @@ public class WallNut extends Plant{
         }
         isAlive = false;
         System.out.println("plant dead");
-        if (this.plantView.getParent() instanceof Pane) {
-            ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image
-            GameManager.getPlants().remove(this);
-        }
+
+        GameManager.removePlant(this);
+
         plantView.setOnMouseClicked(null);//don't click again
     }
 }

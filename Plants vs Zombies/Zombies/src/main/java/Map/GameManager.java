@@ -1,5 +1,6 @@
 package Map;
 
+import Plants.Peashooter;
 import Plants.Plant;
 import Plants.Sun;
 import Zombies.ImpZombie;
@@ -54,61 +55,63 @@ public class GameManager {
 
     }
 
-    public void initializeCardSelection(Runnable onCardsSelected) {
-        cardSelectionPane = new Pane();
-        cardSelectionPane.setPrefSize(600, 400);
-        cardSelectionPane.setLayoutX(100);
-        cardSelectionPane.setLayoutY(100);
-
-        ImageView frame = new ImageView(new Image(getClass().getResourceAsStream("/Cards/cardMenu.png")));
-        frame.setFitWidth(600);
-        frame.setFitHeight(400);
-        cardSelectionPane.getChildren().add(frame);
-
-        double[][] positions = {
-                {50, 50}, {150, 50}, {250, 50}, {350, 50}, {450, 50},
-                {50, 200}, {150, 200}, {250, 200}, {350, 200}, {450, 200}
-        };
-
-        for (int i = 0; i < 10; i++) {
-            String cardName = "card" + (i + 1);
-            Image img = new Image(getClass().getResourceAsStream("/Plants/Sun/Sun_" + i + ".png"));
-            Cart card = new Cart(cardName, img);
-
-            ImageView cardView = new ImageView(img);
-            cardView.setFitWidth(80);
-            cardView.setFitHeight(100);
-            cardView.setLayoutX(positions[i][0]);
-            cardView.setLayoutY(positions[i][1]);
-
-            cardView.setOnMouseClicked(e -> {
-                if (selectedCards.size() < 5 && !selectedCards.contains(card)) {
-                    selectedCards.add(card);
-
-                    ImageView selectedView = new ImageView(card.getCardImage());
-                    selectedView.setFitWidth(80);
-                    selectedView.setFitHeight(100);
-                    selectedCardsBox.getChildren().add(selectedView);
-
-                    if (selectedCards.size() == 5) {
-                        background.getChildren().remove(cardSelectionPane);
-                        background.getChildren().remove(selectedCardsBox);
-                        if (onCardsSelected != null) onCardsSelected.run();
-                    }
-                }
-            });
-
-            cardSelectionPane.getChildren().add(cardView);
-        }
-
-        selectedCardsBox = new VBox(10);
-        selectedCardsBox.setPrefWidth(150);
-        selectedCardsBox.setLayoutX(20);
-        selectedCardsBox.setLayoutY(100);
-        selectedCardsBox.setStyle("-fx-background-color: rgba(200,200,200,0.7); -fx-padding: 10; -fx-border-color: black;");
-
-        background.getChildren().addAll(cardSelectionPane, selectedCardsBox);
-    }
+//    public void initializeCardSelection(Runnable onCardsSelected) {
+//        cardSelectionPane = new Pane();
+//        cardSelectionPane.setPrefSize(600, 400);
+//        cardSelectionPane.setLayoutX(100);
+//        cardSelectionPane.setLayoutY(100);
+//
+//        ImageView frame = new ImageView(new Image(getClass().getResourceAsStream("/Cards/cardSelection.png")));
+//        frame.setFitWidth(600);
+//        frame.setFitHeight(400);
+//        cardSelectionPane.getChildren().add(frame);
+//
+//        double[][] positions = {
+//                {50, 50}, {150, 50}, {250, 50}, {350, 50}, {450, 50},
+//                {50, 200}, {150, 200}, {250, 200}, {350, 200}, {450, 200}
+//        };
+//
+//        for (int i = 0; i < 10; i++) {
+//            String cardName = "card_" + i ;
+//            Image img = new Image(getClass().getResourceAsStream("/Cards/card_" + i + ".png"));
+//            Cart card = new Cart(cardName, img);
+//
+//            ImageView cardView = new ImageView(img);
+//            cardView.setFitWidth(80);
+//            cardView.setFitHeight(100);
+//            cardView.setLayoutX(positions[i][0]);
+//            cardView.setLayoutY(positions[i][1]);
+//
+//            cardView.setOnMouseClicked(e -> {
+//                if (selectedCards.size() < 7 && !selectedCards.contains(card) ) {
+//                    selectedCards.add(card);
+//                    System.out.println("price cart " + card.getPrice());
+//
+//                    ImageView selectedView = new ImageView(card.getCardImage());
+//                    selectedView.setFitWidth(80);
+//                    selectedView.setFitHeight(100);
+//                    selectedCardsBox.getChildren().add(selectedView);
+//
+//                    if (selectedCards.size() == 6) {
+//                        background.getChildren().remove(cardSelectionPane);
+//                        background.getChildren().remove(selectedCardsBox);
+//                        if (onCardsSelected != null) onCardsSelected.run();
+//                    }
+//                }
+//            });
+//
+//            cardSelectionPane.getChildren().add(cardView);
+//        }
+//
+//        selectedCardsBox = new VBox(10);
+//        selectedCardsBox.setPrefWidth(150);
+//        selectedCardsBox.setLayoutX(20);
+//        selectedCardsBox.setLayoutY(100);
+//        selectedCardsBox.setStyle("-fx-background-color: rgba(200,200,200,0.7); -fx-padding: 10; -fx-border-color: black;");
+//
+//        background.getChildren().add(cardSelectionPane);
+//        background.getChildren().add(selectedCardsBox);
+//    }
 
     private void removeCardSelectionUI() {
         background.getChildren().removeAll(cardSelectionGrid, selectedCardsBox);
@@ -118,6 +121,7 @@ public class GameManager {
         plantMenuVBox = new VBox(8);
         plantMenuVBox.setLayoutX(0);
         plantMenuVBox.setLayoutY(90);
+        // plantMenuVBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.3); -fx-padding: 10;");
 
         plantMenuVBox.setStyle(
                 "-fx-background-color: #8B4513;" +
@@ -130,8 +134,8 @@ public class GameManager {
         String[] plantImages = {
                 "/Screen/sun.png",
                 "/Screen/shooter.png",
-                "/Screen/snowPea.png",
-                "/Screen/WallNut.png",
+                "/Screen/sun.png",
+                "/Screen/shooter.png",
                 "/Screen/sun.png",
                 "/Screen/shooter.png",
         };
@@ -185,8 +189,17 @@ public class GameManager {
     }
 
     public void addPlant(Plant p) {
-        plants.add(p);
-        cells[p.getRow()][p.getCol()].setPlant(p);
+        if(cells[p.getRow()][p.getCol()].canSetPlant()) {
+            cells[p.getRow()][p.getCol()].setPlant(p);
+            plants.add(p);
+        }
+        else System.out.println("can't");
+    }
+
+    public static void removePlant(Plant p){
+        cells[p.getRow()][p.getCol()].removePlant();
+        plants.remove(p);
+        panePlantVsZombie.getChildren().remove(p.getPlantView());
     }
 
     public static void addSun(Sun sun , int row , int col){
@@ -196,7 +209,21 @@ public class GameManager {
     }
 
     public void updateGame() {
+        for(Cart cart : selectedCards){
+            cart.setOnMouseClicked(event -> {
+                System.out.println("clicked");
+            });
+        }
+        for (int i = 0; i < map_row; i++) {
+            for (int j = 0; j < map_col; j++) {
+                int finalI = i;
+                int finalJ = j;
+                cells[i][j].setOnMouseClicked(event -> {
+                    addPlant(new Peashooter(finalI, finalJ));
 
+                });
+            }
+        }
     }
 
     public void spawnZombie(){
