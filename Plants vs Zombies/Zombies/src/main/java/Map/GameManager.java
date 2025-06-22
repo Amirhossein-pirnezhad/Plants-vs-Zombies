@@ -3,9 +3,9 @@ package Map;
 import Plants.*;
 import Zombies.ImpZombie;
 import Zombies.ScreenDoorZombie;
+import javafx.animation.Animation;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import Zombies.ConeheadZombie;
 import Zombies.Zombie;
 import javafx.animation.KeyFrame;
@@ -32,6 +32,8 @@ public class GameManager {
     private VBox plantMenuVBox;
     private static Label sunPointLabel;
     private static Cart savedCart = null;
+    private Timeline game;
+    private int timeLevel = 0;
 
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
@@ -71,13 +73,9 @@ public class GameManager {
         for (Cart cart : selectedCards) {
             Image image = cart.getCardImageView().getImage();
             ImageView imageView = cart.getCardImageView();
-            imageView.setFitWidth(180);
-            imageView.setFitHeight(image.getHeight() * (180 / image.getWidth()));
+            imageView.setFitWidth(160);
+            imageView.setFitHeight(image.getHeight() * (160 / image.getWidth()));
 
-            Rectangle border = new Rectangle(180, 10);
-            border.setY(imageView.getFitHeight() );
-            border.setFill(Color.GREEN);
-            border.setStroke(Color.BLACK);
             BorderPane borderPane = cart.borderPane;
             borderPane.setCenter(imageView);
 
@@ -107,6 +105,7 @@ public class GameManager {
             }
         }
         panePlantVsZombie.getChildren().add(gridPane);
+        gameAttack();
     }
 
     public void addZombie(Zombie z) {
@@ -173,9 +172,15 @@ public class GameManager {
     private void handleClickOnChoice(){
         for (int i = 0; i < cartView_recharge.size(); i++) {
             BorderPane s = cartView_recharge.get(i);
-            int finalI = i;
+            Cart c = selectedCards.get(i);
+            if(c.getPrice() > sunPoint){
+                c.getBorder().setFill(Color.RED);
+            }
+            else if(c.isReady()){
+                c.getBorder().setFill(Color.GREEN);
+            }
             s.setOnMouseClicked(event -> {
-                savedCart = selectedCards.get(finalI);
+                savedCart = c;
                 System.out.println(savedCart.getPlantType());
             });
         }
@@ -185,10 +190,9 @@ public class GameManager {
         return savedCart.isReady() && (sunPoint >= savedCart.getPrice());
     }
 
-    public void spawnZombie(){
-        Timeline spawnZombies = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+    public void spawnZombie(int model){
             int col = (int)(Math.random() * 100) % 5;
-            int type = (int)(Math.random() * 100) % 4;
+            int type = (int)(Math.random() * 100) % model;
             Zombie z;
             if(type == 0)
                 z = new Zombie(col);
@@ -199,9 +203,34 @@ public class GameManager {
             else
                 z = new ImpZombie(col);
             addZombie(z);
+    }
+
+    private void gameAttack(){
+        game = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
+            timeLevel ++;
+            System.out.println("Start!!!!");
+            if(timeLevel > 3 && timeLevel <=15){
+                if(timeLevel % 3 == 0){
+                    spawnZombie(1);
+                }
+            }
+            else if(timeLevel > 15 && timeLevel <= 30){
+                if(timeLevel % 2 == 0)
+                    spawnZombie(2);
+            }
+            else if(timeLevel > 30 && timeLevel <= 45) {
+                if (timeLevel % 2 == 0)
+                    spawnZombie(3);
+            }
+            else if(timeLevel > 45){
+                if (timeLevel % 2 == 0) {
+                    spawnZombie(4);
+                    spawnZombie(4);
+                }
+            }
         }));
-        spawnZombies.setCycleCount(Timeline.INDEFINITE);
-        spawnZombies.play();
+        game.setCycleCount(Animation.INDEFINITE);
+        game.play();
     }
 
     public void spawnSun(){

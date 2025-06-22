@@ -128,7 +128,6 @@ public class Main extends Application {
 
     private void Game(List<Cart> selectedCards){
         Stage primaryStage = new Stage();
-        ConeheadZombie z = new ConeheadZombie( 4);
 
         ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/Items/Background/Background_0.jpg")));
         background.setFitHeight(Sizes.SCREEN_HEIGHT);
@@ -137,7 +136,7 @@ public class Main extends Application {
         sunCounter.setFitHeight(90);
         sunCounter.setFitWidth(250);
 
-        Pane pane = new Pane( background , z.getZombieView()  );
+        Pane pane = new Pane( background );
         pane.getChildren().add(sunCounter);
         GameManager g = new GameManager(pane , selectedCards);
 
@@ -149,11 +148,6 @@ public class Main extends Application {
         pane.getChildren().add(sunLabel);
 
 
-
-        z.run();
-        Peashooter p = new Peashooter(0,1);
-        Repeater p2 = new Repeater(0 , 2);
-
         pane.getChildren().addAll(
             GameManager.getPanePeas() ,
                 GameManager.getPanePlantVsZombie()
@@ -163,21 +157,20 @@ public class Main extends Application {
 
         GameManager.setSunPointLabel(sunLabel);
 
-        g.spawnZombie();
-        g.addPlant(p);
-        g.addPlant(p2);
-        System.out.println(p.getPlantView().getLayoutX());
-        g.addZombie(new ImpZombie(3));
-        g.addPlant(new Peashooter(7 , 4));
-        g.addPlant(new Peashooter(6,3));
-        g.addPlant(new SnowPea(1 , 4));
-        g.addPlant(new WallNut(4 , 4));
-        g.addPlant(new WallNut(7 , 0));
-        g.addPlant(new SunFlower(0 , 0));
-        g.addPlant(new SunFlower(4 , 1));
-        g.addPlant(new CherryBomb(7 , 2));
-        g.addPlant(new Jalapeno(1,0));
-        g.addPlant(new TallNut(4 , 0));
+//        g.addPlant(p);
+//        g.addPlant(p2);
+//        System.out.println(p.getPlantView().getLayoutX());
+//        g.addZombie(new ImpZombie(3));
+//        g.addPlant(new Peashooter(7 , 4));
+//        g.addPlant(new Peashooter(6,3));
+//        g.addPlant(new SnowPea(1 , 4));
+//        g.addPlant(new WallNut(4 , 4));
+//        g.addPlant(new WallNut(7 , 0));
+//        g.addPlant(new SunFlower(0 , 0));
+//        g.addPlant(new SunFlower(4 , 1));
+//        g.addPlant(new CherryBomb(7 , 2));
+//        g.addPlant(new Jalapeno(1,0));
+//        g.addPlant(new TallNut(4 , 0));
         g.spawnSun();
 
         gameUpdate = new AnimationTimer() {//game loop

@@ -42,8 +42,8 @@ public class Cart{
         }
 
         this.imageView = new ImageView(image);
-        imageView.setFitWidth(180);
-        imageView.setFitHeight(image.getHeight() * (180 / image.getWidth()));
+        imageView.setFitWidth(160);
+        imageView.setFitHeight(image.getHeight() * (160 / image.getWidth()));
         imageView.setPreserveRatio(true);
 
         border= new Rectangle(0, 10);
@@ -114,4 +114,7 @@ public class Cart{
         return isReady;
     }
 
+    public Rectangle getBorder() {
+        return border;
+    }
 }
