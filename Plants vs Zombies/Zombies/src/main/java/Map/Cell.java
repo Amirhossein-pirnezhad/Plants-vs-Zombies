@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 
-
 public class Cell extends StackPane {
     private int row , col;
     public Rectangle border;

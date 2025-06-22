@@ -3,7 +3,8 @@ package Map;
 import Plants.*;
 import Zombies.ImpZombie;
 import Zombies.ScreenDoorZombie;
-import javafx.scene.Node;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import Zombies.ConeheadZombie;
 import Zombies.Zombie;
@@ -12,9 +13,6 @@ import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -36,6 +34,7 @@ public class GameManager {
     private static Cart savedCart = null;
 
     private List<Cart> selectedCards = new ArrayList<>();
+    private List<BorderPane> cartView_recharge = new ArrayList<>();
 
 
     public GameManager(Pane gamePane , List<Cart> selectedCards) {
@@ -70,24 +69,23 @@ public class GameManager {
 
 
         for (Cart cart : selectedCards) {
-                Image image = cart.getCardImageView().getImage();
-                ImageView imageView = cart.getCardImageView();
-                imageView.setFitWidth(180);
-                imageView.setPreserveRatio(true);
+            Image image = cart.getCardImageView().getImage();
+            ImageView imageView = cart.getCardImageView();
+            imageView.setFitWidth(180);
+            imageView.setFitHeight(image.getHeight() * (180 / image.getWidth()));
 
-                Rectangle clip = new Rectangle(180, image.getHeight() * (180 / image.getWidth()));
-                clip.setArcWidth(30);
-                clip.setArcHeight(30);
-                imageView.setClip(clip);
+            Rectangle border = new Rectangle(180, 10);
+            border.setY(imageView.getFitHeight() );
+            border.setFill(Color.GREEN);
+            border.setStroke(Color.BLACK);
+            BorderPane borderPane = cart.borderPane;
+            borderPane.setCenter(imageView);
 
-                plantMenuVBox.getChildren().add(cart.getCardImageView());
-                cart.setImageView(imageView);
+            cartView_recharge.add(borderPane);
+            cart.startRechargeTimer();
         }
+        plantMenuVBox.getChildren().addAll(cartView_recharge);
         panePlantVsZombie.getChildren().add(plantMenuVBox);
-    }
-
-    public static void setSavedCart(Cart c){
-        savedCart = c;
     }
 
     public static void setSunPointLabel(Label label) {
@@ -138,6 +136,7 @@ public class GameManager {
     }
 
     public void updateGame() {
+        handleClickOnChoice();
         for (int i = 0; i < map_row; i++) {
             for (int j = 0; j < map_col; j++) {
                 int finalI = i;
@@ -152,17 +151,34 @@ public class GameManager {
     private void choice(int i , int j){
         if(savedCart == null || !canBuild()) return;
         switch (savedCart.getPlantType()){
-            case SUNFLOWER:   addPlant(new SunFlower(i , j));   break;
-            case PEASHOOTRER: addPlant(new Peashooter(i,j));    break;
-            case REPEATER:    addPlant(new Repeater(i,j));      break;
-            case TALLNUT:     addPlant(new TallNut(i,j));       break;
-            case WALLNUT:     addPlant(new WallNut(i,j));       break;
-            case CHERRYBOMB:  addPlant(new CherryBomb(i,j));    break;
-            case JALAPENO:    addPlant(new Jalapeno(i,j));      break;
-            case SNOWPEA:     addPlant(new SnowPea(i,j));       break;
+            case SUNFLOWER:   addPlant(new SunFlower(i , j));   buyPlant(savedCart);    break;
+            case PEASHOOTRER: addPlant(new Peashooter(i,j));    buyPlant(savedCart);    break;
+            case REPEATER:    addPlant(new Repeater(i,j));      buyPlant(savedCart);    break;
+            case TALLNUT:     addPlant(new TallNut(i,j));       buyPlant(savedCart);    break;
+            case WALLNUT:     addPlant(new WallNut(i,j));       buyPlant(savedCart);    break;
+            case CHERRYBOMB:  addPlant(new CherryBomb(i,j));    buyPlant(savedCart);    break;
+            case JALAPENO:    addPlant(new Jalapeno(i,j));      buyPlant(savedCart);    break;
+            case SNOWPEA:     addPlant(new SnowPea(i,j));       buyPlant(savedCart);    break;
             default:break;
         }
+        savedCart.startRechargeTimer();
         savedCart = null;
+    }
+
+    private void buyPlant(Cart cart){
+        sunPoint -= cart.getPrice();
+        updateSunPointLabel();
+    }
+
+    private void handleClickOnChoice(){
+        for (int i = 0; i < cartView_recharge.size(); i++) {
+            BorderPane s = cartView_recharge.get(i);
+            int finalI = i;
+            s.setOnMouseClicked(event -> {
+                savedCart = selectedCards.get(finalI);
+                System.out.println(savedCart.getPlantType());
+            });
+        }
     }
 
     private boolean canBuild(){

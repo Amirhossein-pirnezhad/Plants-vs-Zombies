@@ -37,7 +37,7 @@ public class Main extends Application {
         Button button = new Button("Start");
         imageView.setFitWidth(Sizes.SCREEN_WIDTH);//set background
         imageView.setFitHeight(Sizes.SCREEN_HEIGHT);
-        Pane pane = new Pane(button);
+        Pane pane = new Pane(imageView , button);
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         button.setOnAction(event -> {
@@ -91,7 +91,7 @@ public class Main extends Application {
 
 
             cardView.setOnMouseClicked(e -> {
-                if (selectedCards.size() < 7 && !selectedCards.contains(card) && !card.isAdded()) {
+                if (selectedCards.size() < 6 && !selectedCards.contains(card) && !card.isAdded()) {
                     selectedCards.add(card);
                     card.setAdded(true);
                     System.out.println("price cart " + card.getPrice());

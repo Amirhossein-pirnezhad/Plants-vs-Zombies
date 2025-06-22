@@ -76,9 +76,9 @@ public class Zombie {
                         }
                         if ((targetPlant = if_touch_plant()) == null) {
 
+                            frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
                             zombieView.setImage(zombieImages[frameIndex[0]]);
                             zombieView.setLayoutX(zombieView.getLayoutX() - dxPerFrame[0]);
-                            frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
 
                         } else {
                             attackZombie();

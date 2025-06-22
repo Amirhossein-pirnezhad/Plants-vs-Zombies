@@ -1,22 +1,30 @@
 package Map;
 
-import Plants.Plant;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class Cart extends StackPane {
+public class Cart{
     private ImageView imageView;
     private final CardsType plantType;
     private int price ;
     private ScheduledExecutorService scheduler;
+    private Timeline recharge;
     private int rechargeTime;
     private boolean isReady;
     private boolean isAdded;
+    public BorderPane borderPane;
+    private Rectangle border;
 
 
     public Cart(CardsType cardsType, Image image) {
@@ -34,23 +42,43 @@ public class Cart extends StackPane {
         }
 
         this.imageView = new ImageView(image);
-        imageView.setFitWidth(80);
-        imageView.setFitHeight(100);
-        this.getChildren().add(imageView);
-        this.imageView.setOnMouseClicked(event -> {
-            GameManager.setSavedCart(this);
-            System.out.println("Yes");
-        });
-        startRechargeTimer();
+        imageView.setFitWidth(180);
+        imageView.setFitHeight(image.getHeight() * (180 / image.getWidth()));
+        imageView.setPreserveRatio(true);
+
+        border= new Rectangle(0, 10);
+        border.setY(imageView.getFitHeight() );
+        border.setFill(Color.RED);
+        border.setStroke(Color.BLACK);
+
+        borderPane = new BorderPane(imageView);
+        this.borderPane.setBottom(border);
     }
 
-    private void startRechargeTimer() {
+    public void startRechargeTimer() {
         isReady = false;
         scheduler = Executors.newScheduledThreadPool(1);
+        animCharging();
         scheduler.schedule(() -> {
             isReady = true;
+            border.setFill(Color.GREEN);
+            System.out.println("isReady" + plantType);
         }, rechargeTime, TimeUnit.SECONDS);
     }
+
+    public void animCharging() {
+        border.setWidth(0);
+        border.setFill(Color.RED);
+        int timeForEachFrame = 100;
+        int cycle = (int)rechargeTime * 1000 / timeForEachFrame;
+        double valueForIncrease = imageView.getFitWidth() / cycle;
+        recharge = new Timeline(new KeyFrame(Duration.millis(timeForEachFrame) , event -> {
+            border.setWidth(border.getWidth() + valueForIncrease);
+        }));
+        recharge.setCycleCount(cycle);
+        recharge.play();
+    }
+
 
     public ImageView getCardImageView() {
         return imageView;
@@ -85,4 +113,5 @@ public class Cart extends StackPane {
     public boolean isReady() {
         return isReady;
     }
+
 }

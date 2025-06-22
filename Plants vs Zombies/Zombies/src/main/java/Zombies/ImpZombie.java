@@ -1,8 +1,10 @@
 package Zombies;
 
 import Map.GameManager;
-import Map.Sizes;
-import Plants.Plant;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import static Map.Cell.cell_size;
 
@@ -12,7 +14,36 @@ public class ImpZombie extends Zombie{
         HP = 3;
         speed = cell_size / 2;
         distance = 10;
-        zombieImages = setZombieImages("/Zombies/FlagZombie/FlagZombie/FlagZombie_" , 12);
-        zombieAttack = setZombieImages("/Zombies/FlagZombie/FlagZombieAttack/FlagZombieAttack_" , 11);
+        zombieImages = setZombieImages("/Zombies/Imp/ZombieWalk/" , 33);
+        zombieAttack = setZombieImages("/Zombies/Imp/ZombieAttack/" , 26);
+    }
+
+    @Override
+    protected void deadZombie(){
+        isAlive = false;
+        if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
+            runZombie.stop();
+        }
+        if(eating != null || (eating.getStatus() == Animation.Status.RUNNING)){
+            eating.stop();
+        }
+        zombieDei = setZombieImages("/Zombies/Imp/ZombieDie/" , 22);
+
+        final int[] frame = new int[]{0};
+
+        deadZombie = new Timeline(new KeyFrame(Duration.millis(150) , event -> {
+            zombieView.setImage(zombieDei[frame[0]]);
+            frame[0] = (frame[0] + 1) % zombieDei.length;
+        }));
+
+        deadZombie.setCycleCount(zombieDei.length);
+        deadZombie.play();
+
+        Timeline dead = new Timeline(new KeyFrame(Duration.millis(200 * zombieDei.length) , event -> {
+            GameManager.getZombies().remove(this);
+            GameManager.getPanePlantVsZombie().getChildren().removeAll(zombieView);
+        }));
+        dead.setCycleCount(1);
+        dead.play();
     }
 }
