@@ -2,6 +2,7 @@ package Zombies;
 
 import Map.GameManager;
 import Map.Sizes;
+import Map.ZombieType;
 import Plants.Plant;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -10,6 +11,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import static Map.Cell.cell_size;
+import static Map.ZombieType.*;
+
+import Map.ZombieType.*;
 
 public class Zombie {
     protected int HP;
@@ -23,13 +27,18 @@ public class Zombie {
     protected Timeline runZombie;
     protected Timeline eating = new Timeline();
     protected Timeline boomDieZombie;
+    protected Timeline getDamage;
     protected boolean isAttacking;
     protected boolean isAlive;
     protected Plant targetPlant;
     protected boolean isSpeedHalf;
     protected double distance;
+    protected boolean isPause;
+    protected ZombieType mode;
 
     public Zombie(int col){
+        isPause = false;
+        mode = RUN;
         HP = 5;
         this.speed = cell_size/4;
         distance = 1;
@@ -42,6 +51,11 @@ public class Zombie {
         zombieAttack = setZombieImages("/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" , 21);
         zombieView.setLayoutX(1500);
         zombieView.setLayoutY(col * cell_size + 30);
+        this.zombieView.setOnMouseClicked(event -> {
+            if(!isPause)
+                pause();
+            else resume();
+        });
     }
 
     protected Image[] setZombieImages(String path , int len){
@@ -65,11 +79,12 @@ public class Zombie {
 
         runZombie.getKeyFrames().add(
                 new KeyFrame(Duration.millis(frameIntervalMs[0]), e -> {
-                    if(isAlive) {
+                    if(isAlive && mode == RUN) {
                         frameIntervalMs[0] = ((1000000) / (fps[0] * speed * 30));
                         dxPerFrame[0] = speed / fps[0];
 
                         if (HP <= 0) {
+                            mode = DEAD;
                             isAlive = false;
                             runZombie.stop();
                             deadZombie();
@@ -81,6 +96,7 @@ public class Zombie {
                             zombieView.setLayoutX(zombieView.getLayoutX() - dxPerFrame[0]);
 
                         } else {
+                            mode = EATING;
                             attackZombie();
                         }
                     }
@@ -115,29 +131,30 @@ public class Zombie {
         eating.setCycleCount(Animation.INDEFINITE);
         eating.play();
 
-        Timeline[] damage = new Timeline[1];
 
-        damage[0] = new Timeline(new KeyFrame(Duration.seconds(1), e -> {//get damage plant
+        getDamage = new Timeline(new KeyFrame(Duration.seconds(1), e -> {//get damage plant
                 if (targetPlant != null && targetPlant.isAlive()) {
-                    if(isAlive) {
+                    if(isAlive && mode == EATING) {
                         if (HP <= 0) {
+                            mode = DEAD;
                             eating.stop();
-                            damage[0].stop();
+                            getDamage.stop();
                             deadZombie();
                         }
                         targetPlant.setHP(targetPlant.getHP() - 1);
-                        System.out.println("eating :" + damage[0].getCycleCount());
+                        System.out.println("eating :" + getDamage.getCycleCount());
                     }
                 }
             else{
+                mode = RUN;
                 isAttacking = false;
                 targetPlant = null;
                 eating.stop();
-                damage[0].stop();
+                getDamage.stop();
                 }
         }));
-        damage[0].setCycleCount(Animation.INDEFINITE);
-        damage[0].play();
+        getDamage.setCycleCount(Animation.INDEFINITE);
+        getDamage.play();
     }
 
     protected Plant if_touch_plant(){
@@ -217,6 +234,31 @@ public class Zombie {
         }));
         dead.setCycleCount(1);
         dead.play();
+    }
+
+    public void pause(){
+        isPause = true;
+        if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
+            runZombie.stop();
+        }
+        if(eating != null || (eating.getStatus() == Animation.Status.RUNNING)){
+            eating.stop();
+        }
+        if(deadZombie != null || (deadZombie.getStatus() == Animation.Status.RUNNING)){
+            deadZombie.stop();
+        }
+        if(boomDieZombie != null || (boomDieZombie.getStatus() == Animation.Status.RUNNING)){
+            boomDieZombie.stop();
+        }
+        if(getDamage != null || (getDamage.getStatus() == Animation.Status.RUNNING)){
+            getDamage.stop();
+        }
+
+    }
+
+    public void resume(){
+        isPause = true;
+        run();
     }
 
     public ImageView getZombieView() {

@@ -1,19 +1,16 @@
 package Plants;
 
-import Map.GameManager;
-import Map.Sizes;
 import Zombies.Zombie;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 
 public class Jalapeno extends CherryBomb{
     public Jalapeno(int row, int col) {
         super(row, col);
         setImage("/Plants/Jalapeno/Jalapeno/Jalapeno_" , 8);
+        plantView.setOnMouseClicked(event -> {
+            if(!isPauses)
+                pause();
+            else resume();
+        });
 //        setImage("/Plants/Jalapeno/JalapenoExplode/JalapenoExplode_" , 8);
     }
 

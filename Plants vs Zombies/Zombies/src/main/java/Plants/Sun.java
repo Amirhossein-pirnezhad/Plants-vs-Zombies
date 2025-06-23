@@ -2,6 +2,7 @@ package Plants;
 
 import Map.GameManager;
 import Map.Sizes;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -30,15 +31,18 @@ public class Sun extends Plant{
             lifeTimeline.stop();
             dead();
         });
+        plantView.setX(cell_size * col + Sizes.START_X_GRID);
+        plantView.setY(sty);
 
-        animSun(cell_size * col + Sizes.START_X_GRID , sty);
+        animSun();
         startLifeTime();
     }
 
     @Override
     public void dead() {
         isAlive = false;
-        animTimeline.stop();
+        if (animTimeline != null && animTimeline.getStatus() == Animation.Status.RUNNING)
+            animTimeline.stop();
         if (this.plantView.getParent() instanceof Pane) {
             ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image sun
         }
@@ -47,21 +51,21 @@ public class Sun extends Plant{
 
     private void startLifeTime(){
         lifeTimeline = new Timeline(
-                new KeyFrame(Duration.seconds(lifeTime) , e->{
-                    dead();
+                new KeyFrame(Duration.seconds(1) , e->{
+                    lifeTime --;
+                    if(lifeTime == 0)
+                        dead();
                 })
         );
-        lifeTimeline.setCycleCount(1);
+        lifeTimeline.setCycleCount(lifeTime);
         lifeTimeline.play();
     }
 
-    private void animSun(double startX , double startY){
+    private void animSun(){
         animTimeline = new Timeline();
         animTimeline.setCycleCount(Timeline.INDEFINITE);
         final int[] frameIndex = new int[1];
 
-        plantView.setX(startX);
-        plantView.setY(startY);
 
         animTimeline.getKeyFrames().add(
                 new KeyFrame(Duration.millis(100), e -> {
@@ -72,6 +76,18 @@ public class Sun extends Plant{
                 })
         );
         animTimeline.play();
+    }
+
+    public void pause(){
+        if (animTimeline != null && animTimeline.getStatus() == Animation.Status.RUNNING)
+            animTimeline.stop();
+        if (lifeTimeline != null && lifeTimeline.getStatus() == Animation.Status.RUNNING)
+            lifeTimeline.stop();
+    }
+
+    public void resume(){
+        animSun();
+        startLifeTime();
     }
 
 }

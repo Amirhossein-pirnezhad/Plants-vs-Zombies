@@ -5,7 +5,6 @@ import Zombies.Zombie;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -18,16 +17,23 @@ public class Peashooter extends Plant{
     protected Timeline animPeashooter;
     protected int peaInCircle;
     protected double secondInCircle = 1.5;
+    protected boolean isPauses;
 
 
     public Peashooter(int row, int col) {
         super(row, col);
+        isPauses = false;
         setImage("/Plants/Peashooter/Peashooter_" , 13);
         HP = 4;
         peaInCircle = 1;
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
         this.getChildren().addAll(plantView);
+        this.plantView.setOnMouseClicked(event -> {
+            if(!isPauses)
+                pause();
+            else resume();
+        });
         animPeashooter();
     }
 
@@ -86,6 +92,25 @@ public class Peashooter extends Plant{
                 return true;
         }
         return false;
+    }
+
+    public void pause(){
+        isPauses = true;
+        if(shoot != null && shoot.getStatus() == Animation.Status.RUNNING)
+            shoot.stop();
+        if(animPeashooter != null && animPeashooter.getStatus() == Animation.Status.RUNNING)
+            animPeashooter.stop();
+        for(Pea p : peas){
+            p.pause();
+        }
+    }
+
+    public void resume(){
+        isPauses = false;
+        animPeashooter();
+        for(Pea p : peas){
+            p.resume();
+        }
     }
 
     public ArrayList<Pea> getPeas() {

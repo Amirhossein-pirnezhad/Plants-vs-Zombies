@@ -32,13 +32,13 @@ public class Cart{
         plantType = cardsType;
         switch (cardsType){
             case SUNFLOWER: this.price = 50;  this.rechargeTime = 11;   break;
-            case PEASHOOTRER: this.price = 100; this.rechargeTime = 20; break;
-            case REPEATER: this.price = 200; this.rechargeTime = 50;    break;
-            case TALLNUT: this.price = 125; this.rechargeTime = 20;     break;
+            case PEASHOOTRER: this.price = 100; this.rechargeTime = 10; break;
+            case REPEATER: this.price = 200; this.rechargeTime = 10;    break;
+            case TALLNUT: this.price = 125; this.rechargeTime = 10;     break;
             case WALLNUT: this.price = 50;  this.rechargeTime = 10;     break;
-            case CHERRYBOMB: this.price = 150; this.rechargeTime = 30;  break;
-            case JALAPENO: this.price = 200; this.rechargeTime = 15;    break;
-            case SNOWPEA: this.price = 175; this.rechargeTime = 14;     break;
+            case CHERRYBOMB: this.price = 150; this.rechargeTime = 10;  break;
+            case JALAPENO: this.price = 200; this.rechargeTime = 11;    break;
+            case SNOWPEA: this.price = 175; this.rechargeTime = 10;     break;
         }
 
         this.imageView = new ImageView(image);

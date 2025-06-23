@@ -5,7 +5,6 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import static Map.Cell.cell_size;
@@ -74,5 +73,14 @@ public class WallNut extends Plant{
         GameManager.removePlant(this);
 
         plantView.setOnMouseClicked(null);//don't click again
+    }
+
+    public void pause(){
+        if (hpGood != null && hpGood.getStatus() == Animation.Status.RUNNING)
+            hpGood.stop();
+    }
+
+    public void resume(){
+        animWallNut();
     }
 }

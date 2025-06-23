@@ -11,6 +11,11 @@ public class SnowPea extends Peashooter{
     public SnowPea(int row, int col) {
         super(row, col);
         setImage("/Plants/SnowPea/SnowPea_" , 15);
+        this.plantView.setOnMouseClicked(event -> {
+            if(!isPauses)
+                pause();
+            else resume();
+        });
     }
 
     @Override

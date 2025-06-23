@@ -138,7 +138,7 @@ public class Main extends Application {
 
         Pane pane = new Pane( background );
         pane.getChildren().add(sunCounter);
-        GameManager g = new GameManager(pane , selectedCards);
+        GameManager g = new GameManager(pane , new SaveLoad(selectedCards));
 
         Label sunLabel = new Label("SunPoints: 0");
         sunLabel.setFont(new Font("Arial", 60));

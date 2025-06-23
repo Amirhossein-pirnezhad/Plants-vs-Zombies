@@ -14,27 +14,27 @@ public class Pea {
     protected Image peaImage;
     protected ImageView peaView;
     protected double speed;
-    protected Timeline shot;
+    protected Timeline shoot;
     protected Peashooter peashooter;
     protected boolean isAlive;
 
     public Pea(Peashooter peashooter){
         peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
         peaView = new ImageView(peaImage);
+        peaView.setLayoutX(peashooter.row * CELL_SIZE + START_X_GRID );
+        peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
         isAlive = true;
         this.peashooter = peashooter;
         animPea();
     }
 
     public void animPea(){
-        peaView.setLayoutX(peashooter.row * CELL_SIZE + START_X_GRID );
-        peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
-        shot = new Timeline(new KeyFrame(Duration.millis(10) , event -> {
+        shoot = new Timeline(new KeyFrame(Duration.millis(10) , event -> {
             if_touch_Zombie();
             peaView.setLayoutX(peaView.getLayoutX() + 2);
         }));
-        shot.setCycleCount(Animation.INDEFINITE);
-        shot.play();
+        shoot.setCycleCount(Animation.INDEFINITE);
+        shoot.play();
     }
 
     protected void if_touch_Zombie(){
@@ -53,17 +53,25 @@ public class Pea {
 
     protected void dead(){
         isAlive = false;
-        shot = new Timeline(new KeyFrame(Duration.millis(500), event -> {//boom!
+        shoot = new Timeline(new KeyFrame(Duration.millis(500), event -> {//boom!
             peaView.setImage(new Image(getClass().getResourceAsStream("/Bullets/PeaNormalExplode/PeaNormalExplode_0.png")));
         }));
-        shot.setCycleCount(1);
-        shot.play();
-        shot = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {//for delete pea
+        shoot.setCycleCount(1);
+        shoot.play();
+        shoot = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {//for delete pea
             peashooter.getPeas().remove(this);
             GameManager.getPanePeas().getChildren().remove(peaView);
         }));
-        shot.setCycleCount(1);
-        shot.play();
+        shoot.setCycleCount(1);
+        shoot.play();
+    }
+
+    public void pause(){
+        if(shoot != null && shoot.getStatus() == Animation.Status.RUNNING)
+            shoot.stop();
+    }
+    public void resume(){
+        animPea();
     }
 
     public ImageView getPeaView() {

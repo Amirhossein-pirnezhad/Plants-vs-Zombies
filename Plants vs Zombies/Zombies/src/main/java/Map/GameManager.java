@@ -15,44 +15,51 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static Map.CardsType.*;
+import java.util.Scanner;
 
 public class GameManager {
     private static Pane background , panePlantVsZombie = new Pane() , panePeas = new Pane();
-    private static List<Zombie> zombies = new ArrayList<>();
-    private static List<Plant> plants = new ArrayList<>();
-    private static List<Sun> suns = new ArrayList<>();
+    private static List<Zombie> zombies;
+    private static List<Plant> plants;
+    private static List<Sun> suns;
     private GridPane gridPane;
     private static int map_row , map_col;
-    private static Cell[][] cells;
+    private static Cell[][] cells = new Cell[map_row][map_col];
     public static int sunPoint;
     private VBox plantMenuVBox;
     private static Label sunPointLabel;
     private static Cart savedCart = null;
     private Timeline game;
     private int timeLevel = 0;
+    private SaveLoad saveLoad;
 
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
 
 
-    public GameManager(Pane gamePane , List<Cart> selectedCards) {
-        this.selectedCards = selectedCards;
-        this.background = gamePane;
-        this.sunPoint = 0;
+    public GameManager(Pane gamePane , SaveLoad savedGame) {
+        saveLoad = savedGame;
+        selectedCards = savedGame.getSelectedCards();
+        background = gamePane;
+//        gridPane = savedGame.getGridPane();
         gridPane = new GridPane();
+        cells = savedGame.getCells();
+        zombies = savedGame.getZombies();
+        plants = savedGame.getPlants();
+        suns = savedGame.getSuns();
+        timeLevel = savedGame.getTimeLevel();
+        sunPoint = savedGame.getSunPoint();
         map_row = 9;
         map_col = 5;
-        cells = new Cell[map_row][map_col];
         gridPane.setTranslateX(Sizes.START_X_GRID);
         gridPane.setTranslateY(Sizes.START_Y_GRID);
         gridPane.setGridLinesVisible(true);
         buildMap();
         initializePlantMenu();
-
+        panePlantVsZombie.getChildren().add(saveLoad.getSave());
     }
 
 
@@ -98,14 +105,17 @@ public class GameManager {
     }
 
     public void buildMap(){
-        for (int i = 0; i < map_row; i++) {
-            for (int j = 0; j < map_col; j++) {
-                cells[i][j] = new Cell(i , j);
-                gridPane.add(cells[i][j] , i , j);
+//        if(cells[0][0] == null) {
+            for (int i = 0; i < map_row; i++) {
+                for (int j = 0; j < map_col; j++) {
+                    cells[i][j] = saveLoad.getCells()[i][j];
+                    gridPane.add(cells[i][j], i, j);
+                }
             }
-        }
+//        }
         panePlantVsZombie.getChildren().add(gridPane);
         gameAttack();
+
     }
 
     public void addZombie(Zombie z) {
@@ -144,6 +154,32 @@ public class GameManager {
                     choice(finalI , finalJ);
                 });
             }
+        }
+        saveLoad.getSave().setOnAction(event -> {
+            saveLoad = new SaveLoad(selectedCards);
+//            saveLoad.setGridPane(gridPane);
+            saveLoad.setTimeLevel(timeLevel);
+            saveLoad.setZombies(zombies);
+            saveLoad.setPlants(plants);
+            saveLoad.setSuns(suns);
+            saveLoad.setCells(cells);
+            saveLoad.setSunPoint(sunPoint);
+            SaveGame(saveLoad);
+        });
+    }
+
+    private void SaveGame(SaveLoad save){
+        try {
+
+            FileOutputStream fileOut = new FileOutputStream(String.valueOf(getClass().getResourceAsStream("/Plants/save.txt")));
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(save);
+            objectOut.flush();
+            objectOut.close();
+            fileOut.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

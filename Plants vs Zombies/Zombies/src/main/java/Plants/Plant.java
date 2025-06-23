@@ -4,9 +4,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
+import java.io.Serializable;
+
 import static Map.Cell.cell_size;
 
-public abstract class Plant extends StackPane {
+public abstract class Plant extends StackPane implements Serializable {
     protected int HP;
     protected Image[] plantImage;
     protected ImageView plantView;

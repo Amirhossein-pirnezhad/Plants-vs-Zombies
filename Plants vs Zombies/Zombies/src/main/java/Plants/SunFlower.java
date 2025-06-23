@@ -5,7 +5,6 @@ import Map.Sizes;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import static Map.Cell.cell_size;
 
@@ -54,5 +53,17 @@ public class SunFlower extends Plant{
         System.out.println("plant dead");
         GameManager.removePlant(this);
         plantView.setOnMouseClicked(null);//don't click again
+    }
+
+    public void pause(){
+        if (anim != null && anim.getStatus() == Animation.Status.RUNNING)
+            anim.stop();
+        if (buildSun != null && buildSun.getStatus() == Animation.Status.RUNNING)
+            buildSun.stop();
+    }
+
+    public void resume(){
+        animSunFlower();
+        buildSun();
     }
 }
