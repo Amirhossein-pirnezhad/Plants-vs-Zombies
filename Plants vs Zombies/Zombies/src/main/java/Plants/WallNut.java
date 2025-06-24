@@ -12,10 +12,10 @@ import static Map.Cell.cell_size;
 
 public class WallNut extends Plant{
     protected final int initialHp = 15;
-    protected Timeline hpGood;
+    protected transient Timeline hpGood;
     protected int frame = 0;
-    protected Image[] wallCracked1;
-    protected Image[] wallCracked2;
+    protected transient Image[] wallCracked1;
+    protected transient Image[] wallCracked2;
 
     public WallNut(int row, int col) {
         super(row, col);
@@ -81,6 +81,10 @@ public class WallNut extends Plant{
     }
 
     public void resume(){
+        setImage("/Plants/WallNut/WallNut/WallNut_" , 15);
+        this.getChildren().addAll(plantView);
+        wallCracked1 = setImageCracked("/Plants/WallNut/WallNut_cracked1/WallNut_cracked1_" , 10);
+        wallCracked2 = setImageCracked("/Plants/WallNut/WallNut_cracked2/WallNut_cracked2_" , 14);
         animWallNut();
     }
 }

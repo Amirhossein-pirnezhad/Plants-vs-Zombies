@@ -10,7 +10,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
@@ -18,9 +17,10 @@ public class Cart{
     private ImageView imageView;
     private final CardsType plantType;
     private int price ;
-    private ScheduledExecutorService scheduler;
+    private Timeline scheduler;
     private Timeline recharge;
     private int rechargeTime;
+    private int timer;
     private boolean isReady;
     private boolean isAdded;
     public BorderPane borderPane;
@@ -57,13 +57,18 @@ public class Cart{
 
     public void startRechargeTimer() {
         isReady = false;
-        scheduler = Executors.newScheduledThreadPool(1);
+        scheduler = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
+            timer ++;
+            if(timer == rechargeTime) {
+                isReady = true;
+                border.setFill(Color.GREEN);
+                System.out.println("isReady" + plantType);
+                scheduler.stop();
+            }
+        }));
+        scheduler.setCycleCount(rechargeTime);
+        scheduler.play();
         animCharging();
-        scheduler.schedule(() -> {
-            isReady = true;
-            border.setFill(Color.GREEN);
-            System.out.println("isReady" + plantType);
-        }, rechargeTime, TimeUnit.SECONDS);
     }
 
     public void animCharging() {
@@ -92,12 +97,6 @@ public class Cart{
         return plantType;
     }
 
-    public void stopTimer() {
-        if (scheduler != null) {
-            scheduler.shutdown();
-        }
-    }
-
     public void setAdded(boolean added) {
         isAdded = added;
     }
@@ -116,5 +115,13 @@ public class Cart{
 
     public Rectangle getBorder() {
         return border;
+    }
+
+    public int getTimer() {
+        return timer;
+    }
+
+    public void setTimer(int timer) {
+        this.timer = timer;
     }
 }

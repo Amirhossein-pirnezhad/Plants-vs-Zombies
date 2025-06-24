@@ -4,6 +4,10 @@ import Plants.*;
 import Zombies.ImpZombie;
 import Zombies.ScreenDoorZombie;
 import javafx.animation.Animation;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import Zombies.ConeheadZombie;
@@ -13,6 +17,8 @@ import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
@@ -156,31 +162,61 @@ public class GameManager {
             }
         }
         saveLoad.getSave().setOnAction(event -> {
-            saveLoad = new SaveLoad(selectedCards);
-//            saveLoad.setGridPane(gridPane);
-            saveLoad.setTimeLevel(timeLevel);
-            saveLoad.setZombies(zombies);
-            saveLoad.setPlants(plants);
-            saveLoad.setSuns(suns);
-            saveLoad.setCells(cells);
-            saveLoad.setSunPoint(sunPoint);
-            SaveGame(saveLoad);
+            initialSaveGame();
         });
     }
 
-    private void SaveGame(SaveLoad save){
-        try {
+    private void SaveGame(SaveLoad save , String path){
+        try (FileOutputStream fileOut = new FileOutputStream(path + ".txt");
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);){
 
-            FileOutputStream fileOut = new FileOutputStream(String.valueOf(getClass().getResourceAsStream("/Plants/save.txt")));
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(save);
             objectOut.flush();
             objectOut.close();
             fileOut.close();
+            System.out.println("Saving");
 
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void initialSaveGame(){
+        for(Zombie z : zombies)
+            z.pause();
+        for (Plant p : plants)
+            p.pause();
+        for (Sun s : suns){
+            s.pause();
+        }
+
+        saveLoad = new SaveLoad(selectedCards);
+        saveLoad.setTimeLevel(timeLevel);
+        saveLoad.setZombies(zombies);
+        saveLoad.setPlants(plants);
+        saveLoad.setSuns(suns);
+        saveLoad.setCells(cells);
+        saveLoad.setSunPoint(sunPoint);
+        getSaveName(saveLoad);
+    }
+
+    private void getSaveName(SaveLoad saveLoad){
+        Stage stage = new Stage();
+        stage.setTitle("Save");
+        Button enter = new Button("Enter");
+        Text text = new Text("Please enter your save's name\nthen press enter");
+        TextField textField = new TextField();
+        textField.setPromptText("Please enter your save's name:");
+        Scene scene = new Scene(new Pane(text , textField , enter));
+        stage.setScene(scene);
+        stage.show();
+        enter.setOnAction(event -> {
+            if(textField.getText() != ""){
+                SaveGame(saveLoad , textField.getText());
+                stage.close();
+                System.exit(0);
+            }
+        });
     }
 
     private void choice(int i , int j){

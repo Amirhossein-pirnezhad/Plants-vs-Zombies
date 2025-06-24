@@ -10,8 +10,8 @@ import static Map.Cell.cell_size;
 
 public abstract class Plant extends StackPane implements Serializable {
     protected int HP;
-    protected Image[] plantImage;
-    protected ImageView plantView;
+    protected transient Image[] plantImage;
+    protected transient ImageView plantView;
     protected int row , col;
     protected boolean isAlive;
 
@@ -34,6 +34,10 @@ public abstract class Plant extends StackPane implements Serializable {
     }
 
     public abstract void dead();
+
+    public abstract void pause();
+
+    public abstract void resume();
 
     public void setHP(int HP) {
         this.HP = HP;

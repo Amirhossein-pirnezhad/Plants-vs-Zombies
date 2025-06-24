@@ -11,8 +11,8 @@ import java.io.Serializable;
 
 public class Cell extends StackPane implements Serializable {
     private int row , col;
-    public Rectangle border;
-    private ImageView cellView;
+    public  Rectangle border;
+    private transient ImageView cellView;
     public static double cell_size = Sizes.CELL_SIZE;
     private Plant plant;
 

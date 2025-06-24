@@ -8,13 +8,16 @@ import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+
+import java.io.Serializable;
+
 import static Map.Sizes.*;
 
-public class Pea {
-    protected Image peaImage;
-    protected ImageView peaView;
-    protected double speed;
-    protected Timeline shoot;
+public class Pea implements Serializable {
+    protected transient Image peaImage;
+    protected transient ImageView peaView;
+    protected double x;
+    protected transient Timeline shoot;
     protected Peashooter peashooter;
     protected boolean isAlive;
 
@@ -69,8 +72,14 @@ public class Pea {
     public void pause(){
         if(shoot != null && shoot.getStatus() == Animation.Status.RUNNING)
             shoot.stop();
+        x = peaView.getLayoutX();
     }
+
     public void resume(){
+        peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
+        peaView = new ImageView(peaImage);
+        peaView.setLayoutX(x);
+        peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
         animPea();
     }
 

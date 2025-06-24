@@ -15,13 +15,13 @@ import java.util.List;
 public class SaveLoad extends StackPane implements Serializable {
 //    private GridPane gridPane;
     private static Cell[][] cells;
-    private List<Cart> selectedCards = new ArrayList<>();
+    private transient List<Cart> selectedCards = new ArrayList<>();
     private List<Zombie> zombies;
     private List<Plant> plants;
     private List<Sun> suns;
     private int sunPoint;
     private int timeLevel;
-    private Button save;
+    private transient Button save;
 
     public SaveLoad(List<Cart> selectedCards){
         this.selectedCards = selectedCards;

@@ -10,8 +10,8 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 public class CherryBomb extends Plant{
-    protected Timeline timerBomb;
-    protected Timeline dead;
+    protected transient Timeline timerBomb;
+    protected transient Timeline dead;
     protected boolean isBoom = false;
     protected double timer = 20;
     protected int frame = 0;
@@ -95,6 +95,7 @@ public class CherryBomb extends Plant{
     }
 
     public void resume(){
+        setImage("/Plants/CherryBomb/CherryBomb_" , 7);
         bomb();
     }
 }

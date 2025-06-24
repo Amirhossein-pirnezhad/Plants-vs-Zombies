@@ -9,8 +9,8 @@ import javafx.util.Duration;
 import static Map.Cell.cell_size;
 
 public class SunFlower extends Plant{
-    protected Timeline buildSun;
-    protected Timeline anim;
+    protected transient Timeline buildSun;
+    protected transient Timeline anim;
     private int timeBuild = 10;
 
     public SunFlower(int row, int col) {
@@ -63,6 +63,7 @@ public class SunFlower extends Plant{
     }
 
     public void resume(){
+        setImage("/Plants/SunFlower/SunFlower_" , 18);
         animSunFlower();
         buildSun();
     }

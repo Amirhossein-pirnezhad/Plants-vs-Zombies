@@ -13,8 +13,8 @@ import static Map.Cell.cell_size;
 
 public class Peashooter extends Plant{
     protected ArrayList<Pea> peas = new ArrayList<>();
-    protected Timeline shoot;
-    protected Timeline animPeashooter;
+    protected transient Timeline shoot;
+    protected transient Timeline animPeashooter;
     protected int peaInCircle;
     protected double secondInCircle = 1.5;
     protected boolean isPauses;
@@ -29,11 +29,6 @@ public class Peashooter extends Plant{
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
         this.getChildren().addAll(plantView);
-        this.plantView.setOnMouseClicked(event -> {
-            if(!isPauses)
-                pause();
-            else resume();
-        });
         animPeashooter();
     }
 
@@ -107,6 +102,10 @@ public class Peashooter extends Plant{
 
     public void resume(){
         isPauses = false;
+        setImage("/Plants/Peashooter/Peashooter_" , 13);
+        plantView.setFitHeight(cell_size * 0.75);
+        plantView.setFitWidth(cell_size * 0.75);
+        this.getChildren().addAll(plantView);
         animPeashooter();
         for(Pea p : peas){
             p.resume();

@@ -14,8 +14,8 @@ import static Map.Cell.cell_size;
 import static Map.GameManager.sunPoint;
 
 public class Sun extends Plant{
-    private Timeline lifeTimeline;
-    private Timeline animTimeline;
+    private transient Timeline lifeTimeline;
+    private transient Timeline animTimeline;
     private int point = 50;
     private int lifeTime = 10;
 
@@ -86,6 +86,8 @@ public class Sun extends Plant{
     }
 
     public void resume(){
+        setImage("/Plants/Sun/Sun_" , 22);
+        this.getChildren().add(plantView);
         animSun();
         startLifeTime();
     }
