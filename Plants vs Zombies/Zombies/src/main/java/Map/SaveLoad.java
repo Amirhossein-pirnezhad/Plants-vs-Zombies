@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SaveLoad extends StackPane implements Serializable {
-//    private GridPane gridPane;
-    private static Cell[][] cells;
     private transient List<Cart> selectedCards = new ArrayList<>();
     private List<Zombie> zombies;
     private List<Plant> plants;
@@ -25,8 +23,6 @@ public class SaveLoad extends StackPane implements Serializable {
 
     public SaveLoad(List<Cart> selectedCards){
         this.selectedCards = selectedCards;
-//        gridPane = new GridPane();
-        cells = new Cell[GameManager.getMap_row()][GameManager.getMap_col()];
         zombies = new ArrayList<>();
         plants = new ArrayList<>();
         suns = new ArrayList<>();
@@ -34,19 +30,6 @@ public class SaveLoad extends StackPane implements Serializable {
         timeLevel = 0;
         save = new Button("Save");
         this.getChildren().add(save);
-        for (int i = 0; i < GameManager.getMap_row(); i++) {
-            for (int j = 0; j < GameManager.getMap_col(); j++) {
-                cells [i][j] = new Cell(i,j);
-            }
-        }
-    }
-
-//    public void setGridPane(GridPane gridPane) {
-//        this.gridPane = gridPane;
-//    }
-
-    public static void setCells(Cell[][] cells) {
-        SaveLoad.cells = cells;
     }
 
     public void setZombies(List<Zombie> zombies) {
@@ -97,11 +80,4 @@ public class SaveLoad extends StackPane implements Serializable {
         return selectedCards;
     }
 
-    public static Cell[][] getCells() {
-        return cells;
-    }
-
-//    public GridPane getGridPane() {
-//        return gridPane;
-//    }
 }

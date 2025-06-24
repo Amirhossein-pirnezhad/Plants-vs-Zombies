@@ -33,7 +33,7 @@ public class GameManager {
     private static List<Sun> suns;
     private GridPane gridPane;
     private static int map_row , map_col;
-    private static Cell[][] cells = new Cell[map_row][map_col];
+    private static Cell[][] cells;
     public static int sunPoint;
     private VBox plantMenuVBox;
     private static Label sunPointLabel;
@@ -50,9 +50,7 @@ public class GameManager {
         saveLoad = savedGame;
         selectedCards = savedGame.getSelectedCards();
         background = gamePane;
-//        gridPane = savedGame.getGridPane();
         gridPane = new GridPane();
-        cells = savedGame.getCells();
         zombies = savedGame.getZombies();
         plants = savedGame.getPlants();
         suns = savedGame.getSuns();
@@ -60,11 +58,15 @@ public class GameManager {
         sunPoint = savedGame.getSunPoint();
         map_row = 9;
         map_col = 5;
+        cells = new Cell[map_row][map_col];
         gridPane.setTranslateX(Sizes.START_X_GRID);
         gridPane.setTranslateY(Sizes.START_Y_GRID);
         gridPane.setGridLinesVisible(true);
         buildMap();
         initializePlantMenu();
+        for (Plant p : plants){
+            cells[p.getRow()][p.getCol()].setPlant(p);
+        }
         panePlantVsZombie.getChildren().add(saveLoad.getSave());
     }
 
@@ -111,14 +113,12 @@ public class GameManager {
     }
 
     public void buildMap(){
-//        if(cells[0][0] == null) {
             for (int i = 0; i < map_row; i++) {
                 for (int j = 0; j < map_col; j++) {
-                    cells[i][j] = saveLoad.getCells()[i][j];
+                    cells[i][j] = new Cell(i , j);
                     gridPane.add(cells[i][j], i, j);
                 }
             }
-//        }
         panePlantVsZombie.getChildren().add(gridPane);
         gameAttack();
 
@@ -168,8 +168,7 @@ public class GameManager {
 
     private void SaveGame(SaveLoad save , String path){
         try (FileOutputStream fileOut = new FileOutputStream(path + ".txt");
-             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);){
-
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)){
             objectOut.writeObject(save);
             objectOut.flush();
             objectOut.close();
@@ -195,7 +194,6 @@ public class GameManager {
         saveLoad.setZombies(zombies);
         saveLoad.setPlants(plants);
         saveLoad.setSuns(suns);
-        saveLoad.setCells(cells);
         saveLoad.setSunPoint(sunPoint);
         getSaveName(saveLoad);
     }
@@ -207,7 +205,11 @@ public class GameManager {
         Text text = new Text("Please enter your save's name\nthen press enter");
         TextField textField = new TextField();
         textField.setPromptText("Please enter your save's name:");
-        Scene scene = new Scene(new Pane(text , textField , enter));
+        BorderPane borderPane = new BorderPane(textField);
+        borderPane.setTop(text);
+        borderPane.setBottom(enter);
+
+        Scene scene = new Scene(borderPane);
         stage.setScene(scene);
         stage.show();
         enter.setOnAction(event -> {

@@ -16,6 +16,10 @@ import javafx.stage.Stage;
 import Zombies.*;
 import Map.*;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +54,8 @@ public class Main extends Application {
     public void initializeCardSelection() {
         Stage stage = new Stage();
         Button button = new Button("Start Game");
+        Button loading = new Button("load");
+
         cardSelectionPane = new Pane();
         Scene scene = new Scene(cardSelectionPane);
         stage.setScene(scene);
@@ -72,7 +78,7 @@ public class Main extends Application {
         ImageView frame = new ImageView(new Image(getClass().getResourceAsStream("/Screen/PanelBackground.png")));
         frame.setScaleX(1.5);
         frame.setScaleY(1.5);
-        cardSelectionPane.getChildren().addAll(frame , button);
+        cardSelectionPane.getChildren().addAll(frame , button ,loading);
 
         double[][] positions = {
                 {50, 50}, {150, 50}, {250, 50}, {350, 50}, {450, 50},
@@ -119,14 +125,29 @@ public class Main extends Application {
         }
         button.setOnAction(event -> {
             if(selectedCards.size() == 6) {
-                Game(selectedCards);
+                Game(selectedCards , new SaveLoad(selectedCards));
                 stage.close();
             }
 
         });
+        loading.setOnAction(event -> {
+            SaveLoad saveLoad;
+            try (FileInputStream fileOut = new FileInputStream("game.txt");
+                 ObjectInputStream objectOut = new ObjectInputStream(fileOut)){
+
+                saveLoad = (SaveLoad) objectOut.readObject();
+                objectOut.close();
+                fileOut.close();
+                System.out.println("loading");
+                Game(selectedCards , saveLoad);
+                stage.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
     }
 
-    private void Game(List<Cart> selectedCards){
+    private void Game(List<Cart> selectedCards , SaveLoad saveLoad){
         Stage primaryStage = new Stage();
 
         ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/Items/Background/Background_0.jpg")));
@@ -138,7 +159,7 @@ public class Main extends Application {
 
         Pane pane = new Pane( background );
         pane.getChildren().add(sunCounter);
-        GameManager g = new GameManager(pane , new SaveLoad(selectedCards));
+        GameManager g = new GameManager(pane , saveLoad);
 
         Label sunLabel = new Label("SunPoints: 0");
         sunLabel.setFont(new Font("Arial", 60));
