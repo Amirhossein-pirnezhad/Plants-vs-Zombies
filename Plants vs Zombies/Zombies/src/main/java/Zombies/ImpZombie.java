@@ -21,11 +21,11 @@ public class ImpZombie extends Zombie{
     @Override
     protected void deadZombie(){
         isAlive = false;
-        if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
+        if(runZombie != null && (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
         }
-        if(eating != null || (eating.getStatus() == Animation.Status.RUNNING)){
-            eating.stop();
+        if(getDamage != null && (getDamage.getStatus() == Animation.Status.RUNNING)){
+            getDamage.stop();
         }
         zombieDei = setZombieImages("/Zombies/Imp/ZombieDie/" , 22);
 

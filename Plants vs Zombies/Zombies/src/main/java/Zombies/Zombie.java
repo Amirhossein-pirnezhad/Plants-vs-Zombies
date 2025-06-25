@@ -28,7 +28,6 @@ public class Zombie implements Serializable {
     protected transient ImageView zombieView;
     protected transient Timeline deadZombie;
     protected transient Timeline runZombie;
-    protected transient Timeline eating = new Timeline();
     protected transient Timeline boomDieZombie;
     protected transient Timeline getDamage;
     protected boolean isAttacking;
@@ -64,6 +63,7 @@ public class Zombie implements Serializable {
     }
 
     public void run(){
+        getDamage = null;
         runZombie = new Timeline();
         runZombie.setCycleCount(Timeline.INDEFINITE);
         final int[] frameIndex = new int[1];
@@ -102,49 +102,46 @@ public class Zombie implements Serializable {
     public void speedIsHalf(){
         isSpeedHalf = true;
         speed = speed/2;
+        zombieImages = null;
         zombieImages = setZombieImages("/Zombies/NormalZombie/ZombieIce/Zombie_" , 22);
     }
 
     protected void attackZombie(){
-        if (eating != null && eating.getStatus() == Animation.Status.RUNNING) return;
+        if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) return;
         isAttacking = true;
+        zombieImages = null;
+        runZombie.stop();
+        runZombie = null;
         zombieAttack = setZombieImages("/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" , 21);
 
         final int[] frameIndex = new int[1];
-
-        eating = new Timeline(new KeyFrame(Duration.millis(70) , event -> {//animation eating
-            if(isAlive) {
-                if (HP <= 0) {
-                    eating.stop();
-                    deadZombie();
-                }
-                zombieView.setImage(zombieAttack[frameIndex[0]]);
-                frameIndex[0] = (frameIndex[0] + 1) % zombieAttack.length;
-            }
-        }));
-        eating.setCycleCount(Animation.INDEFINITE);
-        eating.play();
-
-        getDamage = new Timeline(new KeyFrame(Duration.seconds(1), e -> {//get damage plant
+        final double[] time = {0};
+        getDamage = new Timeline(new KeyFrame(Duration.millis(70), e -> {//get damage plant
+            time[0] += 0.07;
                 if (targetPlant != null && targetPlant.isAlive()) {
                     if(isAlive && mode == EATING) {
                         if (HP <= 0) {
                             mode = DEAD;
-                            eating.stop();
+                            zombieAttack = null;
                             getDamage.stop();
                             deadZombie();
                         }
-                        targetPlant.setHP(targetPlant.getHP() - 1);
-                        System.out.println("eating :" + getDamage.getCycleCount());
+                        zombieView.setImage(zombieAttack[frameIndex[0]]);
+                        frameIndex[0] = (frameIndex[0] + 1) % zombieAttack.length;
+                        if((int)(time[0] + 0.07) > (int) time[0]) {
+                            targetPlant.setHP(targetPlant.getHP() - 1);
+                            System.out.println("eating :" + getDamage.getCycleCount());
+                        }
                     }
                 }
             else{
-                mode = RUN;
-                isAttacking = false;
-                targetPlant = null;
-                zombieAttack = null;
-                eating.stop();
-                getDamage.stop();
+                    mode = RUN;
+                    isAttacking = false;
+                    targetPlant = null;
+                    zombieAttack = null;
+                    getDamage.stop();
+                    zombieImages = setZombieImages("/Zombies/NormalZombie/Zombie/Zombie_" , 22);
+                    run();
                 }
         }));
         getDamage.setCycleCount(Animation.INDEFINITE);
@@ -164,12 +161,17 @@ public class Zombie implements Serializable {
 
     protected void deadZombie(){
         isAlive = false;
-        if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
+        if(runZombie != null && (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
         }
-        if(eating != null || (eating.getStatus() == Animation.Status.RUNNING)){
-            eating.stop();
+        if(getDamage != null && (getDamage.getStatus() == Animation.Status.RUNNING)){
+           getDamage.stop();
         }
+        runZombie = null;
+        getDamage = null;
+        zombieAttack = null;
+        zombieImages = null;
+
         zombieDei = setZombieImages("/Zombies/NormalZombie/ZombieDie/ZombieDie_" , 10);
 
         Image[] zombieLostHead = setZombieImages("/Zombies/NormalZombie/ZombieHead/ZombieHead_" , 11);//anim lost head
@@ -196,6 +198,8 @@ public class Zombie implements Serializable {
         Timeline dead = new Timeline(new KeyFrame(Duration.millis(200 * zombieDei.length) , event -> {
             GameManager.getZombies().remove(this);
             GameManager.getPanePlantVsZombie().getChildren().removeAll(zombieView, lostHead);
+            zombieImages = null;
+            zombieDei = null;
         }));
         dead.setCycleCount(1);
         dead.play();
@@ -205,12 +209,19 @@ public class Zombie implements Serializable {
         isAlive = false;
         if(runZombie != null && (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
+            runZombie = null;
         }
-        if(deadZombie  != null && deadZombie.getStatus() == Animation.Status.RUNNING)
+        if(deadZombie  != null && deadZombie.getStatus() == Animation.Status.RUNNING) {
             deadZombie.stop();
-        if(eating.getStatus() == Animation.Status.RUNNING)
-            eating.stop();
+            deadZombie = null;
+        }
+        if(getDamage.getStatus() == Animation.Status.RUNNING) {
+            getDamage.stop();
+            getDamage = null;
+        }
 
+        zombieAttack = null;
+        zombieImages = null;
         zombieDei = setZombieImages("/Zombies/NormalZombie/BoomDie/BoomDie_" , 19);
 
         final int[] frame = new int[]{0};
@@ -225,6 +236,8 @@ public class Zombie implements Serializable {
         Timeline dead = new Timeline(new KeyFrame(Duration.millis(200 * zombieDei.length) , event -> {
             GameManager.getZombies().remove(this);
             GameManager.getPanePlantVsZombie().getChildren().removeAll(zombieView);
+            zombieImages = null;
+            zombieDei = null;
         }));
         dead.setCycleCount(1);
         dead.play();
@@ -233,9 +246,6 @@ public class Zombie implements Serializable {
     public void pause(){
         if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
-        }
-        if(eating != null || (eating.getStatus() == Animation.Status.RUNNING)){
-            eating.stop();
         }
         if(deadZombie != null ){
             deadZombie.stop();
