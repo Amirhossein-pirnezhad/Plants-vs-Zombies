@@ -9,9 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 
 public class Cart{
     private ImageView imageView;

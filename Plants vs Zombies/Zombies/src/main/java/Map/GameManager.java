@@ -24,13 +24,12 @@ import javafx.util.Duration;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class GameManager {
     private static Pane background , panePlantVsZombie = new Pane() , panePeas = new Pane();
-    private static List<Zombie> zombies;
-    private static List<Plant> plants;
-    private static List<Sun> suns;
+    private static List<Zombie> zombies = new ArrayList<>();
+    private static List<Plant> plants = new ArrayList<>();
+    private static List<Sun> suns = new ArrayList<>();
     private GridPane gridPane;
     private static int map_row , map_col;
     private static Cell[][] cells;
@@ -41,6 +40,7 @@ public class GameManager {
     private Timeline game;
     private int timeLevel = 0;
     private SaveLoad saveLoad;
+    private Button save;
 
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
@@ -51,9 +51,6 @@ public class GameManager {
         selectedCards = savedGame.getSelectedCards();
         background = gamePane;
         gridPane = new GridPane();
-        zombies = savedGame.getZombies();
-        plants = savedGame.getPlants();
-        suns = savedGame.getSuns();
         timeLevel = savedGame.getTimeLevel();
         sunPoint = savedGame.getSunPoint();
         map_row = 9;
@@ -63,11 +60,22 @@ public class GameManager {
         gridPane.setTranslateY(Sizes.START_Y_GRID);
         gridPane.setGridLinesVisible(true);
         buildMap();
-        initializePlantMenu();
-        for (Plant p : plants){
+//        initializePlantMenu();
+        for (Sun s : suns){
+            s.resume();
+            addSun(s , s.getRow() , s.getCol());
+        }
+        for(Zombie z : savedGame.getZombies()){
+            z.resume();
+            addZombie(z);
+        }
+        for (Plant p : savedGame.getPlants()){
+            p.resume();
+            addPlant(p);
             cells[p.getRow()][p.getCol()].setPlant(p);
         }
-        panePlantVsZombie.getChildren().add(saveLoad.getSave());
+        save = new Button("Save");
+        panePlantVsZombie.getChildren().add(save);
     }
 
 
@@ -161,7 +169,7 @@ public class GameManager {
                 });
             }
         }
-        saveLoad.getSave().setOnAction(event -> {
+        save.setOnAction(event -> {
             initialSaveGame();
         });
     }

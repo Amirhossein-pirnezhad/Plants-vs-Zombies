@@ -64,6 +64,7 @@ public class Zombie implements Serializable {
 
     public void run(){
         getDamage = null;
+        zombieAttack = null;
         runZombie = new Timeline();
         runZombie.setCycleCount(Timeline.INDEFINITE);
         final int[] frameIndex = new int[1];
@@ -130,16 +131,17 @@ public class Zombie implements Serializable {
                         frameIndex[0] = (frameIndex[0] + 1) % zombieAttack.length;
                         if((int)(time[0] + 0.07) > (int) time[0]) {
                             targetPlant.setHP(targetPlant.getHP() - 1);
-                            System.out.println("eating :" + getDamage.getCycleCount());
+                            System.out.println("eating :" + mode);
                         }
                     }
                 }
             else{
+                    System.out.println("finish eating");
                     mode = RUN;
                     isAttacking = false;
                     targetPlant = null;
-                    zombieAttack = null;
                     getDamage.stop();
+                    getDamage  = null;
                     zombieImages = setZombieImages("/Zombies/NormalZombie/Zombie/Zombie_" , 22);
                     run();
                 }
@@ -244,7 +246,7 @@ public class Zombie implements Serializable {
     }
 
     public void pause(){
-        if(runZombie != null || (runZombie.getStatus() == Animation.Status.RUNNING)){
+        if(runZombie != null && (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
         }
         if(deadZombie != null ){

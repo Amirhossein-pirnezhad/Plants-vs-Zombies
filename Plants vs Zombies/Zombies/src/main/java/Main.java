@@ -7,19 +7,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import Zombies.*;
 import Map.*;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,19 +102,7 @@ public class Main extends Application {
                     selectedView.setFitWidth(80);
                     selectedView.setFitHeight(100);
                     selectedCardsBox.getChildren().add(selectedView);
-
-//                    if (selectedCards.size() == 6) {
-//                        background.getChildren().remove(cardSelectionPane);
-//                        background.getChildren().remove(selectedCardsBox);
-//                        if (onCardsSelected != null) onCardsSelected.run();
-//                    }
                 }
-//                else if(card.isAdded()){
-//                    card.setAdded(false);
-//                    selectedCards.remove(card);
-//                    selectedCardsBox.getChildren().remove(cardView);
-//                    System.out.println("deleting");
-//                }
             });
 
             cardSelectionPane.getChildren().add(cardView);

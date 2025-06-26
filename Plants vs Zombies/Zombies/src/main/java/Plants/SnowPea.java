@@ -6,16 +6,13 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+import static Map.Cell.cell_size;
+
 public class SnowPea extends Peashooter{
 
     public SnowPea(int row, int col) {
         super(row, col);
         setImage("/Plants/SnowPea/SnowPea_" , 15);
-        this.plantView.setOnMouseClicked(event -> {
-            if(!isPauses)
-                pause();
-            else resume();
-        });
     }
 
     @Override
@@ -33,5 +30,18 @@ public class SnowPea extends Peashooter{
             }));
         shoot.setCycleCount(Animation.INDEFINITE);
         shoot.play();
+    }
+
+    @Override
+    public void resume(){
+        isPauses = false;
+        setImage("/Plants/SnowPea/SnowPea_" , 15);
+        plantView.setFitHeight(cell_size * 0.75);
+        plantView.setFitWidth(cell_size * 0.75);
+        this.getChildren().addAll(plantView);
+        animPeashooter();
+        for(Pea p : peas){
+            p.resume();
+        }
     }
 }

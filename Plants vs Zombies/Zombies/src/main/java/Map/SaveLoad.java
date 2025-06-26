@@ -19,7 +19,6 @@ public class SaveLoad extends StackPane implements Serializable {
     private List<Sun> suns;
     private int sunPoint;
     private int timeLevel;
-    private transient Button save;
 
     public SaveLoad(List<Cart> selectedCards){
         this.selectedCards = selectedCards;
@@ -28,8 +27,7 @@ public class SaveLoad extends StackPane implements Serializable {
         suns = new ArrayList<>();
         sunPoint = 0;
         timeLevel = 0;
-        save = new Button("Save");
-        this.getChildren().add(save);
+
     }
 
     public void setZombies(List<Zombie> zombies) {
@@ -50,10 +48,6 @@ public class SaveLoad extends StackPane implements Serializable {
 
     public void setTimeLevel(int timeLevel) {
         this.timeLevel = timeLevel;
-    }
-
-    public Button getSave() {
-        return save;
     }
 
     public int getSunPoint() {
