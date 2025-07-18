@@ -14,8 +14,12 @@ public class ImpZombie extends Zombie{
         HP = 3;
         speed = cell_size / 2;
         distance = 10;
-        zombieImages = setZombieImages("/Zombies/Imp/ZombieWalk/" , 33);
-        zombieAttack = setZombieImages("/Zombies/Imp/ZombieAttack/" , 26);
+        imgPath = "/Zombies/Imp/ZombieWalk/";
+        imgPathAttack = "/Zombies/Imp/ZombieAttack/";
+        imgLen = 33;
+        imgAttackLen = 26;
+        zombieImages = setZombieImages(imgPath , imgLen);
+        zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
     }
 
     @Override
@@ -46,4 +50,16 @@ public class ImpZombie extends Zombie{
         dead.setCycleCount(1);
         dead.play();
     }
+
+//    @Override
+//    public void resume(){
+//        zombieView = new ImageView();
+//        if(!isSpeedHalf)
+//            zombieImages = setZombieImages("/Zombies/Imp/ZombieWalk/" , 33);
+//        else zombieImages = setZombieImages("/Zombies/ConeheadZombie/ConeheadZombieIce/ConeheadZombie_" , 21);
+//        zombieAttack = setZombieImages("/Zombies/Imp/ZombieAttack/" , 26);
+//        zombieView.setLayoutX(x + Sizes.CELL_SIZE);
+//        zombieView.setLayoutY(col * cell_size + 30);
+//        run();
+//    }
 }

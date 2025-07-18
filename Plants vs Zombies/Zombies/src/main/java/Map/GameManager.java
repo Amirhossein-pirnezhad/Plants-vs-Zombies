@@ -40,7 +40,8 @@ public class GameManager {
     private Timeline game;
     private int timeLevel = 0;
     private SaveLoad saveLoad;
-    private Button save;
+    private Button save , pause , resume;
+    private Game_Timer game_timer;
 
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
@@ -48,6 +49,9 @@ public class GameManager {
 
     public GameManager(Pane gamePane , SaveLoad savedGame) {
         saveLoad = savedGame;
+        for(Cart cart : savedGame.getSelectedCards()){
+            cart.repair();
+        }
         selectedCards = savedGame.getSelectedCards();
         background = gamePane;
         gridPane = new GridPane();
@@ -60,7 +64,7 @@ public class GameManager {
         gridPane.setTranslateY(Sizes.START_Y_GRID);
         gridPane.setGridLinesVisible(true);
         buildMap();
-//        initializePlantMenu();
+        initializePlantMenu();
         for (Sun s : suns){
             s.resume();
             addSun(s , s.getRow() , s.getCol());
@@ -75,7 +79,16 @@ public class GameManager {
             cells[p.getRow()][p.getCol()].setPlant(p);
         }
         save = new Button("Save");
-        panePlantVsZombie.getChildren().add(save);
+        pause = new Button("Pause");
+        resume = new Button("resume");
+        VBox vBox = new VBox(save , pause , resume);
+        panePlantVsZombie.getChildren().add(vBox);
+        game_timer = new Game_Timer(timeLevel);
+        StackPane timerBar = game_timer.getClip();
+        timerBar.setLayoutX(100);
+        timerBar.setLayoutY(50);
+        panePlantVsZombie.getChildren().add(timerBar);
+        sunPoint = 1000;
     }
 
 
@@ -169,24 +182,46 @@ public class GameManager {
                 });
             }
         }
+        for (Zombie z : zombies){
+            if (z.getZombieView().getLayoutX() < Sizes.START_X_GRID)
+                lose();
+        }
         save.setOnAction(event -> {
+            game.stop();
             initialSaveGame();
+        });
+        pause.setOnAction(event -> {
+            for (Zombie z : zombies)
+                z.pause();
+        });
+        resume.setOnAction(event -> {
+            for (Zombie z : zombies)
+                z.resume();
         });
     }
 
-    private void SaveGame(SaveLoad save , String path){
-        try (FileOutputStream fileOut = new FileOutputStream(path + ".txt");
-             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)){
-            objectOut.writeObject(save);
-            objectOut.flush();
-            objectOut.close();
-            fileOut.close();
-            System.out.println("Saving");
+    private void SaveGame(SaveLoad save, String fileName) {
+        try {
+            File dir = new File("saves");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
 
-        }catch (Exception e){
+            File file = new File(dir, fileName + ".txt");
+
+            try (FileOutputStream fileOut = new FileOutputStream(file);
+                 ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+
+                objectOut.writeObject(save);
+                objectOut.flush();
+                System.out.println("save" + file.getAbsolutePath());
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     private void initialSaveGame(){
         for(Zombie z : zombies)
@@ -290,7 +325,6 @@ public class GameManager {
     private void gameAttack(){
         game = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
             timeLevel ++;
-            System.out.println("Start!!!!");
             if(timeLevel > 3 && timeLevel <=15){
                 if(timeLevel % 3 == 0){
                     spawnZombie(1);
@@ -313,6 +347,13 @@ public class GameManager {
         }));
         game.setCycleCount(Animation.INDEFINITE);
         game.play();
+    }
+
+    private void lose(){
+        game.stop();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("You lost!");
+
     }
 
     public void spawnSun(){

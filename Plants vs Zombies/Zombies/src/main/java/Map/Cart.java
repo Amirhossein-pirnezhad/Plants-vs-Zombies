@@ -9,22 +9,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import java.io.Serializable;
 
-public class Cart{
-    private ImageView imageView;
+
+public class Cart implements Serializable {
+    private transient ImageView imageView;
     private final CardsType plantType;
     private int price ;
-    private Timeline scheduler;
-    private Timeline recharge;
+    private transient Timeline scheduler;
+    private transient Timeline recharge;
     private int rechargeTime;
-    private int timer;
+    private int timer = 0;
     private boolean isReady;
     private boolean isAdded;
-    public BorderPane borderPane;
-    private Rectangle border;
+    public transient BorderPane borderPane;
+    private transient Rectangle border;
+    private double x;
+    private double width = 160;
 
 
-    public Cart(CardsType cardsType, Image image) {
+    public Cart(CardsType cardsType) {
+        Image image = new Image(getClass().getResourceAsStream("/Cards/" + cardsType.toString() + ".png"));
         isAdded = false;
         plantType = cardsType;
         switch (cardsType){
@@ -54,10 +59,10 @@ public class Cart{
 
     public void startRechargeTimer() {
         isReady = false;
-        timer = 0;
         scheduler = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
             timer ++;
             if(timer == rechargeTime) {
+                timer = 0;
                 isReady = true;
                 border.setFill(Color.GREEN);
                 System.out.println("isReady" + plantType);
@@ -80,6 +85,22 @@ public class Cart{
         }));
         recharge.setCycleCount(cycle);
         recharge.play();
+    }
+
+    public void repair(){
+        Image image = new Image(getClass().getResourceAsStream("/Cards/" + plantType + ".png"));
+        imageView = new ImageView(image);
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(image.getHeight() * (width / image.getWidth()));
+        imageView.setPreserveRatio(true);
+
+        border= new Rectangle(width * (timer / rechargeTime), 10);
+        border.setY(imageView.getFitHeight() );
+        border.setFill(Color.RED);
+        border.setStroke(Color.BLACK);
+
+        borderPane = new BorderPane(imageView);
+        this.borderPane.setBottom(border);
     }
 
 

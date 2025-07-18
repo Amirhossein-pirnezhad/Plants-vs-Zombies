@@ -109,6 +109,7 @@ public class Peashooter extends Plant{
         animPeashooter();
         for(Pea p : peas){
             p.resume();
+            GameManager.getPanePeas().getChildren().add(p.getPeaView());
         }
     }
 

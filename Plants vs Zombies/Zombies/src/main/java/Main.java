@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import Map.*;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -82,10 +83,9 @@ public class Main extends Application {
         };
         int k = -1;
         for (CardsType c : CardsType.values()) {
-            Image img = new Image(getClass().getResourceAsStream("/Cards/" + c.toString() + ".png"));
-            Cart card = new Cart(c, img);
+            Cart card = new Cart(c);
 
-            ImageView cardView = new ImageView(img);
+            ImageView cardView = card.getCardImageView();
             cardView.setFitWidth(80);
             cardView.setFitHeight(100);
             cardView.setLayoutX(positions[++k][0]);
@@ -116,7 +116,10 @@ public class Main extends Application {
         });
         loading.setOnAction(event -> {
             SaveLoad saveLoad;
-            try (FileInputStream fileOut = new FileInputStream("game.txt");
+            File dir = new File("saves");
+            File file = new File(dir,  "ni.txt");
+            System.out.println(file.getAbsolutePath());
+            try (FileInputStream fileOut = new FileInputStream(file);
                  ObjectInputStream objectOut = new ObjectInputStream(fileOut)){
 
                 saveLoad = (SaveLoad) objectOut.readObject();

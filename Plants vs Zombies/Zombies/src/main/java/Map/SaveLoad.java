@@ -3,9 +3,6 @@ package Map;
 import Plants.Plant;
 import Plants.Sun;
 import Zombies.Zombie;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import java.io.Serializable;
@@ -13,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SaveLoad extends StackPane implements Serializable {
-    private transient List<Cart> selectedCards = new ArrayList<>();
+    private List<Cart> selectedCards = new ArrayList<>();
     private List<Zombie> zombies;
     private List<Plant> plants;
     private List<Sun> suns;
@@ -27,7 +24,6 @@ public class SaveLoad extends StackPane implements Serializable {
         suns = new ArrayList<>();
         sunPoint = 0;
         timeLevel = 0;
-
     }
 
     public void setZombies(List<Zombie> zombies) {
