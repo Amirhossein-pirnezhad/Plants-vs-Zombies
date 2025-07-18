@@ -1,5 +1,7 @@
 package Plants;
 
+import Map.GameManager;
+
 import static Map.Cell.cell_size;
 
 public class Repeater extends Peashooter{
@@ -19,6 +21,9 @@ public class Repeater extends Peashooter{
         animPeashooter();
         for(Pea p : peas){
             p.resume();
+            GameManager.getPanePeas().getChildren().addAll(p.getPeaView());
         }
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 }

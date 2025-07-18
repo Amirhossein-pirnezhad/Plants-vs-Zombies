@@ -37,7 +37,7 @@ public class Cell extends StackPane {
         plant = null;
     }
 
-    private void setCellView(ImageView cellView) {
+    public void setCellView(ImageView cellView) {
         this.cellView = cellView;
         this.getChildren().add(cellView);
     }

@@ -102,15 +102,17 @@ public class Peashooter extends Plant{
 
     public void resume(){
         isPauses = false;
+        GameManager.getCells()[row][col].removePlant();
         setImage("/Plants/Peashooter/Peashooter_" , 13);
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
-        this.getChildren().addAll(plantView);
+//        this.getChildren().addAll(plantView);
         animPeashooter();
         for(Pea p : peas){
             p.resume();
-            GameManager.getPanePeas().getChildren().add(p.getPeaView());
+            GameManager.getPanePeas().getChildren().addAll(p.getPeaView());
         }
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
     public ArrayList<Pea> getPeas() {

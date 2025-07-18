@@ -81,10 +81,12 @@ public class WallNut extends Plant{
     }
 
     public void resume(){
+        GameManager.getCells()[row][col].removePlant();
         setImage("/Plants/WallNut/WallNut/WallNut_" , 15);
         this.getChildren().addAll(plantView);
         wallCracked1 = setImageCracked("/Plants/WallNut/WallNut_cracked1/WallNut_cracked1_" , 10);
         wallCracked2 = setImageCracked("/Plants/WallNut/WallNut_cracked2/WallNut_cracked2_" , 14);
         animWallNut();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 }

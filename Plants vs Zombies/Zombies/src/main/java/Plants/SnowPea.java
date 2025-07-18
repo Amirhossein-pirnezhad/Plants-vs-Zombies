@@ -42,6 +42,9 @@ public class SnowPea extends Peashooter{
         animPeashooter();
         for(Pea p : peas){
             p.resume();
+            GameManager.getPanePeas().getChildren().addAll(p.getPeaView());
         }
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 }

@@ -22,7 +22,7 @@ public class CherryBomb extends Plant{
         isPauses = false;
         HP = Integer.MAX_VALUE;
         setImage("/Plants/CherryBomb/CherryBomb_" , 7);
-        bomb();
+        bomb(0);
         plantView.setOnMouseClicked(event -> {
             if(!isPauses)
                 pause();
@@ -30,11 +30,11 @@ public class CherryBomb extends Plant{
         });
     }
 
-    private void bomb(){
+    protected void bomb(int frame){
             timerBomb = new Timeline(new KeyFrame(Duration.millis(200) , e ->{
                 changeImage(plantImage);
             }));
-            timerBomb.setCycleCount(plantImage.length);
+            timerBomb.setCycleCount(plantImage.length - frame);
             timerBomb.play();
             dead();
     }
@@ -74,7 +74,7 @@ public class CherryBomb extends Plant{
         }));
         timeline.setCycleCount(1);
 
-        dead = new Timeline(new KeyFrame(Duration.millis(500) , event -> {
+        dead = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
             if(timerBomb.getStatus() != Animation.Status.RUNNING) {
                 setAnimDie();
                 killZombie();
@@ -95,7 +95,9 @@ public class CherryBomb extends Plant{
     }
 
     public void resume(){
+        GameManager.getCells()[row][col].removePlant();
         setImage("/Plants/CherryBomb/CherryBomb_" , 7);
-        bomb();
+        bomb(frame);
+        GameManager.getCells()[row][col].setPlant(this);
     }
 }

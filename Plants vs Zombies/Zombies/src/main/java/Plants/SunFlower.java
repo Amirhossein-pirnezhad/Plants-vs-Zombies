@@ -11,7 +11,8 @@ import static Map.Cell.cell_size;
 public class SunFlower extends Plant{
     protected transient Timeline buildSun;
     protected transient Timeline anim;
-    private int timeBuild = 10;
+    private final int timeBuild = 10;
+    private int time;
 
     public SunFlower(int row, int col) {
         super(row, col);
@@ -36,8 +37,12 @@ public class SunFlower extends Plant{
     }
 
     private void buildSun(){
-        buildSun = new Timeline(new KeyFrame(Duration.seconds(timeBuild) , event -> {
-            GameManager.addSun(new Sun(col, row , cell_size * col + Sizes.START_Y_GRID ) , row , col);
+        buildSun = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
+            if(time == timeBuild) {
+                GameManager.addSun(new Sun(col, row, cell_size * col + Sizes.START_Y_GRID), row, col);
+                time = 0;
+            }
+            time++;
         }));
         buildSun.setCycleCount(Animation.INDEFINITE);
         buildSun.play();
@@ -63,8 +68,10 @@ public class SunFlower extends Plant{
     }
 
     public void resume(){
+        GameManager.getCells()[row][col].removePlant();
         setImage("/Plants/SunFlower/SunFlower_" , 18);
         animSunFlower();
         buildSun();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 }

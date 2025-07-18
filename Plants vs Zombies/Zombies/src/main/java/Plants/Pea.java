@@ -76,6 +76,8 @@ public class Pea implements Serializable {
     }
 
     public void resume(){
+        if(peaView != null)
+            GameManager.getPanePeas().getChildren().remove(peaView);
         peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
         peaView = new ImageView(peaImage);
         peaView.setLayoutX(x);

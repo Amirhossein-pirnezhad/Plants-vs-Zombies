@@ -1,18 +1,25 @@
 package Plants;
 
+import Map.GameManager;
 import Zombies.Zombie;
 
 public class Jalapeno extends CherryBomb{
     public Jalapeno(int row, int col) {
         super(row, col);
         setImage("/Plants/Jalapeno/Jalapeno/Jalapeno_" , 8);
-
-//        setImage("/Plants/Jalapeno/JalapenoExplode/JalapenoExplode_" , 8);
     }
 
     @Override
     protected boolean isKilled(Zombie z){
         return ((z.getCol() == col));
+    }
+
+    @Override
+    public void resume(){
+        GameManager.getCells()[row][col].removePlant();
+        setImage("/Plants/Jalapeno/Jalapeno/Jalapeno_" , 8);
+        bomb(frame);
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
 //    @Override

@@ -193,10 +193,18 @@ public class GameManager {
         pause.setOnAction(event -> {
             for (Zombie z : zombies)
                 z.pause();
+            for(Plant p : plants)
+                p.pause();
+            for(Sun s : suns)
+                s.pause();
         });
         resume.setOnAction(event -> {
             for (Zombie z : zombies)
                 z.resume();
+            for(Plant p : plants)
+                p.resume();
+            for(Sun s : suns)
+                s.resume();
         });
     }
 
