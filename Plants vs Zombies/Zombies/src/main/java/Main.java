@@ -2,11 +2,16 @@
 import Plants.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -115,22 +120,7 @@ public class Main extends Application {
 
         });
         loading.setOnAction(event -> {
-            SaveLoad saveLoad;
-            File dir = new File("saves");
-            File file = new File(dir,  "ni.txt");
-            System.out.println(file.getAbsolutePath());
-            try (FileInputStream fileOut = new FileInputStream(file);
-                 ObjectInputStream objectOut = new ObjectInputStream(fileOut)){
-
-                saveLoad = (SaveLoad) objectOut.readObject();
-                objectOut.close();
-                fileOut.close();
-                System.out.println("loading");
-                Game(selectedCards , saveLoad);
-                stage.close();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            createLoadMenu();
         });
     }
 
@@ -164,21 +154,6 @@ public class Main extends Application {
         Scene scene = new Scene(pane);
 
         GameManager.setSunPointLabel(sunLabel);
-
-//        g.addPlant(p);
-//        g.addPlant(p2);
-//        System.out.println(p.getPlantView().getLayoutX());
-//        g.addZombie(new ImpZombie(3));
-//        g.addPlant(new Peashooter(7 , 4));
-//        g.addPlant(new Peashooter(6,3));
-//        g.addPlant(new SnowPea(1 , 4));
-//        g.addPlant(new WallNut(4 , 4));
-//        g.addPlant(new WallNut(7 , 0));
-//        g.addPlant(new SunFlower(0 , 0));
-//        g.addPlant(new SunFlower(4 , 1));
-//        g.addPlant(new CherryBomb(7 , 2));
-//        g.addPlant(new Jalapeno(1,0));
-//        g.addPlant(new TallNut(4 , 0));
         g.spawnSun();
 
         gameUpdate = new AnimationTimer() {//game loop
@@ -194,6 +169,84 @@ public class Main extends Application {
 
     }
 
+    private List<String> getSaveFiles() {
+        List<String> saveFiles = new ArrayList<>();
+        File dir = new File("saves");
+        if (dir.exists() && dir.isDirectory()) {
+            File[] files = dir.listFiles((d, name) -> name.endsWith(".txt"));
+            if (files != null) {
+                for (File file : files) {
+                    saveFiles.add(file.getName().replace(".txt", ""));
+                }
+            }
+        }
+        return saveFiles;
+    }
+
+    private void createLoadMenu() {
+        Stage loadStage = new Stage();
+        loadStage.setTitle("Load Game");
+        loadStage.setWidth(400);
+        loadStage.setHeight(500);
+
+        VBox loadMenu = new VBox(10);
+        loadMenu.setPadding(new Insets(20));
+        loadMenu.setAlignment(Pos.TOP_CENTER);
+
+        Label title = new Label("Select a save file to load:");
+        title.setFont(Font.font(20));
+
+        ListView<String> saveList = new ListView<>();
+        saveList.getItems().addAll(getSaveFiles());
+
+        Button loadButton = new Button("Load");
+        loadButton.setDisable(true);
+
+        saveList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            loadButton.setDisable(newVal == null);
+        });
+
+        loadButton.setOnAction(e -> {
+            String selectedSave = saveList.getSelectionModel().getSelectedItem();
+            if (selectedSave != null) {
+                loadGame(selectedSave);
+                loadStage.close();
+            }
+        });
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction(e -> loadStage.close());
+
+        HBox buttonBox = new HBox(10, loadButton, cancelButton);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        loadMenu.getChildren().addAll(title, saveList, buttonBox);
+
+        Scene scene = new Scene(loadMenu);
+        loadStage.setScene(scene);
+        loadStage.show();
+    }
+
+    private void loadGame(String saveName) {
+        SaveLoad saveLoad;
+        File file = new File("saves", saveName + ".txt");
+
+        try (FileInputStream fileIn = new FileInputStream(file);
+             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+
+            saveLoad = (SaveLoad) objectIn.readObject();
+            System.out.println("Loading game: " + saveName);
+            Game(saveLoad.getSelectedCards(), saveLoad);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to load game");
+            alert.setContentText("Could not load the selected save file.");
+            alert.showAndWait();
+        }
+    }
     public static void main(String[] args) {
         launch(args);
     }

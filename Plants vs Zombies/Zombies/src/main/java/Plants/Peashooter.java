@@ -112,7 +112,7 @@ public class Peashooter extends Plant{
             p.resume();
             GameManager.getPanePeas().getChildren().addAll(p.getPeaView());
         }
-        GameManager.getCells()[row][col].setPlant(this);
+        GameManager.addPlant(this);
     }
 
     public ArrayList<Pea> getPeas() {

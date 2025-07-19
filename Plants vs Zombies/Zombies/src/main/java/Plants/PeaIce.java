@@ -35,6 +35,8 @@ public class PeaIce extends Pea{
 
     @Override
     public void resume(){
+        if(peaView != null)
+            GameManager.getPanePeas().getChildren().remove(peaView);
         peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaIce/PeaIce_0.png"));
         peaView = new ImageView(peaImage);
         peaView.setLayoutX(x);

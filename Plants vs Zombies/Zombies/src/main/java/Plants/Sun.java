@@ -18,6 +18,7 @@ public class Sun extends Plant{
     private transient Timeline animTimeline;
     private int point = 50;
     private int lifeTime = 10;
+    private double x , y;
 
     public Sun(int row, int col , double sty) {
         super(row, col);
@@ -31,8 +32,8 @@ public class Sun extends Plant{
             lifeTimeline.stop();
             dead();
         });
-        plantView.setX(cell_size * col + Sizes.START_X_GRID);
-        plantView.setY(sty);
+        plantView.setLayoutX(cell_size * col + Sizes.START_X_GRID);
+        plantView.setLayoutY(sty);
 
         animSun();
         startLifeTime();
@@ -66,12 +67,11 @@ public class Sun extends Plant{
         animTimeline.setCycleCount(Timeline.INDEFINITE);
         final int[] frameIndex = new int[1];
 
-
         animTimeline.getKeyFrames().add(
                 new KeyFrame(Duration.millis(100), e -> {
                     plantView.setImage(plantImage[frameIndex[0]]);
-                    if(plantView.getY() < row * cell_size + Sizes.START_Y_GRID + 30)
-                        plantView.setY(plantView.getY() + 10);
+                    if(plantView.getLayoutY() < row * cell_size + Sizes.START_Y_GRID + 30)
+                        plantView.setLayoutY(plantView.getLayoutY() + 10);
                     frameIndex[0] = (frameIndex[0] + 1) % plantImage.length;
                 })
         );
@@ -83,11 +83,19 @@ public class Sun extends Plant{
             animTimeline.stop();
         if (lifeTimeline != null && lifeTimeline.getStatus() == Animation.Status.RUNNING)
             lifeTimeline.stop();
+        x = plantView.getLayoutX();
+        y = plantView.getLayoutY();
     }
 
     public void resume(){
+        if(plantView != null)
+            GameManager.getBackground().getChildren().remove(plantView);
         setImage("/Plants/Sun/Sun_" , 22);
         this.getChildren().add(plantView);
+        plantView.setLayoutX(x);
+        plantView.setLayoutY(y);
+        if(!GameManager.getBackground().getChildren().contains(plantView))
+            GameManager.getBackground().getChildren().add(plantView);
         animSun();
         startLifeTime();
     }

@@ -3,13 +3,12 @@ package Map;
 import Plants.Plant;
 import Plants.Sun;
 import Zombies.Zombie;
-import javafx.scene.layout.StackPane;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SaveLoad extends StackPane implements Serializable {
+public class SaveLoad implements Serializable {
     private List<Cart> selectedCards = new ArrayList<>();
     private List<Zombie> zombies;
     private List<Plant> plants;

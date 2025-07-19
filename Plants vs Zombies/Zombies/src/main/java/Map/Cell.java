@@ -33,8 +33,10 @@ public class Cell extends StackPane {
     }
 
     public void removePlant(){
-        getChildren().remove(plant.getPlantView());
-        plant = null;
+        if(plant != null) {
+            getChildren().remove(plant.getPlantView());
+            plant = null;
+        }
     }
 
     public void setCellView(ImageView cellView) {

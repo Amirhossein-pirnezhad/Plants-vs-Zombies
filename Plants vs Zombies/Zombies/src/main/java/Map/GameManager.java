@@ -37,7 +37,9 @@ public class GameManager {
     private VBox plantMenuVBox;
     private static Label sunPointLabel;
     private static Cart savedCart = null;
-    private Timeline game;
+    private Timeline game , tlSunBuild;
+    private final int timeBuildSun = 5;
+    private int timerSun;
     private int timeLevel = 0;
     private SaveLoad saveLoad;
     private Button save , pause , resume;
@@ -65,7 +67,7 @@ public class GameManager {
         gridPane.setGridLinesVisible(true);
         buildMap();
         initializePlantMenu();
-        for (Sun s : suns){
+        for (Sun s : savedGame.getSuns()){
             s.resume();
             addSun(s , s.getRow() , s.getCol());
         }
@@ -147,11 +149,12 @@ public class GameManager {
 
     public void addZombie(Zombie z) {
         zombies.add(z);
-        panePlantVsZombie.getChildren().add(z.getZombieView());
+        if(!panePlantVsZombie.getChildren().contains(z.getZombieView()))
+            panePlantVsZombie.getChildren().add(z.getZombieView());
         z.run();
     }
 
-    public void addPlant(Plant p) {
+    public static void addPlant(Plant p) {
         if(cells[p.getRow()][p.getCol()].canSetPlant()) {
             cells[p.getRow()][p.getCol()].setPlant(p);
             plants.add(p);
@@ -168,7 +171,8 @@ public class GameManager {
     public static void addSun(Sun sun , int row , int col){
         suns.add(sun);
         ImageView view = sun.getPlantView();
-        background.getChildren().add(view);
+        if(!background.getChildren().contains(view))
+            background.getChildren().add(view);
     }
 
     public void updateGame() {
@@ -187,25 +191,40 @@ public class GameManager {
                 lose();
         }
         save.setOnAction(event -> {
-            game.stop();
+            pauseGame();
             initialSaveGame();
         });
         pause.setOnAction(event -> {
-            for (Zombie z : zombies)
-                z.pause();
-            for(Plant p : plants)
-                p.pause();
-            for(Sun s : suns)
-                s.pause();
+            pauseGame();
         });
         resume.setOnAction(event -> {
-            for (Zombie z : zombies)
-                z.resume();
-            for(Plant p : plants)
-                p.resume();
-            for(Sun s : suns)
-                s.resume();
+            resumeGame();
         });
+    }
+
+    private void pauseGame(){
+        if(game != null && game.getStatus() == Animation.Status.RUNNING)
+            game.stop();
+        if (tlSunBuild != null && tlSunBuild.getStatus() == Animation.Status.RUNNING)
+            tlSunBuild.stop();
+
+        for (Zombie z : zombies)
+            z.pause();
+        for(Plant p : plants)
+            p.pause();
+        for(Sun s : suns)
+            s.pause();
+    }
+
+    private void resumeGame(){
+        gameAttack();
+        spawnSun();
+        for (Zombie z : zombies)
+            z.resume();
+        for(Plant p : plants)
+            p.resume();
+        for(Sun s : suns)
+            s.resume();
     }
 
     private void SaveGame(SaveLoad save, String fileName) {
@@ -232,14 +251,6 @@ public class GameManager {
 
 
     private void initialSaveGame(){
-        for(Zombie z : zombies)
-            z.pause();
-        for (Plant p : plants)
-            p.pause();
-        for (Sun s : suns){
-            s.pause();
-        }
-
         saveLoad = new SaveLoad(selectedCards);
         saveLoad.setTimeLevel(timeLevel);
         saveLoad.setZombies(zombies);
@@ -361,18 +372,21 @@ public class GameManager {
         game.stop();
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("You lost!");
-
     }
 
     public void spawnSun(){
-        Timeline tlSun = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
-            int row = (int)(Math.random() * 100) % 5;
-            int col = (int)(Math.random() * 100) % 9;
-            Sun s = new Sun(row , col , 0);
-            addSun(s , row , col);
+        tlSunBuild = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if(timerSun == timeBuildSun) {
+                int row = (int) (Math.random() * 100) % 5;
+                int col = (int) (Math.random() * 100) % 9;
+                Sun s = new Sun(row, col, 0);
+                addSun(s, row, col);
+                timerSun = -1;
+            }
+            timerSun ++;
         }));
-        tlSun.setCycleCount(Timeline.INDEFINITE);
-        tlSun.play();
+        tlSunBuild.setCycleCount(Timeline.INDEFINITE);
+        tlSunBuild.play();
     }
 
     public static void addImageView(ImageView imageView){

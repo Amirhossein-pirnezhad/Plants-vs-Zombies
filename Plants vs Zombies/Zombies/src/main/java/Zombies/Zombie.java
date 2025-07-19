@@ -96,8 +96,8 @@ public class Zombie implements Serializable {
                             attackZombie();
                         }
                     }
-                    else if(mode == EATING && (targetPlant = if_touch_plant()) != null) attackZombie();
-                    else if (mode == DEAD) deadZombie();
+                    else if(isAlive && mode == EATING && (targetPlant = if_touch_plant()) != null) attackZombie();
+                    else if (isAlive && mode == DEAD) deadZombie();
                 })
 
         );
@@ -105,6 +105,8 @@ public class Zombie implements Serializable {
     }
 
     public void speedIsHalf(){
+        if(isSpeedHalf)
+            return;
         isSpeedHalf = true;
         speed = speed/2;
         zombieImages = null;
@@ -164,6 +166,8 @@ public class Zombie implements Serializable {
     }
 
     protected void deadZombie(){
+        if((deadZombie != null && deadZombie.getStatus() == Animation.Status.RUNNING))
+            return;
         isAlive = false;
         if(runZombie != null && (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
@@ -196,7 +200,7 @@ public class Zombie implements Serializable {
         Timeline dead = new Timeline(new KeyFrame(Duration.millis(200 * zombieDei.length) , event -> {
             GameManager.getZombies().remove(this);
             GameManager.getPanePlantVsZombie().getChildren().removeAll(zombieView, lostHead);
-            zombieDei = null;
+//            zombieDei = null;
             runZombie = null;
             getDamage = null;
             zombieAttack = null;
@@ -236,6 +240,8 @@ public class Zombie implements Serializable {
             GameManager.getZombies().remove(this);
             GameManager.getPanePlantVsZombie().getChildren().removeAll(zombieView);
             zombieDei = null;
+            runZombie = null;
+            getDamage = null;
             zombieAttack = null;
             zombieImages = null;
         }));
@@ -277,9 +283,9 @@ public class Zombie implements Serializable {
                 GameManager.getPanePlantVsZombie().getChildren().remove(zombieView);
             mode = state.getZombieType();
             HP = state.getHP();
-            this.speed = state.getSpeed();
+            speed = state.getSpeed();
             distance = 1;
-            this.col = state.getCol();
+            col = state.getCol();
             isSpeedHalf = state.isSpeedHalf();
             isAlive = state.isAlive();
             imgPath = state.getImgPath();
@@ -300,18 +306,10 @@ public class Zombie implements Serializable {
             zombieView.setLayoutY(col * cell_size + 30);
 
             switch (mode) {
-                case RUN:
-                    run();
-                    break;
-                case EATING:
-                    attackZombie();
-                    break;
-                case DEAD:
-                    deadZombie();
-                    break;
-                default:
-                    mode = RUN;
-                    break;
+                case RUN: run();            break;
+                case EATING: attackZombie();break;
+                case DEAD: deadZombie();    break;
+                default: mode = RUN;        break;
             }
         }
     }
@@ -395,5 +393,9 @@ public class Zombie implements Serializable {
 
     public int getImgDieLen() {
         return imgDieLen;
+    }
+
+    public void setState(ZombieState state) {
+        this.state = state;
     }
 }
