@@ -12,6 +12,7 @@ import javafx.util.Duration;
 import static Map.Cell.cell_size;
 import static Map.GameManager.sunPoint;
 
+
 public class Sun extends Plant{
     private Timeline lifeTimeline;
     private Timeline animTimeline;

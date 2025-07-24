@@ -21,18 +21,20 @@ public class Main extends Application {
     private AnimationTimer gameUpdate;
     @Override
     public void start(Stage primaryStage) {
+
         Zombie z = new Zombie( 4);
 //        ConeheadZombie z2 = new ConeheadZombie( 0);
+
         ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/Items/Background/Background_0.jpg")));
         background.setFitHeight(Sizes.SCREEN_HEIGHT);
         background.setFitWidth(Sizes.SCREEN_WIDTH);
         ImageView sunCounter = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Sun/sunCounter.png")));
         sunCounter.setFitHeight(90);
         sunCounter.setFitWidth(250);
-
         System.out.println(Sizes.SCREEN_HEIGHT);
         System.out.println(Sizes.SCREEN_WIDTH);
-        Pane pane = new Pane( background , z.getZombieView()  );
+
+        Pane pane = new Pane( background , z.getZombieView() );
         pane.getChildren().add(sunCounter);
 
         Label sunLabel = new Label("SunPoints: 0");
@@ -46,8 +48,17 @@ public class Main extends Application {
         Peashooter p = new Peashooter(0,1);
         Repeater p2 = new Repeater(0 , 2);
         GameManager g = new GameManager(pane);
-
         GameManager.setSunPointLabel(sunLabel);
+
+//Runnable runnable = new Runnable() {
+//    @Override
+//    public void run() {
+//        System.out.println("runnable");
+//
+//    }
+//};
+//        g.initializeCardSelection(runnable);
+        g.initializeCardSelection();
 
         Scene scene = new Scene(GameManager.getGamePane() , 800 , 600);
         g.spawnZombie();

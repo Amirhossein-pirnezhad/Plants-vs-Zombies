@@ -33,16 +33,17 @@ public class GameManager {
     private GridPane cardSelectionGrid;
     private VBox selectedCardsBox;
     private List<Cart> selectedCards = new ArrayList<>();
-    private Runnable onCardsSelectedCallback;
+ //   private Runnable onCardsSelectedCallback;
     private Pane cardSelectionPane;
 
-    public void initializeCardSelection(Runnable onCardsSelected) {
+    public void initializeCardSelection() {
         cardSelectionPane = new Pane();
         cardSelectionPane.setPrefSize(600, 400);
-        cardSelectionPane.setLayoutX(100);
-        cardSelectionPane.setLayoutY(100);
+        cardSelectionPane.setLayoutX(580);
+        cardSelectionPane.setLayoutY(300);
 
-        ImageView frame = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Sun/Sun_2.png")));
+
+        ImageView frame = new ImageView(new Image(getClass().getResourceAsStream("/Cards/cardSelection.png")));
         frame.setFitWidth(600);
         frame.setFitHeight(400);
         cardSelectionPane.getChildren().add(frame);
@@ -52,9 +53,10 @@ public class GameManager {
                 {50, 200}, {150, 200}, {250, 200}, {350, 200}, {450, 200}
         };
 
+        Image img = null;
         for (int i = 0; i < 10; i++) {
-            String cardName = "card" + (i + 1);
-            Image img = new Image(getClass().getResourceAsStream("/Plants/Sun/Sun_" + i + ".png"));
+            String cardName = "card_" + i;
+            img = new Image(getClass().getResourceAsStream("/Cards/card_" + i + ".png"));
             Cart card = new Cart(cardName, img);
 
             ImageView cardView = new ImageView(img);
@@ -66,6 +68,7 @@ public class GameManager {
             cardView.setOnMouseClicked(e -> {
                 if (selectedCards.size() < 5 && !selectedCards.contains(card)) {
                     selectedCards.add(card);
+                    System.out.println(card.getPrice());
 
                     ImageView selectedView = new ImageView(card.getCardImage());
                     selectedView.setFitWidth(80);
@@ -74,8 +77,12 @@ public class GameManager {
 
                     if (selectedCards.size() == 5) {
                         gamePane.getChildren().remove(cardSelectionPane);
-                        gamePane.getChildren().remove(selectedCardsBox);
-                        if (onCardsSelected != null) onCardsSelected.run();
+                        //    gamePane.getChildren().remove(selectedCardsBox);
+                        for (Cart cards : selectedCards) {
+                            card.startRechargeTimer();
+                        }
+
+                        //         if (onCardsSelected != null) onCardsSelected.run();
                     }
                 }
             });
@@ -83,19 +90,28 @@ public class GameManager {
             cardSelectionPane.getChildren().add(cardView);
         }
 
-        selectedCardsBox = new VBox(10);
+        selectedCardsBox = new VBox(5);
         selectedCardsBox.setPrefWidth(150);
-        selectedCardsBox.setLayoutX(20);
-        selectedCardsBox.setLayoutY(100);
-        selectedCardsBox.setStyle("-fx-background-color: rgba(200,200,200,0.7); -fx-padding: 10; -fx-border-color: black;");
+        selectedCardsBox.setLayoutX(0);
+        selectedCardsBox.setLayoutY(90);
+        selectedCardsBox.setStyle(
+                "-fx-background-color: #8B4513;" +
+                        "-fx-background-radius: 12;" +
+                        "-fx-border-radius: 12;" +
+                        "-fx-padding: 10;" +
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);"
+        );
 
-        gamePane.getChildren().addAll(cardSelectionPane, selectedCardsBox);
+
+        gamePane.getChildren().add(cardSelectionPane);
+        gamePane.getChildren().add(selectedCardsBox);
     }
 
 
 
     public GameManager(Pane gamePane) {
         this.gamePane = gamePane;
+        this.cardSelectionPane = cardSelectionPane;
         this.sunPoint = 0;
         gridPane = new GridPane();
         map_row = 9;
@@ -106,7 +122,6 @@ public class GameManager {
         gridPane.setGridLinesVisible(true);
         buildMap();
         initializePlantMenu();
-
     }
 
 
