@@ -1,5 +1,5 @@
 
-import Plants.*;
+import Plants.NightPlant.PuffShroom;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -144,12 +144,16 @@ public class Main extends Application {
         sunLabel.setLayoutX(110);
         sunLabel.setLayoutY(7);
         pane.getChildren().add(sunLabel);
+        GameManager.addPlant(new PuffShroom(2 , 3));
 
 
         pane.getChildren().addAll(
             GameManager.getPanePeas() ,
                 GameManager.getPanePlantVsZombie()
         );
+        pane.setOnMouseClicked(event -> {
+            System.out.println("Pane clicked at X = " + event.getX() + ", Y = " + event.getY());
+        });
 
         Scene scene = new Scene(pane);
 

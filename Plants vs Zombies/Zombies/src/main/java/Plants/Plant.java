@@ -1,5 +1,6 @@
 package Plants;
 
+import Map.Sizes;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -14,11 +15,16 @@ public abstract class Plant extends StackPane implements Serializable {
     protected transient ImageView plantView;
     protected int row , col;
     protected boolean isAlive;
+    protected double x , y;
 
     public Plant(int row , int col){
         this.row = row;
         this.col = col;
         isAlive = true;
+        x = (row + 0.5) * Sizes.CELL_SIZE + Sizes.START_X_GRID;
+        y = (col + 0.5) * Sizes.CELL_SIZE + Sizes.START_Y_GRID;
+        System.out.println(x);
+        System.out.println(y);
     }
     protected void setImage(String path , int len){
         plantImage = new Image[len];

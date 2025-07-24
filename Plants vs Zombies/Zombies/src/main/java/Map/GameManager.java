@@ -62,8 +62,8 @@ public class GameManager {
         map_row = 9;
         map_col = 5;
         cells = new Cell[map_row][map_col];
-        gridPane.setTranslateX(Sizes.START_X_GRID);
-        gridPane.setTranslateY(Sizes.START_Y_GRID);
+        gridPane.setLayoutX(Sizes.START_X_GRID);
+        gridPane.setLayoutY(Sizes.START_Y_GRID);
         gridPane.setGridLinesVisible(true);
         buildMap();
         initializePlantMenu();
