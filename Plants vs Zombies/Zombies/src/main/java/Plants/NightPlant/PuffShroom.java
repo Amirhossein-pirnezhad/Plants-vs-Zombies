@@ -29,9 +29,9 @@ public class PuffShroom extends Peashooter {
         plantView.setFitWidth(cell_size * 0.8);
     }
     @Override
-    protected boolean if_Zombie_exist(){
+    protected boolean if_Zombie_exist(){//only 4 house after
         for (Zombie z : GameManager.getZombies()){
-            if(z.getCol() == col && (z.getZombieView().getLayoutX() - (row * Sizes.CELL_SIZE + Sizes.START_X_GRID)) > 4 * Sizes.CELL_SIZE)
+            if(z.getCol() == col && ((z.getZombieView().getLayoutX() - (row * Sizes.CELL_SIZE + Sizes.START_X_GRID)) < 4 * Sizes.CELL_SIZE))
                 return true;
         }
         return false;

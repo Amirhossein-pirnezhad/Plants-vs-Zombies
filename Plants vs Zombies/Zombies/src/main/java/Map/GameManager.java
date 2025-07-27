@@ -4,6 +4,8 @@ import Plants.*;
 import Zombies.ImpZombie;
 import Zombies.ScreenDoorZombie;
 import javafx.animation.Animation;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -17,6 +19,7 @@ import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -38,11 +41,11 @@ public class GameManager {
     private static Label sunPointLabel;
     private static Cart savedCart = null;
     private Timeline game , tlSunBuild;
-    private final int timeBuildSun = 5;
+    private final int timeBuildSun = 5 , timeLevel1 = 60;
     private int timerSun;
     private int timeLevel = 0;
     private SaveLoad saveLoad;
-    private Button save , pause , resume;
+    private Button save , pause , resume ,menuButton;
     private Game_Timer game_timer;
 
     private List<Cart> selectedCards = new ArrayList<>();
@@ -80,16 +83,28 @@ public class GameManager {
             addPlant(p);
             cells[p.getRow()][p.getCol()].setPlant(p);
         }
-        save = new Button("Save");
-        pause = new Button("Pause");
-        resume = new Button("resume");
-        VBox vBox = new VBox(save , pause , resume);
-        panePlantVsZombie.getChildren().add(vBox);
+
+        menuButton = new Button("menu");
+        menuButton.setPrefSize(170, 25);
+        menuButton.setStyle(
+                "-fx-background-color: #8B4513;" +
+                        "-fx-background-radius: 12;" +
+                        "-fx-border-radius: 12;" +
+                        "-fx-padding: 10;" +
+                        "-fx-text-fill: white;"+
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);"
+        );
+        Font adventureFont = Font.loadFont(getClass().getResourceAsStream("/fonts/Wonderland_3.ttf"), 40);
+
+        menuButton.setFont(adventureFont);
+        menuButton.setOnAction(e -> showMenuOptions());
+
+        panePlantVsZombie.getChildren().add(menuButton);
         game_timer = new Game_Timer(timeLevel);
         StackPane timerBar = game_timer.getClip();
         timerBar.setLayoutX(100);
         timerBar.setLayoutY(50);
-        panePlantVsZombie.getChildren().add(timerBar);
+//        panePlantVsZombie.getChildren().add(timerBar);
         sunPoint = 1000;
     }
 
@@ -190,16 +205,6 @@ public class GameManager {
             if (z.getZombieView().getLayoutX() < Sizes.START_X_GRID)
                 lose();
         }
-        save.setOnAction(event -> {
-            pauseGame();
-            initialSaveGame();
-        });
-        pause.setOnAction(event -> {
-            pauseGame();
-        });
-        resume.setOnAction(event -> {
-            resumeGame();
-        });
     }
 
     private void pauseGame(){
@@ -385,12 +390,48 @@ public class GameManager {
             }
             timerSun ++;
         }));
-        tlSunBuild.setCycleCount(Timeline.INDEFINITE);
+        tlSunBuild.setCycleCount(timeLevel1);
         tlSunBuild.play();
     }
 
-    public static void addImageView(ImageView imageView){
-        background.getChildren().add(imageView);
+    private void showMenuOptions() {
+        pauseGame();
+
+        Stage menuStage = new Stage();
+        menuStage.setTitle("Game Menu");
+
+        Button saveButton = new Button("Save Game");
+        Button resumeButton = new Button("Resume Game");
+        Button exitButton = new Button("Exit Game");
+
+        String buttonStyle = "-fx-background-color: #8B4513; -fx-text-fill: white; -fx-font-size: 16; -fx-padding: 10;";
+        saveButton.setStyle(buttonStyle);
+        resumeButton.setStyle(buttonStyle);
+        exitButton.setStyle(buttonStyle);
+
+        saveButton.setOnAction(e -> {
+            initialSaveGame();
+            menuStage.close();
+        });
+
+        resumeButton.setOnAction(e -> {
+            resumeGame();
+            menuStage.close();
+        });
+
+        exitButton.setOnAction(e -> {
+            menuStage.close();
+            System.exit(0);
+        });
+
+        VBox vbox = new VBox(10, saveButton, resumeButton, exitButton);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+        vbox.setStyle("-fx-background-color: #f5f5dc;");
+
+        Scene scene = new Scene(vbox, 300, 200);
+        menuStage.setScene(scene);
+        menuStage.showAndWait();
     }
 
     public static Cell[][] getCells() {

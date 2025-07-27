@@ -53,6 +53,9 @@ public class Zombie implements Serializable {
         zombieDei = setZombieImages(imgPathDead , imgDieLen);
         zombieView.setLayoutX(1500);
         zombieView.setLayoutY(col * cell_size + 30);
+        zombieView.setOnMouseClicked(event -> {
+            System.out.println(zombieView.getLayoutX() + " ,"  +zombieView.getLayoutY());
+        });
     }
 
     protected Image[] setZombieImages(String path , int len){
@@ -265,17 +268,6 @@ public class Zombie implements Serializable {
         x = zombieView.getLayoutX();
         state = new ZombieState(this);
     }
-
-//    public void resume(){
-//        zombieView = new ImageView();
-//        if(!isSpeedHalf)
-//            zombieImages = setZombieImages(imgPath , 22);
-//        else zombieImages = setZombieImages(imgPath , 22);
-//        zombieAttack = setZombieImages(imgPathAttack , 21);
-//        zombieView.setLayoutX(x + Sizes.CELL_SIZE);
-//        zombieView.setLayoutY(col * cell_size + 30);
-//        run();
-//    }
 
     public void resume(){
         if(state != null) {

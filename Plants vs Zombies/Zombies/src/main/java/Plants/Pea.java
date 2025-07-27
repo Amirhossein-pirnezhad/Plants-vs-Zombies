@@ -29,6 +29,9 @@ public class Pea implements Serializable {
         isAlive = true;
         this.peashooter = peashooter;
         animPea();
+        peaView.setOnMouseClicked(event -> {
+            System.out.println("pea view x :" + peaView.getLayoutX() + "event: " + event.getX());
+        });
     }
 
     public void animPea(){
@@ -45,7 +48,7 @@ public class Pea implements Serializable {
             for (Zombie z : GameManager.getZombies()){
                 if(z.getCol() == peashooter.col && z.isAlive()){
                     if(Math.abs(peaView.getLayoutX() - z.getZombieView().getLayoutX()) < 5) {
-//                        System.out.println(peaView.getLayoutX());
+                        System.out.println(peaView.getLayoutX());
                         z.setHP(z.getHP() - 1); //zombie health
                         dead();
                         break;
