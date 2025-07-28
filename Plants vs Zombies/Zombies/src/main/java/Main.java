@@ -33,6 +33,8 @@ public class Main extends Application {
     private VBox selectedCardsBox;
     private List<Cart> selectedCards = new ArrayList<>();
     private Pane cardSelectionPane;
+
+    //init
     @Override
     public void start(Stage primaryStage) {
         startGame(primaryStage);
