@@ -2,6 +2,7 @@ package Zombies;
 
 import Map.GameManager;
 import Map.Sizes;
+import Plants.NightPlant.Grave;
 import Plants.Plant;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -160,12 +161,18 @@ public class Zombie implements Serializable {
     protected Plant if_touch_plant(){
         for (Plant p : GameManager.getPlants()){
             if(this.col == p.getCol()){
+                if (p.getClass() == Grave.class)
+                    continue;
                 if(Math.abs((p.getRow() * cell_size + Sizes.START_X_GRID) - this.zombieView.getLayoutX()) < distance){
                     return p;
                 }
             }
         }
         return null;
+    }
+
+    public void ice(){
+
     }
 
     protected void deadZombie(){
