@@ -31,7 +31,9 @@ public abstract class Plant extends StackPane implements Serializable {
         for (int i = 0; i < len; i++) {
             plantImage[i] = new Image(getClass().getResourceAsStream(path + i + ".png"));
         }
-        plantView = new ImageView(plantImage[0]);
+        if(plantView == null)
+            plantView = new ImageView(plantImage[0]);
+        else  plantView.setImage(plantImage[0]);
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
     }

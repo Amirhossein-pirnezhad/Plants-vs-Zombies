@@ -5,6 +5,7 @@ import Zombies.Zombie;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Peashooter extends Plant{
     protected int peaInCircle;
     protected double secondInCircle = 1.5;
     protected boolean isPauses;
+    protected int frame = 0;
 
 
     public Peashooter(int row, int col) {
@@ -51,18 +53,22 @@ public class Peashooter extends Plant{
             shooting();
             animPeashooter = new Timeline();
             animPeashooter.setCycleCount(Timeline.INDEFINITE);
-            final int[] frameIndex = new int[1];
 
             animPeashooter.getKeyFrames().add(
                     new KeyFrame(Duration.millis(100), e -> {
-                        plantView.setImage(plantImage[frameIndex[0]]);
                         if(HP <= 0){
                             dead();
                         }
-                        frameIndex[0] = (frameIndex[0] + 1) % plantImage.length;
+                        changeImage(plantImage);
                     })
             );
             animPeashooter.play();
+    }
+
+    protected void changeImage(Image[] images){
+        if(frame >= images.length) frame = 0;
+        plantView.setImage(images[frame]);
+        frame = (frame + 1) % images.length;
     }
 
     protected void shooting(){

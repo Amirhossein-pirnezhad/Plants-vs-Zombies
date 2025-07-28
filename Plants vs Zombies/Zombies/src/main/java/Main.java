@@ -1,5 +1,6 @@
 
 import Plants.NightPlant.PuffShroom;
+import Plants.NightPlant.ScaredyShroom;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -275,6 +276,7 @@ public class Main extends Application {
         sunLabel.setLayoutY(7);
         pane.getChildren().add(sunLabel);
         GameManager.addPlant(new PuffShroom(0 , 0));
+        GameManager.addPlant(new ScaredyShroom(1 ,1));
 
 
         pane.getChildren().addAll(
