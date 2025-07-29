@@ -84,6 +84,9 @@ public class Zombie implements Serializable {
                     if(isAlive && mode == RUN) {
                         frameIntervalMs[0] = ((1000000) / (fps[0] * speed * 30));
                         dxPerFrame[0] = speed / fps[0];
+                        if (zombieView.getLayoutX() < Sizes.START_X_GRID - Sizes.CELL_SIZE){//Win
+                            GameManager.lose();
+                        }
 
                         if (HP <= 0) {//Dead
                             mode = DEAD;

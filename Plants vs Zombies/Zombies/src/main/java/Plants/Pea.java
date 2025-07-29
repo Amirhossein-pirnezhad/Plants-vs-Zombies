@@ -29,9 +29,6 @@ public class Pea implements Serializable {
         isAlive = true;
         this.peashooter = peashooter;
         animPea();
-        peaView.setOnMouseClicked(event -> {
-            System.out.println("pea view x :" + peaView.getLayoutX() + "event: " + event.getX());
-        });
     }
 
     public void animPea(){

@@ -4,6 +4,7 @@ import Plants.*;
 import Zombies.ImpZombie;
 import Zombies.ScreenDoorZombie;
 import javafx.animation.Animation;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -40,10 +41,11 @@ public class GameManager {
     private VBox plantMenuVBox;
     private static Label sunPointLabel;
     private static Cart savedCart = null;
-    private Timeline game , tlSunBuild;
+    private static Timeline game ;
+    private Timeline tlSunBuild , winTime;
     private final int timeBuildSun = 5 , timeLevel1 = 60;
     private int timerSun;
-    private int timeLevel = 0;
+    private int timeLevel = 1;
     private SaveLoad saveLoad;
     private Button save , pause , resume ,menuButton;
     private Game_Timer game_timer;
@@ -201,11 +203,14 @@ public class GameManager {
                 });
             }
         }
-        for (Zombie z : zombies){
-            if (z.getZombieView().getLayoutX() < Sizes.START_X_GRID)
-                lose();
-        }
     }
+
+//    private void if_game_over(){
+//        for (Zombie z : zombies){
+//            if (z.getZombieView().getLayoutX() < Sizes.START_X_GRID)
+//                lose();
+//        }
+//    }
 
     private void pauseGame(){
         if(game != null && game.getStatus() == Animation.Status.RUNNING)
@@ -349,6 +354,10 @@ public class GameManager {
     private void gameAttack(){
         game = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
             timeLevel ++;
+            if (timeLevel == timeLevel1){
+                checkWin();
+            }
+            System.out.println(timeLevel);
             if(timeLevel > 3 && timeLevel <=15){
                 if(timeLevel % 3 == 0){
                     spawnZombie(1);
@@ -369,14 +378,35 @@ public class GameManager {
                 }
             }
         }));
-        game.setCycleCount(Animation.INDEFINITE);
+        game.setCycleCount(timeLevel1);
         game.play();
     }
 
-    private void lose(){
+    private void checkWin(){
+        winTime = new Timeline(new KeyFrame(Duration.seconds(1) , actionEvent -> {
+            System.out.println("zmbi Aive" + zombies.size());
+            if (zombies.isEmpty()){
+                win();
+                winTime.stop();
+            }
+        }));
+        winTime.setCycleCount(Animation.INDEFINITE);
+        winTime.play();
+    }
+
+    private void win(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("You Win!");
+        Platform.runLater(() -> alert.showAndWait());
+    }
+
+    public static void lose(){
         game.stop();
+        for (Zombie z : zombies)
+            z.pause();
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("You lost!");
+        Platform.runLater(() -> alert.showAndWait());
     }
 
     public void spawnSun(){
