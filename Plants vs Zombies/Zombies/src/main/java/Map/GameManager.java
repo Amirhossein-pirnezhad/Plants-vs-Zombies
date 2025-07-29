@@ -331,6 +331,7 @@ public class GameManager {
         return savedCart.isReady() && (sunPoint >= savedCart.getPrice());
     }
 
+    int[] temp = new int[5];
     public void spawnZombie(int model){
             int col = (int)(Math.random() * 100) % 5;
             int type = (int)(Math.random() * 100) % model;
@@ -345,6 +346,7 @@ public class GameManager {
                 z = new ImpZombie(col);
             addZombie(z);
     }
+
 
     private void gameAttack(){
         game = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
