@@ -56,6 +56,7 @@ public class Zombie implements Serializable {
         zombieView.setLayoutY(col * cell_size + 30);
         zombieView.setOnMouseClicked(event -> {
             System.out.println(zombieView.getLayoutX() + " ,"  +zombieView.getLayoutY());
+            speed *= -1;
         });
     }
 
