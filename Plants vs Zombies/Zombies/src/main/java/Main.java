@@ -34,6 +34,8 @@ public class Main extends Application {
     private VBox selectedCardsBox;
     private List<Cart> selectedCards = new ArrayList<>();
     private Pane cardSelectionPane;
+
+    //initadda
     @Override
     public void start(Stage primaryStage) {
         startGame(primaryStage);
@@ -46,7 +48,6 @@ public class Main extends Application {
         ImageView Adventure_0= new ImageView(new Image(getClass().getResourceAsStream("/Screen/aks.png")));
         ImageView Adventure_2= new ImageView(new Image(getClass().getResourceAsStream("/Screen/aks2.png")));
 
-        Button button = new Button("Start");
         imageView.setFitWidth(Sizes.SCREEN_WIDTH);//set background
         imageView.setFitHeight(Sizes.SCREEN_HEIGHT);
 
@@ -75,12 +76,11 @@ public class Main extends Application {
         Adventure_2.setOnMouseEntered(e -> Adventure_2.setEffect(neonEffect));
         Adventure_2.setOnMouseExited(e -> Adventure_2.setEffect(null));
 
-        imageView.setFitWidth(Sizes.SCREEN_WIDTH);//set background
-        imageView.setFitHeight(Sizes.SCREEN_HEIGHT);
-        Pane pane = new Pane(imageView , button , Adventure_0,Adventure_2);
+
+        Pane pane = new Pane(imageView  , Adventure_0,Adventure_2);
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        button.setOnAction(event -> {
+        Adventure_0.setOnMouseClicked(event -> {
             initializeCardSelection();
             stage.close();
         });
@@ -137,6 +137,8 @@ public class Main extends Application {
         double scaledHeight = originalHeight * frame.getScaleY();
         button.setPrefWidth(190);
         button.setPrefHeight(30);
+        loading.setPrefWidth(190);
+        loading.setPrefHeight(30);
         Font adventureFont = Font.loadFont(getClass().getResourceAsStream("/fonts/Wonderland_3.ttf"), 30);
         button.setStyle(
                 "-fx-background-color: #8B4513;" +
@@ -146,12 +148,22 @@ public class Main extends Application {
                         "-fx-text-fill: white;"+
                         "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);"
         );
+        loading.setStyle(
+                "-fx-background-color: #8B4513;" +
+                        "-fx-background-radius: 12;" +
+                        "-fx-border-radius: 12;" +
+                        "-fx-padding: 10;" +
+                        "-fx-text-fill: white;"+
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);"
+        );
         button.setFont(adventureFont);
+        loading.setFont(adventureFont);
         frame.setLayoutX((Sizes.SCREEN_WIDTH / 2) - (scaledWidth / 2));
         frame.setLayoutY((Sizes.SCREEN_HEIGHT / 2) - (scaledHeight / 2));
-        button.setLayoutX(frame.getLayoutX() + (frame.getBoundsInParent().getWidth() / 2) - (button.getPrefWidth() / 2));
-        button.setLayoutY(frame.getLayoutY() + frame.getBoundsInParent().getHeight() - 65);
-
+        button.setLayoutX(frame.getLayoutX() + (frame.getBoundsInParent().getWidth() / 2) - (button.getPrefWidth()));
+        button.setLayoutY(frame.getLayoutY() + frame.getBoundsInParent().getHeight() - 75);
+        loading.setLayoutX(frame.getLayoutX() + (frame.getBoundsInParent().getWidth() / 2) + 3);
+        loading.setLayoutY(frame.getLayoutY() + frame.getBoundsInParent().getHeight() - 75);
 
         cardSelectionPane.getChildren().addAll(frame , button ,loading);
 
@@ -162,7 +174,9 @@ public class Main extends Application {
                 {tempx, tempy}, {tempx + 150, tempy}, {tempx + 300, tempy},
                 {tempx, tempy + 100}, {tempx + 150 , tempy + 100}, {tempx + 300, tempy + 100},
                 {tempx, tempy + 200}, {tempx + 150 , tempy + 200}, {tempx + 300, tempy + 200},
-                {tempx, tempy + 300}
+                {tempx, tempy + 300}, {tempx + 150 , tempy + 300}, {tempx + 300, tempy + 300},
+                {tempx, tempy + 400}, {tempx + 150 , tempy + 400}, {tempx + 300, tempy + 400},
+
         };
         int k = -1;
         for (CardsType c : CardsType.values()) {
