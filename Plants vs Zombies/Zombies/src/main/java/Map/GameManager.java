@@ -1,8 +1,8 @@
 package Map;
 
 import Plants.*;
-import Zombies.ImpZombie;
-import Zombies.ScreenDoorZombie;
+import Plants.NightPlant.*;
+import Zombies.*;
 import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import Zombies.ConeheadZombie;
-import Zombies.Zombie;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
@@ -293,22 +292,29 @@ public class GameManager {
         });
     }
 
-    private void choice(int i , int j){
-        if(savedCart == null || !canBuild()) return;
-        switch (savedCart.getPlantType()){
-            case SUNFLOWER:   addPlant(new SunFlower(i , j));   buyPlant(savedCart);    break;
-            case PEASHOOTRER: addPlant(new Peashooter(i,j));    buyPlant(savedCart);    break;
-            case REPEATER:    addPlant(new Repeater(i,j));      buyPlant(savedCart);    break;
-            case TALLNUT:     addPlant(new TallNut(i,j));       buyPlant(savedCart);    break;
-            case WALLNUT:     addPlant(new WallNut(i,j));       buyPlant(savedCart);    break;
-            case CHERRYBOMB:  addPlant(new CherryBomb(i,j));    buyPlant(savedCart);    break;
-            case JALAPENO:    addPlant(new Jalapeno(i,j));      buyPlant(savedCart);    break;
-            case SNOWPEA:     addPlant(new SnowPea(i,j));       buyPlant(savedCart);    break;
-            default:break;
+    private void choice(int i, int j) {
+        if (savedCart == null || !canBuild()) return;
+        switch (savedCart.getPlantType()) {
+            case SUNFLOWER:      addPlant(new SunFlower(i, j));      break;
+            case PEASHOOTRER:    addPlant(new Peashooter(i, j));     break;
+            case REPEATER:       addPlant(new Repeater(i, j));       break;
+            case TALLNUT:        addPlant(new TallNut(i, j));        break;
+            case WALLNUT:        addPlant(new WallNut(i, j));        break;
+            case CHERRYBOMB:     addPlant(new CherryBomb(i, j));     break;
+            case JALAPENO:       addPlant(new Jalapeno(i, j));       break;
+            case SNOWPEA:        addPlant(new SnowPea(i, j));        break;
+            case DOOMSHROOM:     addPlant(new DoomShroom(i, j));     break;
+            case HYPNOSHROOM:    addPlant(new HypenoShroom(i, j));    break;
+            case ICESHROOM:      addPlant(new IceShroom(i, j));      break;
+            case PUFFSHROOM:     addPlant(new PuffShroom(i, j));     break;
+            case SCARREDYSHROOM: addPlant(new ScaredyShroom(i, j));  break;
+            default: return;
         }
+        buyPlant(savedCart);
         savedCart.startRechargeTimer();
         savedCart = null;
     }
+
 
     private void buyPlant(Cart cart){
         sunPoint -= cart.getPrice();
@@ -360,12 +366,12 @@ public class GameManager {
         for (int count : Count)
             if(count < min)
                 min = count;
-        List<Integer> choos = new ArrayList<>();
+        List<Integer> choose = new ArrayList<>();
         for (int i = 0; i < Count.length; i++){
-            if(Count[i] <= min + 1)
-                choos.add(i);
+            if(Count[i] <= min)
+                choose.add(i);
         }
-        return choos.get((int)(Math.random() * choos.size()));
+        return choose.get((int)(Math.random() * choose.size()));
     }
 
     private void gameAttack(){

@@ -3,6 +3,7 @@ package Zombies;
 import Map.GameManager;
 import Map.Sizes;
 import Plants.NightPlant.Grave;
+import Plants.NightPlant.HypenoShroom;
 import Plants.Plant;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -39,6 +40,7 @@ public class Zombie implements Serializable {
                      imgPathBoomDie = "/Zombies/NormalZombie/BoomDie/BoomDie_";
     protected int imgLen = 22 , imgAttackLen = 21 , imgDieLen = 10;
     protected ZombieState state;
+    protected boolean hypnosis;
 
     public Zombie(int col){
         mode = RUN;
@@ -48,6 +50,7 @@ public class Zombie implements Serializable {
         this.col = col;
         isSpeedHalf = false;
         isAlive = true;
+        hypnosis = false;
         zombieView = new ImageView();
         zombieImages = setZombieImages(imgPath , imgLen);
         zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
@@ -57,6 +60,7 @@ public class Zombie implements Serializable {
         zombieView.setOnMouseClicked(event -> {
             System.out.println(zombieView.getLayoutX() + " ,"  +zombieView.getLayoutY());
             speed *= -1;
+            zombieView.setScaleX(-1);
         });
     }
 
@@ -81,7 +85,7 @@ public class Zombie implements Serializable {
         double[] dxPerFrame = new double[]{speed / fps[0]};
 
         runZombie.getKeyFrames().add(
-                new KeyFrame(Duration.millis(frameIntervalMs[0]), e -> {
+                new KeyFrame(Duration.millis(Math.abs(frameIntervalMs[0])), e -> {
                     if(isAlive && mode == RUN) {
                         frameIntervalMs[0] = ((1000000) / (fps[0] * speed * 30));
                         dxPerFrame[0] = speed / fps[0];
@@ -95,13 +99,30 @@ public class Zombie implements Serializable {
                             runZombie.stop();
                             deadZombie();
                         }
-                        if ((targetPlant = if_touch_plant()) == null) {//Run
-                            frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
-                            zombieView.setImage(zombieImages[frameIndex[0]]);
-                            zombieView.setLayoutX(zombieView.getLayoutX() - dxPerFrame[0]);
-                        } else {//eating
-                            mode = EATING;
-                            attackZombie();
+                        if(!hypnosis) {
+                            Zombie z = if_touch_zombie();
+                            if ((targetPlant = if_touch_plant()) == null && (z == null || !z.hypnosis)) {//Run
+                                frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
+                                zombieView.setImage(zombieImages[frameIndex[0]]);
+                                zombieView.setLayoutX(zombieView.getLayoutX() - dxPerFrame[0]);
+                            } else if (z != null && z.isHypnosis()){//attack to hypnosis zombie
+                                mode = EATING;
+                                attackZombie(z);
+                            }else if (targetPlant != null){//eating plant
+                                mode = EATING;
+                                attackZombie();
+                            }
+                        }
+                        else {
+                            Zombie z = if_touch_zombie();
+                            if (z == null) {//Run
+                                frameIndex[0] = (frameIndex[0] + 1) % zombieImages.length;
+                                zombieView.setImage(zombieImages[frameIndex[0]]);
+                                zombieView.setLayoutX(zombieView.getLayoutX() - dxPerFrame[0]);
+                            } else {//eating
+                                mode = EATING;
+                                attackZombie(z);
+                            }
                         }
                     }
                     else if(isAlive && mode == EATING && (targetPlant = if_touch_plant()) != null) attackZombie();
@@ -162,12 +183,57 @@ public class Zombie implements Serializable {
         getDamage.play();
     }
 
+    protected void attackZombie(Zombie z){//for hypnosis mode
+        if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) return;
+
+        if(runZombie != null)
+            runZombie.stop();
+        runZombie = null;
+
+        final int[] frameIndex = new int[1];
+        final double[] time = {0};
+        getDamage = new Timeline(new KeyFrame(Duration.millis(70), e -> {//get damage plant
+            time[0] += 0.07;
+            if (z != null && z.isAlive()) {
+                if(isAlive && mode == EATING) {
+                    if (HP <= 0) {
+                        mode = DEAD;
+                        getDamage.stop();
+                        deadZombie();
+                    }
+                    zombieView.setImage(zombieAttack[frameIndex[0]]);
+                    frameIndex[0] = (frameIndex[0] + 1) % zombieAttack.length;
+                    if((int)(time[0] + 0.07) > (int) time[0]) {
+                        z.setHP(z.getHP() - 1);
+                        System.out.println("eating :" + mode);
+                    }
+                }
+            }
+            else{
+                System.out.println("finish eating");
+                mode = RUN;
+                getDamage.stop();
+                getDamage  = null;
+                run();
+            }
+        }));
+        getDamage.setCycleCount(Animation.INDEFINITE);
+        getDamage.play();
+    }
+
     protected Plant if_touch_plant(){
+        if(hypnosis)
+            return null;
         for (Plant p : GameManager.getPlants()){
             if(this.col == p.getCol()){
                 if (p.getClass() == Grave.class)
                     continue;
                 if(Math.abs((p.getRow() * cell_size + Sizes.START_X_GRID) - this.zombieView.getLayoutX()) < distance){
+                    if(p.getClass() == HypenoShroom.class) {
+                        hypnosis();
+//                        p.setHP(0);
+                        return null;
+                    }
                     return p;
                 }
             }
@@ -175,14 +241,35 @@ public class Zombie implements Serializable {
         return null;
     }
 
+    protected Zombie if_touch_zombie(){
+        for (Zombie z : GameManager.getZombies()){
+            if(z == this) continue;
+            boolean attack = z.isHypnosis() ^ hypnosis;
+            if (Math.abs((z.getZombieView().getLayoutX() - this.zombieView.getLayoutX())) < distance
+                && attack && z.getCol() == col && z.isAlive())
+                return z;
+        }
+        return null;
+    }
+
+
+
+    private void hypnosis(){
+        hypnosis = true;
+        mode = RUN;
+        speed *= -1;
+        zombieView.setScaleX(-1);
+    }
+
     public void ice(){
 
     }
 
     protected void deadZombie(){
-        if((deadZombie != null && deadZombie.getStatus() == Animation.Status.RUNNING))
-            return;
         isAlive = false;
+        if((deadZombie != null && deadZombie.getStatus() == Animation.Status.RUNNING)) {
+            return;
+        }
         if(runZombie != null && (runZombie.getStatus() == Animation.Status.RUNNING)){
             runZombie.stop();
         }
@@ -400,5 +487,9 @@ public class Zombie implements Serializable {
 
     public void setState(ZombieState state) {
         this.state = state;
+    }
+
+    public boolean isHypnosis() {
+        return hypnosis;
     }
 }

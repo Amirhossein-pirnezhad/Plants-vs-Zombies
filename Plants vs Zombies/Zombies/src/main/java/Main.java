@@ -251,22 +251,7 @@ public class Main extends Application {
 
         });
         loading.setOnAction(event -> {
-            SaveLoad saveLoad;
-            File dir = new File("saves");
-            File file = new File(dir,  "ni.txt");
-            System.out.println(file.getAbsolutePath());
-            try (FileInputStream fileOut = new FileInputStream(file);
-                 ObjectInputStream objectOut = new ObjectInputStream(fileOut)){
-
-                saveLoad = (SaveLoad) objectOut.readObject();
-                objectOut.close();
-                fileOut.close();
-                System.out.println("loading");
-                Game(selectedCards , saveLoad);
-                stage.close();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            createLoadMenu();
         });
     }
 
