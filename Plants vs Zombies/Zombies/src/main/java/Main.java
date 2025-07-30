@@ -45,7 +45,7 @@ public class Main extends Application {
         stage.setTitle("Plants vs Zombies");
         stage.setFullScreen(true);
         ImageView imageView= new ImageView(new Image(getClass().getResourceAsStream("/Screen/MainMenu.png")));
-        ImageView Adventure_0= new ImageView(new Image(getClass().getResourceAsStream("/Screen/aks.png")));
+        ImageView Adventure_0= new ImageView(new Image(getClass().getResourceAsStream("/Screen/daymode.png")));
         ImageView Adventure_2= new ImageView(new Image(getClass().getResourceAsStream("/Screen/aks2.png")));
 
         imageView.setFitWidth(Sizes.SCREEN_WIDTH);//set background
@@ -53,8 +53,8 @@ public class Main extends Application {
 
         Adventure_0.setLayoutX(Sizes.SCREEN_WIDTH - 810);
         Adventure_0.setLayoutY(120);
-        Adventure_0.setFitWidth(440);
-        Adventure_0.setFitHeight(293);
+        Adventure_0.setFitWidth(484);
+        Adventure_0.setFitHeight(322);
 
         Adventure_2.setLayoutX(725);
         Adventure_2.setLayoutY(280);

@@ -336,10 +336,11 @@ public class GameManager {
         return savedCart.isReady() && (sunPoint >= savedCart.getPrice());
     }
 
-    int[] temp = new int[5];
+    //change random spawn zombie
+    private int[] Count = new int[5];
     public void spawnZombie(int model){
-            int col = (int)(Math.random() * 100) % 5;
-            int type = (int)(Math.random() * 100) % model;
+        int col = balanceRandom();
+        int type = (int)(Math.random() * model) ;
             Zombie z;
             if(type == 0)
                 z = new Zombie(col);
@@ -350,8 +351,22 @@ public class GameManager {
             else
                 z = new ImpZombie(col);
             addZombie(z);
+        Count[col]++;
+
     }
 
+    private int balanceRandom(){
+        int min = Integer.MAX_VALUE;
+        for (int count : Count)
+            if(count < min)
+                min = count;
+        List<Integer> choos = new ArrayList<>();
+        for (int i = 0; i < Count.length; i++){
+            if(Count[i] <= min + 1)
+                choos.add(i);
+        }
+        return choos.get((int)(Math.random() * choos.size()));
+    }
 
     private void gameAttack(){
         game = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
