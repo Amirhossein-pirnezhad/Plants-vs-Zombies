@@ -46,6 +46,7 @@ public class Cart implements Serializable {
             case ICESHROOM: this.price = 75; this.rechargeTime = 10;     break;
             case PUFFSHROOM: this.price = 0; this.rechargeTime = 5;      break;
             case SCARREDYSHROOM: this.price = 25; this.rechargeTime = 10;  break;
+            case GRAVEBUSTER: this.price = 75; this.rechargeTime = 10; break;
         }
 
         this.imageView = new ImageView(image);
