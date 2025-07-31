@@ -1,6 +1,8 @@
 package Plants;
 
 import Map.GameManager;
+import Plants.NightPlant.PuffShroom;
+import Plants.NightPlant.ScaredyShroom;
 import Zombies.Zombie;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -22,7 +24,10 @@ public class Pea implements Serializable {
     protected boolean isAlive;
 
     public Pea(Peashooter peashooter){
-        peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNight.png"));
+        peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
+        if(peashooter.getClass() == PuffShroom.class ||
+                peashooter.getClass() == ScaredyShroom.class)
+            peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNight.png"));
         peaView = new ImageView(peaImage);
         peaView.setFitHeight(45);
         peaView.setFitWidth(45);

@@ -7,19 +7,24 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+
+import static Map.Cell.cell_size;
 
 public class DoomShroom extends Plant {
     private Timeline boom;
     public DoomShroom(int row, int col) {
         super(row, col);
         HP = Integer.MAX_VALUE;
-        setImage("/Plants/DoomShroom/DoomShroom_" ,1);
+        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/DoomShroom.gif")));
+        plantView.setFitHeight(cell_size * 0.75);
+        plantView.setFitWidth(cell_size * 0.75);
         bomb();
     }
 
     protected void bomb(){
-        boom = new Timeline(new KeyFrame(Duration.seconds(3) , event -> kill()));
+        boom = new Timeline(new KeyFrame(Duration.seconds(0.75) , event -> kill()));
         boom.setCycleCount(1);
         boom.play();
     }

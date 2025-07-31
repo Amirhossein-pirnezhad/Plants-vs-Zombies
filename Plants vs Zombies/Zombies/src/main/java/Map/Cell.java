@@ -1,5 +1,7 @@
 package Map;
 
+import Plants.NightPlant.Grave;
+import Plants.NightPlant.GraveBuster;
 import Plants.Plant;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -13,6 +15,7 @@ public class Cell extends StackPane {
     private transient ImageView cellView;
     public static double cell_size = Sizes.CELL_SIZE;
     private Plant plant;
+    private boolean hasGrave = false;
 
     public Cell(int r ,int c){
         row = r;
@@ -24,7 +27,7 @@ public class Cell extends StackPane {
     }
 
     public void setPlant(Plant plant) {
-        if(canSetPlant()) {
+        if(canSetPlant(plant)) {
             this.plant = plant;
             setCellView(plant.getPlantView());
         }
@@ -42,11 +45,23 @@ public class Cell extends StackPane {
         this.getChildren().add(cellView);
     }
 
-    public boolean canSetPlant(){
-        return (plant == null);
+    public boolean canSetPlant(Plant p){
+        if (hasGrave) {
+            return (p instanceof GraveBuster);
+        } else {
+            return (plant == null) && !(p instanceof GraveBuster);
+        }
     }
 
     public Plant getPlant() {
         return plant;
+    }
+
+    public void setHasGrave(boolean hasGrave) {
+        this.hasGrave = hasGrave;
+    }
+
+    public boolean isHasGrave() {
+        return hasGrave;
     }
 }

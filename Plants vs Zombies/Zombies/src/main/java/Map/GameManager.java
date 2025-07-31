@@ -48,6 +48,7 @@ public class GameManager {
     private SaveLoad saveLoad;
     private Button save , pause , resume ,menuButton;
     private Game_Timer game_timer;
+    private boolean night = true;
 
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
@@ -85,6 +86,14 @@ public class GameManager {
             p.resume();
             addPlant(p);
             cells[p.getRow()][p.getCol()].setPlant(p);
+        }
+
+        if (night){
+            for (int i = 0; i < 3; i++) {
+                int r = (int)(Math.random() * 100) % 8;
+                int c = (int)(Math.random() * 100) % 4;
+                addPlant(new Grave(r,c));
+            }
         }
 
         menuButton = new Button("menu");
@@ -175,7 +184,7 @@ public class GameManager {
     }
 
     public static void addPlant(Plant p) {
-        if(cells[p.getRow()][p.getCol()].canSetPlant()) {
+        if(cells[p.getRow()][p.getCol()].canSetPlant(p)) {
             cells[p.getRow()][p.getCol()].setPlant(p);
             plants.add(p);
         }
@@ -204,6 +213,7 @@ public class GameManager {
                     choice(finalI , finalJ);
                 });
                 shovel.getImageView().setOnMouseClicked(event -> {
+                    System.out.println("shovel");
                     shovel.setClicked(true);
                     savedCart = null;
                 });
@@ -301,7 +311,9 @@ public class GameManager {
 
     private void choice(int i, int j) {
         if (savedCart == null && shovel.isClicked()){
+            cells[i][j].getPlant().setHP(0);
             removePlant(cells[i][j].getPlant());
+            return;
         }
         else if(savedCart == null && !shovel.isClicked() && canBuild()) return;
 

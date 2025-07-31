@@ -171,7 +171,7 @@ public class Main extends Application {
         double tempy = (Sizes.SCREEN_HEIGHT / 2) - (scaledHeight / 2) + 40;
 
         double[][] positions = {
-                {tempx, tempy}, {tempx + 150, tempy}, {tempx + 300, tempy},
+                {tempx, tempy}      , {tempx + 150, tempy}       , {tempx + 300, tempy},
                 {tempx, tempy + 100}, {tempx + 150 , tempy + 100}, {tempx + 300, tempy + 100},
                 {tempx, tempy + 200}, {tempx + 150 , tempy + 200}, {tempx + 300, tempy + 200},
                 {tempx, tempy + 300}, {tempx + 150 , tempy + 300}, {tempx + 300, tempy + 300},
