@@ -51,9 +51,11 @@ public class GameManager {
 
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
+    private Shovel shovel;
 
 
     public GameManager(Pane gamePane , SaveLoad savedGame) {
+        shovel = new Shovel();
         saveLoad = savedGame;
         for(Cart cart : savedGame.getSelectedCards()){
             cart.repair();
@@ -200,6 +202,10 @@ public class GameManager {
                 cells[i][j].setOnMouseClicked(event -> {
                     choice(finalI , finalJ);
                 });
+                shovel.getImageView().setOnMouseClicked(event -> {
+                    shovel.setClicked(true);
+                    savedCart = null;
+                });
             }
         }
     }
@@ -293,7 +299,11 @@ public class GameManager {
     }
 
     private void choice(int i, int j) {
-        if (savedCart == null || !canBuild()) return;
+        if (savedCart == null && shovel.isClicked()){
+            removePlant(cells[i][j].getPlant());
+        }
+        else if(savedCart == null && !shovel.isClicked() && canBuild()) return;
+
         switch (savedCart.getPlantType()) {
             case SUNFLOWER:      addPlant(new SunFlower(i, j));      break;
             case PEASHOOTRER:    addPlant(new Peashooter(i, j));     break;
@@ -304,7 +314,7 @@ public class GameManager {
             case JALAPENO:       addPlant(new Jalapeno(i, j));       break;
             case SNOWPEA:        addPlant(new SnowPea(i, j));        break;
             case DOOMSHROOM:     addPlant(new DoomShroom(i, j));     break;
-            case HYPNOSHROOM:    addPlant(new HypenoShroom(i, j));    break;
+            case HYPNOSHROOM:    addPlant(new HypenoShroom(i, j));   break;
             case ICESHROOM:      addPlant(new IceShroom(i, j));      break;
             case PUFFSHROOM:     addPlant(new PuffShroom(i, j));     break;
             case SCARREDYSHROOM: addPlant(new ScaredyShroom(i, j));  break;

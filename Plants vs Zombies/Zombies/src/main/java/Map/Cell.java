@@ -6,8 +6,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.io.Serializable;
-
 
 public class Cell extends StackPane {
     private int row , col;
@@ -46,5 +44,9 @@ public class Cell extends StackPane {
 
     public boolean canSetPlant(){
         return (plant == null);
+    }
+
+    public Plant getPlant() {
+        return plant;
     }
 }

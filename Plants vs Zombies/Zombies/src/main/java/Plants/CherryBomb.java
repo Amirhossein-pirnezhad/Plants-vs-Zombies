@@ -61,12 +61,12 @@ public class CherryBomb extends Plant{
     }
 
     protected void setAnimDie(){
-        plantView.setImage(new Image(getClass().getResourceAsStream("/Screen/Boom.png")));
+        plantView.setImage(new Image(getClass().getResourceAsStream("/Screen/Boom.gif")));
     }
 
     @Override
     public void dead() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(200), event -> {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1200), event -> {
             if(timerBomb.getStatus() != Animation.Status.RUNNING) {
                 isAlive = false;
                 GameManager.removePlant(this);

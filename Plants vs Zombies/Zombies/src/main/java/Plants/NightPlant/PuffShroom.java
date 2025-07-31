@@ -88,27 +88,6 @@ public class PuffShroom extends Peashooter {
         return false;
     }
 
-//    @Override
-//    protected void animPeashooter() {
-//        if (isSleep) return;
-//        if (isAlive) shooting();
-//
-//        animPeashooter = new Timeline();
-//        animPeashooter.setCycleCount(Timeline.INDEFINITE);
-//        final int[] frameIndex = new int[1];
-//
-//        animPeashooter.getKeyFrames().add(
-//                new KeyFrame(Duration.millis(100), e -> {
-//                    plantView.setImage(plantImage[frameIndex[0]]);
-//                    if (HP <= 0) {
-//                        dead();
-//                    }
-//                    frameIndex[0] = (frameIndex[0] + 1) % plantImage.length;
-//                })
-//        );
-//        animPeashooter.play();
-//    }
-
     @Override
     public void pause() {
         super.pause();
