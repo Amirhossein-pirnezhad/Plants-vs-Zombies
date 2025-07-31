@@ -101,8 +101,10 @@ public class GameManager {
 
         menuButton.setFont(adventureFont);
         menuButton.setOnAction(e -> showMenuOptions());
+        menuButton.setLayoutX(Sizes.SCREEN_WIDTH - 200);
+        menuButton.setLayoutY( 10);
 
-        panePlantVsZombie.getChildren().add(menuButton);
+        panePlantVsZombie.getChildren().addAll(menuButton, shovel.getImageView());
         game_timer = new Game_Timer(timeLevel);
         StackPane timerBar = game_timer.getClip();
         timerBar.setLayoutX(100);
@@ -192,7 +194,6 @@ public class GameManager {
         if(!background.getChildren().contains(view))
             background.getChildren().add(view);
     }
-
     public void updateGame() {
         handleClickOnChoice();
         for (int i = 0; i < map_row; i++) {

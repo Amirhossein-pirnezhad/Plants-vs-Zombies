@@ -265,6 +265,7 @@ public class Main extends Application {
         sunCounter.setFitHeight(90);
         sunCounter.setFitWidth(250);
 
+
         Pane pane = new Pane( background );
         pane.getChildren().add(sunCounter);
         GameManager g = new GameManager(pane , saveLoad);

@@ -22,8 +22,10 @@ public class Pea implements Serializable {
     protected boolean isAlive;
 
     public Pea(Peashooter peashooter){
-        peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
+        peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNight.png"));
         peaView = new ImageView(peaImage);
+        peaView.setFitHeight(45);
+        peaView.setFitWidth(45);
         peaView.setLayoutX(peashooter.row * CELL_SIZE + START_X_GRID );
         peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
         isAlive = true;
