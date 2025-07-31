@@ -176,6 +176,7 @@ public class Main extends Application {
                 {tempx, tempy + 200}, {tempx + 150 , tempy + 200}, {tempx + 300, tempy + 200},
                 {tempx, tempy + 300}, {tempx + 150 , tempy + 300}, {tempx + 300, tempy + 300},
                 {tempx, tempy + 400}, {tempx + 150 , tempy + 400}, {tempx + 300, tempy + 400},
+                {tempx, tempy + 500}
 
         };
         int k = -1;

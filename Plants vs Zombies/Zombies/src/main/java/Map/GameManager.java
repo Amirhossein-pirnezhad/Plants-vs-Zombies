@@ -331,6 +331,7 @@ public class GameManager {
             case ICESHROOM:      addPlant(new IceShroom(i, j));      break;
             case PUFFSHROOM:     addPlant(new PuffShroom(i, j));     break;
             case SCARREDYSHROOM: addPlant(new ScaredyShroom(i, j));  break;
+            case GRAVEBUSTER:    addPlant(new GraveBuster(i, j));    break;
             default: return;
         }
         buyPlant(savedCart);
