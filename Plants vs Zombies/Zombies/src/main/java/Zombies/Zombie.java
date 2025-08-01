@@ -226,8 +226,8 @@ public class Zombie implements Serializable {
             return null;
         for (Plant p : GameManager.getPlants()){
             if(this.col == p.getCol()){
-//                if (p.getClass() == Grave.class)
-//                    continue;
+                if (p.getClass() == Grave.class)
+                    continue;
                 if(Math.abs((p.getRow() * cell_size + Sizes.START_X_GRID) - this.zombieView.getLayoutX()) < distance){
                     if(p.getClass() == HypenoShroom.class) {
                         hypnosis();

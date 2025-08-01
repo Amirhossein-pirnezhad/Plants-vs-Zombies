@@ -14,27 +14,20 @@ public class Grave extends Plant {
 
     public Grave(int row, int col) {
         super(row, col);
+        HP = Integer.MAX_VALUE;
         shape = (int) (Math.random() * 2);
         shapeGrave = new String[]{"Grave.png" , "Grave2.png"};
         plantView = new ImageView(new Image(getClass().getResourceAsStream("/Screen/Grave/" + shapeGrave[shape])));
-        plantView.setFitHeight(cell_size * 1.2);
-        plantView.setFitWidth(cell_size * 1.2);
-
-        Cell cell = GameManager.getCells()[row][col];
-        if (cell != null) {
-            cell.setPlant(this);
-            cell.setHasGrave(true);
-        }
+        plantView.setFitHeight(cell_size );
+        plantView.setFitWidth(cell_size );
     }
 
     @Override
     public void dead() {
         isAlive = false;
-        Cell cell = GameManager.getCells()[row][col];
-        if (cell != null) {
-            cell.setHasGrave(false);
-            GameManager.removePlant(this);
-        }
+        GameManager.removePlant(this);
+
+        plantView.setOnMouseClicked(null);
     }
 
     @Override

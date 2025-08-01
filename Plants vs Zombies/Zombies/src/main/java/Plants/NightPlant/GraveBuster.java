@@ -15,9 +15,9 @@ public class GraveBuster extends Plant {
 
     public GraveBuster(int row, int col) {
         super(row, col);
-        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/GraveBuster/DoomShroom.gif")));
-        plantView.setFitHeight(cell_size * 0.75);
-        plantView.setFitWidth(cell_size * 0.75);
+        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/GraveBuster/GraveBuster.gif")));
+        plantView.setFitHeight(cell_size);
+        plantView.setFitWidth(cell_size);
 
         eating = new Timeline(new KeyFrame(Duration.seconds(3) , e->{
             dead();

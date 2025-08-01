@@ -85,12 +85,11 @@ public class GameManager {
         for (Plant p : savedGame.getPlants()){
             p.resume();
             addPlant(p);
-            cells[p.getRow()][p.getCol()].setPlant(p);
         }
 
         if (night){
-            for (int i = 0; i < 3; i++) {
-                int r = (int)(Math.random() * 100) % 8;
+            for (int i = 0; i < 3; i++) { //random grave in map
+                int r = (int)(Math.random() * 100) % 5 + 3;
                 int c = (int)(Math.random() * 100) % 4;
                 addPlant(new Grave(r,c));
             }
@@ -173,7 +172,6 @@ public class GameManager {
             }
         panePlantVsZombie.getChildren().add(gridPane);
         gameAttack();
-
     }
 
     public void addZombie(Zombie z) {
@@ -184,9 +182,10 @@ public class GameManager {
     }
 
     public static void addPlant(Plant p) {
-        if(cells[p.getRow()][p.getCol()].canSetPlant(p)) {
+        if(cells[p.getRow()][p.getCol()].canSetPlant()) {
             cells[p.getRow()][p.getCol()].setPlant(p);
             plants.add(p);
+            System.out.println("can");
         }
         else System.out.println("can't");
     }
@@ -315,28 +314,29 @@ public class GameManager {
             removePlant(cells[i][j].getPlant());
             return;
         }
-        else if(savedCart == null && !shovel.isClicked() && canBuild()) return;
-
-        switch (savedCart.getPlantType()) {
-            case SUNFLOWER:      addPlant(new SunFlower(i, j));      break;
-            case PEASHOOTRER:    addPlant(new Peashooter(i, j));     break;
-            case REPEATER:       addPlant(new Repeater(i, j));       break;
-            case TALLNUT:        addPlant(new TallNut(i, j));        break;
-            case WALLNUT:        addPlant(new WallNut(i, j));        break;
-            case CHERRYBOMB:     addPlant(new CherryBomb(i, j));     break;
-            case JALAPENO:       addPlant(new Jalapeno(i, j));       break;
-            case SNOWPEA:        addPlant(new SnowPea(i, j));        break;
-            case DOOMSHROOM:     addPlant(new DoomShroom(i, j));     break;
-            case HYPNOSHROOM:    addPlant(new HypenoShroom(i, j));   break;
-            case ICESHROOM:      addPlant(new IceShroom(i, j));      break;
-            case PUFFSHROOM:     addPlant(new PuffShroom(i, j));     break;
-            case SCARREDYSHROOM: addPlant(new ScaredyShroom(i, j));  break;
-            case GRAVEBUSTER:    addPlant(new GraveBuster(i, j));    break;
-            default: return;
+        else if(savedCart == null && !shovel.isClicked()) return;
+        else if (savedCart != null && canBuild() && cells[i][j].canSetPlant()) {
+            switch (savedCart.getPlantType()) {
+                case SUNFLOWER:      addPlant(new SunFlower(i, j));      break;
+                case PEASHOOTRER:    addPlant(new Peashooter(i, j));     break;
+                case REPEATER:       addPlant(new Repeater(i, j));       break;
+                case TALLNUT:        addPlant(new TallNut(i, j));        break;
+                case WALLNUT:        addPlant(new WallNut(i, j));        break;
+                case CHERRYBOMB:     addPlant(new CherryBomb(i, j));     break;
+                case JALAPENO:       addPlant(new Jalapeno(i, j));       break;
+                case SNOWPEA:        addPlant(new SnowPea(i, j));        break;
+                case DOOMSHROOM:     addPlant(new DoomShroom(i, j));     break;
+                case HYPNOSHROOM:    addPlant(new HypenoShroom(i, j));   break;
+                case ICESHROOM:      addPlant(new IceShroom(i, j));      break;
+                case PUFFSHROOM:     addPlant(new PuffShroom(i, j));     break;
+                case SCARREDYSHROOM: addPlant(new ScaredyShroom(i, j));  break;
+                case GRAVEBUSTER:    addPlant(new GraveBuster(i, j));    break;
+                default: return;
+            }
+            buyPlant(savedCart);
+            savedCart.startRechargeTimer();
+            savedCart = null;
         }
-        buyPlant(savedCart);
-        savedCart.startRechargeTimer();
-        savedCart = null;
     }
 
 
