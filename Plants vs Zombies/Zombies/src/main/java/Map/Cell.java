@@ -27,12 +27,12 @@ public class Cell extends StackPane {
     }
 
     public void setPlant(Plant plant) {
-        if(canSetPlant()) {
+        if (canSetPlant(plant.getClass())) {
             this.plant = plant;
             setCellView(plant.getPlantView());
-//            if(plant.getClass() == Grave.class)
-//                hasGrave = true;
-//            else hasGrave = false;
+            if (plant instanceof Grave) {
+                hasGrave = true;
+            }
         }
     }
 
@@ -48,9 +48,18 @@ public class Cell extends StackPane {
         this.getChildren().add(cellView);
     }
 
-    public boolean canSetPlant() {
-        return plant == null;
+    public boolean canSetPlant(Class p) {
+        if (hasGrave) {
+            if (p == GraveBuster.class){
+                removePlant();
+                return true;
+            }
+            return p == GraveBuster.class;
+        } else {
+            return plant == null && p != GraveBuster.class;
+        }
     }
+
 
     public Plant getPlant() {
         return plant;

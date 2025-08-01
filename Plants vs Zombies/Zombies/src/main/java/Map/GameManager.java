@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,7 +183,7 @@ public class GameManager {
     }
 
     public static void addPlant(Plant p) {
-        if(cells[p.getRow()][p.getCol()].canSetPlant()) {
+        if(cells[p.getRow()][p.getCol()].canSetPlant(p.getClass())) {
             cells[p.getRow()][p.getCol()].setPlant(p);
             plants.add(p);
             System.out.println("can");
@@ -310,29 +311,43 @@ public class GameManager {
 
     private void choice(int i, int j) {
         if (savedCart == null && shovel.isClicked()){
-            cells[i][j].getPlant().setHP(0);
-            removePlant(cells[i][j].getPlant());
+            if (cells[i][j].getPlant().getClass() != Grave.class) {
+                cells[i][j].getPlant().setHP(0);
+                removePlant(cells[i][j].getPlant());
+            }
             return;
         }
-        else if(savedCart == null && !shovel.isClicked()) return;
-        else if (savedCart != null && canBuild() && cells[i][j].canSetPlant()) {
-            switch (savedCart.getPlantType()) {
-                case SUNFLOWER:      addPlant(new SunFlower(i, j));      break;
-                case PEASHOOTRER:    addPlant(new Peashooter(i, j));     break;
-                case REPEATER:       addPlant(new Repeater(i, j));       break;
-                case TALLNUT:        addPlant(new TallNut(i, j));        break;
-                case WALLNUT:        addPlant(new WallNut(i, j));        break;
-                case CHERRYBOMB:     addPlant(new CherryBomb(i, j));     break;
-                case JALAPENO:       addPlant(new Jalapeno(i, j));       break;
-                case SNOWPEA:        addPlant(new SnowPea(i, j));        break;
-                case DOOMSHROOM:     addPlant(new DoomShroom(i, j));     break;
-                case HYPNOSHROOM:    addPlant(new HypenoShroom(i, j));   break;
-                case ICESHROOM:      addPlant(new IceShroom(i, j));      break;
-                case PUFFSHROOM:     addPlant(new PuffShroom(i, j));     break;
-                case SCARREDYSHROOM: addPlant(new ScaredyShroom(i, j));  break;
-                case GRAVEBUSTER:    addPlant(new GraveBuster(i, j));    break;
-                default: return;
+        if(savedCart == null) return;
+        Class plantClass;
+        switch (savedCart.getPlantType()) {
+            case SUNFLOWER:      plantClass = SunFlower.class;      break;
+            case PEASHOOTRER:    plantClass = Peashooter.class;     break;
+            case REPEATER:       plantClass = Repeater.class;       break;
+            case TALLNUT:        plantClass = TallNut.class;        break;
+            case WALLNUT:        plantClass = WallNut.class;        break;
+            case CHERRYBOMB:     plantClass = CherryBomb.class;     break;
+            case JALAPENO:       plantClass = Jalapeno.class;       break;
+            case SNOWPEA:        plantClass = SnowPea.class;        break;
+            case DOOMSHROOM:     plantClass = DoomShroom.class;     break;
+            case HYPNOSHROOM:    plantClass = HypenoShroom.class;   break;
+            case ICESHROOM:      plantClass = IceShroom.class;      break;
+            case PUFFSHROOM:     plantClass = PuffShroom.class;     break;
+            case SCARREDYSHROOM: plantClass = ScaredyShroom.class;  break;
+            case GRAVEBUSTER:    plantClass = GraveBuster.class;    break;
+            default:             return;
+        }
+        System.out.println("p :" + plantClass.toString());
+        if (canBuild() && cells[i][j].canSetPlant(plantClass)) {
+            System.out.println("buiding");
+            Plant choose_plant;
+            try {
+                Constructor<? extends Plant> constructor = plantClass.getConstructor(int.class, int.class);
+                choose_plant = constructor.newInstance(i, j);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
             }
+            addPlant(choose_plant);
             buyPlant(savedCart);
             savedCart.startRechargeTimer();
             savedCart = null;
@@ -343,6 +358,7 @@ public class GameManager {
     private void buyPlant(Cart cart){
         sunPoint -= cart.getPrice();
         updateSunPointLabel();
+        System.out.println("buying");
     }
 
     private void handleClickOnChoice(){

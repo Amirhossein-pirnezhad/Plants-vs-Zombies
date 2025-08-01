@@ -52,7 +52,7 @@ public class Pea implements Serializable {
             for (Zombie z : GameManager.getZombies()){
                 if(z.getCol() == peashooter.col && z.isAlive()){
                     if(Math.abs(peaView.getLayoutX() - z.getZombieView().getLayoutX()) < 5) {
-                        System.out.println(peaView.getLayoutX());
+//                        System.out.println(peaView.getLayoutX());
                         z.setHP(z.getHP() - 1); //zombie health
                         dead();
                         break;
