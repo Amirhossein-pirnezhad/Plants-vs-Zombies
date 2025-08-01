@@ -44,7 +44,7 @@ public class Main extends Application {
     private void startGame(Stage stage){
         stage.setTitle("Plants vs Zombies");
         stage.setFullScreen(true);
-        ImageView imageView= new ImageView(new Image(getClass().getResourceAsStream("/Screen/MainMenu.png")));
+        ImageView imageView= new ImageView(new Image(getClass().getResourceAsStream("/Screen/main-menu.png")));
         ImageView Adventure_0= new ImageView(new Image(getClass().getResourceAsStream("/Screen/daymode.png")));
         ImageView Adventure_2= new ImageView(new Image(getClass().getResourceAsStream("/Screen/aks2.png")));
 
@@ -126,10 +126,10 @@ public class Main extends Application {
         // frame.setScaleY(1.5);
 
 
-        frame.setFitWidth(456);
-        frame.setFitHeight(630);
+        frame.setFitWidth(460);
+        frame.setFitHeight(700);
         frame.setLayoutX( (Sizes.SCREEN_WIDTH / 3) );
-        frame.setLayoutY(Sizes.SCREEN_HEIGHT / 3);
+        frame.setLayoutY(Sizes.SCREEN_HEIGHT / 3 );
 
         double originalWidth = frame.getImage().getWidth();
         double originalHeight = frame.getImage().getHeight();
@@ -159,7 +159,7 @@ public class Main extends Application {
         button.setFont(adventureFont);
         loading.setFont(adventureFont);
         frame.setLayoutX((Sizes.SCREEN_WIDTH / 2) - (scaledWidth / 2));
-        frame.setLayoutY((Sizes.SCREEN_HEIGHT / 2) - (scaledHeight / 2));
+        frame.setLayoutY((Sizes.SCREEN_HEIGHT / 2) - (scaledHeight / 1.7));
         button.setLayoutX(frame.getLayoutX() + (frame.getBoundsInParent().getWidth() / 2) - (button.getPrefWidth()));
         button.setLayoutY(frame.getLayoutY() + frame.getBoundsInParent().getHeight() - 75);
         loading.setLayoutX(frame.getLayoutX() + (frame.getBoundsInParent().getWidth() / 2) + 3);
@@ -168,15 +168,15 @@ public class Main extends Application {
         cardSelectionPane.getChildren().addAll(frame , button ,loading);
 
         double tempx = (Sizes.SCREEN_WIDTH / 2) - (scaledWidth / 2) + 15;
-        double tempy = (Sizes.SCREEN_HEIGHT / 2) - (scaledHeight / 2) + 40;
+        double tempy = (Sizes.SCREEN_HEIGHT / 2) - (scaledHeight / 1.7) + 40;
 
         double[][] positions = {
-                {tempx, tempy}      , {tempx + 150, tempy}       , {tempx + 300, tempy},
+                {tempx, tempy      }, {tempx + 150,  tempy      }, {tempx + 300, tempy      },
                 {tempx, tempy + 100}, {tempx + 150 , tempy + 100}, {tempx + 300, tempy + 100},
                 {tempx, tempy + 200}, {tempx + 150 , tempy + 200}, {tempx + 300, tempy + 200},
                 {tempx, tempy + 300}, {tempx + 150 , tempy + 300}, {tempx + 300, tempy + 300},
                 {tempx, tempy + 400}, {tempx + 150 , tempy + 400}, {tempx + 300, tempy + 400},
-                {tempx, tempy + 500}
+                {tempx, tempy + 500}, {tempx + 150 , tempy + 500}
 
         };
         int k = -1;
