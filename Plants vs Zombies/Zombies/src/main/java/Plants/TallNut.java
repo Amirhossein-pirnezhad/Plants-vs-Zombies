@@ -14,6 +14,7 @@ public class TallNut extends Plant{
         plantView.setFitHeight(cell_size);
         plantView.setFitHeight(cell_size);
 
+
     }
 
     @Override
