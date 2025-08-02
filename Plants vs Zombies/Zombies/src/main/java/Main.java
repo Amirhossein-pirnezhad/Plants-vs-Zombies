@@ -50,13 +50,16 @@ public class Main extends Application {
 
         imageView.setFitWidth(Sizes.SCREEN_WIDTH);//set background
         imageView.setFitHeight(Sizes.SCREEN_HEIGHT);
+        System.out.println(Sizes.SCREEN_WIDTH);
+        System.out.println(Sizes.SCREEN_HEIGHT);
 
-        Adventure_0.setLayoutX(Sizes.SCREEN_WIDTH - 810);
-        Adventure_0.setLayoutY(120);
+
+        Adventure_0.setLayoutX(Sizes.SCREEN_WIDTH / 2.05);
+        Adventure_0.setLayoutY(Sizes.SCREEN_HEIGHT/7.58);
         Adventure_0.setFitWidth(484);
         Adventure_0.setFitHeight(322);
 
-        Adventure_2.setLayoutX(725);
+        Adventure_2.setLayoutX(Sizes.SCREEN_WIDTH / 2.05);
         Adventure_2.setLayoutY(280);
         Adventure_2.setFitWidth(380);
         Adventure_2.setFitHeight(380);
@@ -78,6 +81,9 @@ public class Main extends Application {
 
 
         Pane pane = new Pane(imageView  , Adventure_0,Adventure_2);
+        pane.setOnMouseClicked(mouseEvent -> {
+            System.out.println(mouseEvent);
+        });
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         Adventure_0.setOnMouseClicked(event -> {
@@ -284,7 +290,8 @@ public class Main extends Application {
 
         pane.getChildren().addAll(
             GameManager.getPanePeas() ,
-                GameManager.getPanePlantVsZombie()
+                GameManager.getPanePlantVsZombie() ,
+                    GameManager.getPaneMeh()
         );
         pane.setOnMouseClicked(event -> {
             System.out.println("Pane clicked at X = " + event.getX() + ", Y = " + event.getY());

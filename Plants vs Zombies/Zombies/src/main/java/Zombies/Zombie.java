@@ -89,6 +89,7 @@ public class Zombie implements Serializable {
                     if(isAlive && mode == RUN) {
                         frameIntervalMs[0] = ((1000000) / (fps[0] * speed * 30));
                         dxPerFrame[0] = speed / fps[0];
+
                         if (zombieView.getLayoutX() < Sizes.START_X_GRID - Sizes.CELL_SIZE){//Win
                             GameManager.lose();
                         }
@@ -125,8 +126,6 @@ public class Zombie implements Serializable {
                             }
                         }
                     }
-                    else if(isAlive && mode == EATING && (targetPlant = if_touch_plant()) != null) attackZombie();
-                    else if (isAlive && mode == DEAD) deadZombie();
                 })
 
         );

@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
-    private static Pane background , panePlantVsZombie = new Pane() , panePeas = new Pane();
+    private static Pane background , panePlantVsZombie = new Pane() , panePeas = new Pane() , paneMeh = new Pane();
     private static List<Zombie> zombies = new ArrayList<>();
     private static List<Plant> plants = new ArrayList<>();
     private static List<Sun> suns = new ArrayList<>();
@@ -94,6 +94,7 @@ public class GameManager {
                 int c = (int)(Math.random() * 100) % 4;
                 addPlant(new Grave(r,c));
             }
+            buildMeh();
         }
 
         menuButton = new Button("menu");
@@ -173,6 +174,16 @@ public class GameManager {
             }
         panePlantVsZombie.getChildren().add(gridPane);
         gameAttack();
+    }
+
+    private void buildMeh(){
+        GridPane grid = new GridPane();
+        for (int i = 0; i < map_row / 2; i++) {
+            for (int j = 0; j < map_col; j++) {
+                grid.add(new Meh(i,j) , i , j);
+            }
+        }
+        paneMeh.getChildren().add(grid);
     }
 
     public void addZombie(Zombie z) {
@@ -557,5 +568,9 @@ public class GameManager {
 
     public static int getMap_col() {
         return map_col;
+    }
+
+    public static Pane getPaneMeh() {
+        return paneMeh;
     }
 }
