@@ -18,7 +18,7 @@ public class Grave extends Plant {
         shape = (int) (Math.random() * 2);
         shapeGrave = new String[]{"Grave.png" , "Grave2.png"};
         plantView = new ImageView(new Image(getClass().getResourceAsStream("/Screen/Grave/" + shapeGrave[shape])));
-        plantView.setFitHeight(cell_size );
+        plantView.setFitHeight(cell_size * 1.5);
         plantView.setFitWidth(cell_size );
     }
 

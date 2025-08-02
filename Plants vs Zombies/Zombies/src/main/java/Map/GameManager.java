@@ -121,6 +121,12 @@ public class GameManager {
         timerBar.setLayoutY(50);
 //        panePlantVsZombie.getChildren().add(timerBar);
         sunPoint = 1000;
+        background.getChildren().addAll(
+                GameManager.getPanePeas() ,
+                GameManager.getPanePlantVsZombie() ,
+                GameManager.getPaneMeh()
+        );
+
     }
 
 
@@ -177,8 +183,13 @@ public class GameManager {
     }
 
     private void buildMeh(){
+        int row = map_row / 2;
+        paneMeh.setPrefWidth(Sizes.SCREEN_WIDTH/2);
+        paneMeh.setPrefHeight(Sizes.SCREEN_HEIGHT);
+        paneMeh.setLayoutX(Sizes.SCREEN_WIDTH - (row) * Sizes.CELL_SIZE);
+        paneMeh.setLayoutY(Sizes.START_Y_GRID + 10);
         GridPane grid = new GridPane();
-        for (int i = 0; i < map_row / 2; i++) {
+        for (int i = 0; i < row; i++) {
             for (int j = 0; j < map_col; j++) {
                 grid.add(new Meh(i,j) , i , j);
             }

@@ -287,12 +287,6 @@ public class Main extends Application {
         GameManager.addPlant(new ScaredyShroom(1 ,1));
         GameManager.addPlant(new HypenoShroom(3 , 2));
 
-
-        pane.getChildren().addAll(
-            GameManager.getPanePeas() ,
-                GameManager.getPanePlantVsZombie() ,
-                    GameManager.getPaneMeh()
-        );
         pane.setOnMouseClicked(event -> {
             System.out.println("Pane clicked at X = " + event.getX() + ", Y = " + event.getY());
         });

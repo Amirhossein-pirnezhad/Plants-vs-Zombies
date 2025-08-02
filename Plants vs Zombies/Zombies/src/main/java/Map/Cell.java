@@ -20,6 +20,10 @@ public class Cell extends StackPane {
     public Cell(int r ,int c){
         row = r;
         col = c;
+        this.setPrefSize(cell_size, cell_size);
+        this.setMinSize(cell_size, cell_size);
+        this.setMaxSize(cell_size, cell_size);
+        this.setPickOnBounds(false);
         border = new Rectangle(cell_size , cell_size);
         border.setFill(Color.TRANSPARENT);
         border.setStroke(Color.TRANSPARENT);
