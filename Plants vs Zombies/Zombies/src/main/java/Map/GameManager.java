@@ -356,6 +356,7 @@ public class GameManager {
             case PUFFSHROOM:     plantClass = PuffShroom.class;     break;
             case SCARREDYSHROOM: plantClass = ScaredyShroom.class;  break;
             case GRAVEBUSTER:    plantClass = GraveBuster.class;    break;
+            case FAN:            plantClass = Blover.class;         break;
             default:             return;
         }
         System.out.println("p :" + plantClass.toString());
