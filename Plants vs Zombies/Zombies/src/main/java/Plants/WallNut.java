@@ -11,7 +11,7 @@ import static Map.Cell.cell_size;
 
 
 public class WallNut extends Plant{
-    protected final int initialHp = 15;
+    private final int initialHp = 15;
     protected transient Timeline hpGood;
     protected int frame = 0;
     protected transient Image[] wallCracked1;

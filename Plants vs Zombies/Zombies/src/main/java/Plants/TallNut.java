@@ -1,18 +1,46 @@
 package Plants;
 
 import Map.GameManager;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import static Map.Cell.cell_size;
 
 public class TallNut extends Plant{
+    private final int initialHp = 30;
+    private Timeline hpGood;
     public TallNut(int row, int col) {
         super(row, col);
         HP = 30;
         plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/TallNut/TallNut.gif")));
         plantView.setFitHeight(cell_size);
         plantView.setFitHeight(cell_size);
+        animTallNut();
+    }
+
+    protected void animTallNut(){
+        hpGood = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
+            if(HP <= 0){
+                dead();
+            }
+        }));
+        hpGood.setCycleCount(Animation.INDEFINITE);
+        hpGood.play();
+    }
+
+    @Override
+    public void setHP(int HP) {
+        this.HP = HP;
+        if(HP == initialHp * 0.6){
+            plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/TallNut/TallnutCracked1.gif")));
+        }
+        else if (HP == initialHp * 0.3){
+            plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/TallNut/TallnutCracked2.gif")));
+        }
     }
 
     @Override
