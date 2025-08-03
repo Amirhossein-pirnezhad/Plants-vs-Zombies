@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Meh extends StackPane {
@@ -24,6 +25,7 @@ public class Meh extends StackPane {
         this.setMinSize(cell_size, cell_size);
         this.setMaxSize(cell_size, cell_size);
         this.setPickOnBounds(false);
+        this.setMouseTransparent(true);
 
         border = new Rectangle(cell_size, cell_size);
         border.setFill(Color.TRANSPARENT);
@@ -43,28 +45,11 @@ public class Meh extends StackPane {
         return imageView;
     }
 
-//    private void setCellView() {
-//        double imgSize = cell_size * 1.5;
-//
-//        ImageView imageView1 = new ImageView(new Image(getClass().getResourceAsStream("/Screen/meh/Fog1.png")));
-//        imageView1.setFitWidth(imgSize);
-//        imageView1.setFitHeight(imgSize);
-//
-//        ImageView imageView2 = new ImageView(new Image(getClass().getResourceAsStream("/Screen/meh/Fog2.png")));
-//        imageView2.setFitWidth(imgSize);
-//        imageView2.setFitHeight(imgSize);
-//
-//        ImageView imageView3 = new ImageView(new Image(getClass().getResourceAsStream("/Screen/meh/Fog3.png")));
-//        imageView3.setFitWidth(imgSize);
-//        imageView3.setFitHeight(imgSize);
-//
-//        this.getChildren().addAll(imageView1, imageView2, imageView3);
-//    }
-
 
     public void fadeOutFog() {
         ParallelTransition pt = new ParallelTransition();
-        for (ImageView fogLayer : List.of(fogLayer1, fogLayer2, fogLayer3)) {
+        List<ImageView> fogLayers = Arrays.asList(fogLayer1, fogLayer2, fogLayer3);
+        for (ImageView fogLayer : fogLayers) {
             if (!fogLayer.isVisible()) continue;
             FadeTransition ft = new FadeTransition(Duration.seconds(1), fogLayer);
             ft.setFromValue(fogLayer.getOpacity());
@@ -80,7 +65,8 @@ public class Meh extends StackPane {
 
     public void fadeInFog() {
         ParallelTransition pt = new ParallelTransition();
-        for (ImageView fogLayer : List.of(fogLayer1, fogLayer2, fogLayer3)) {
+        List<ImageView> fogLayers = Arrays.asList(fogLayer1, fogLayer2, fogLayer3);
+        for (ImageView fogLayer : fogLayers) {
             fogLayer.setVisible(true);
             fogLayer.setOpacity(0.0);
             FadeTransition ft = new FadeTransition(Duration.seconds(1), fogLayer);

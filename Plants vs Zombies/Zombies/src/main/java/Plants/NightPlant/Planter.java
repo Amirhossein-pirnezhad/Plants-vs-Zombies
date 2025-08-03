@@ -39,7 +39,7 @@ public class Planter extends Plant {
                 { 0, 0},{-1, -1}, {-1, 1}, {1, -1}, {1, 1}
         };
         for (int[] d : deltas) {
-            int r = row + d[0];
+            int r = (row - 5) + d[0];
             int c = col + d[1];
 
         if (isValidCell(cellsMeh, r, c)) {

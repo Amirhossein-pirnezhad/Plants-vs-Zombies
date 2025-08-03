@@ -188,6 +188,9 @@ public class GameManager {
     private void buildMeh(){
         int row = map_row / 2;
 
+        paneMeh.setPickOnBounds(false);
+        paneMeh.setMouseTransparent(true);
+
         mehGrid = new Meh[map_row][map_col];
 
         paneMeh.setPrefWidth(Sizes.SCREEN_WIDTH/2);
