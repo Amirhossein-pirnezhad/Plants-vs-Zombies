@@ -34,6 +34,7 @@ public class Main extends Application {
     private VBox selectedCardsBox;
     private List<Cart> selectedCards = new ArrayList<>();
     private Pane cardSelectionPane;
+    private boolean isNight;
 
     //initadda
     @Override
@@ -81,12 +82,18 @@ public class Main extends Application {
 
 
         Pane pane = new Pane(imageView  , Adventure_0,Adventure_2);
-        pane.setOnMouseClicked(mouseEvent -> {
-            System.out.println(mouseEvent);
-        });
+//        pane.setOnMouseClicked(mouseEvent -> {
+//            System.out.println(mouseEvent);
+//        });
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         Adventure_0.setOnMouseClicked(event -> {
+            isNight = false;
+            initializeCardSelection();
+            stage.close();
+        });
+        Adventure_2.setOnMouseClicked(event -> {
+            isNight = true;
             initializeCardSelection();
             stage.close();
         });
@@ -264,8 +271,11 @@ public class Main extends Application {
 
     private void Game(List<Cart> selectedCards , SaveLoad saveLoad){
         Stage primaryStage = new Stage();
+        String imagePath = isNight
+                ? "/Items/Background/Background_6.jpg"
+                : "/Items/Background/Background_0.jpg";
 
-        ImageView background = new ImageView(new Image(getClass().getResourceAsStream("/Items/Background/Background_0.jpg")));
+        ImageView background = new ImageView(new Image(getClass().getResourceAsStream(imagePath)));
         background.setFitHeight(Sizes.SCREEN_HEIGHT);
         background.setFitWidth(Sizes.SCREEN_WIDTH);
         ImageView sunCounter = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Sun/sunCounter.png")));
@@ -273,9 +283,9 @@ public class Main extends Application {
         sunCounter.setFitWidth(250);
 
 
-        Pane pane = new Pane( background );
+        Pane pane = new Pane( background);
         pane.getChildren().add(sunCounter);
-        GameManager g = new GameManager(pane , saveLoad);
+        GameManager g = new GameManager(pane , saveLoad , isNight);
 
         Label sunLabel = new Label("SunPoints: 0");
         sunLabel.setFont(new Font("Arial", 60));

@@ -59,7 +59,8 @@ public class GameManager {
     private Shovel shovel;
 
 
-    public GameManager(Pane gamePane , SaveLoad savedGame) {
+    public GameManager(Pane gamePane , SaveLoad savedGame , boolean isNight) {
+        night = isNight;
         shovel = new Shovel();
         saveLoad = savedGame;
         for(Cart cart : savedGame.getSelectedCards()){

@@ -13,8 +13,6 @@ public class TallNut extends Plant{
         plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/TallNut/TallNut.gif")));
         plantView.setFitHeight(cell_size);
         plantView.setFitHeight(cell_size);
-
-
     }
 
     @Override
