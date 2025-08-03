@@ -26,10 +26,6 @@ public class HypenoShroom extends Plant {
 
     protected void animHypno() {
         time = new Timeline(new KeyFrame(Duration.millis(200), event -> {
-            if (HP <= 0) {
-                dead();
-            }
-
             for (Zombie z : GameManager.getZombies()) {
                 if (z.isHypnosis() && z.getCol() == this.col) {
                     this.dead();
