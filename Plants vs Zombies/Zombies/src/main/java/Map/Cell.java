@@ -3,6 +3,7 @@ package Map;
 import Plants.NightPlant.Grave;
 import Plants.NightPlant.GraveBuster;
 import Plants.Plant;
+import Zombies.Zombie;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -63,6 +64,19 @@ public class Cell extends StackPane {
             return plant == null && p != GraveBuster.class;
         }
     }
+
+    public boolean hasZombie() {
+        for (Zombie z : GameManager.getZombies()) {
+            if (!z.isAlive()) continue;
+            if (z.getCol() != this.col)   continue;
+            if (z.getZombieView().getBoundsInParent()
+                    .intersects( this.getBoundsInParent() )) { // if zombie on it
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
     public Plant getPlant() {

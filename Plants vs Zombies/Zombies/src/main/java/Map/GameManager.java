@@ -255,6 +255,12 @@ public class GameManager {
                 });
             }
         }
+        panePlantVsZombie.setOnMouseClicked(event -> {
+            System.out.println("pane zombie" + event.getX());
+        });
+        panePeas.setOnMouseClicked(event -> {
+            System.out.println("pea" + event.getX());
+        });
     }
 
 //    private void if_game_over(){

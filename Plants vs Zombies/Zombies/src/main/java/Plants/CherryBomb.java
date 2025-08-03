@@ -39,12 +39,16 @@ public class CherryBomb extends Plant{
             dead();
     }
 
-    protected boolean isKilled(Zombie z){
+    protected boolean isKilled(Zombie z) {
         double x1 = Sizes.START_X_GRID + (row - 2) * Sizes.CELL_SIZE;
-        double x2 = x1 + 1 * row * Sizes.CELL_SIZE;
+        double x2 = x1 + 3 * Sizes.CELL_SIZE;
+        double zombieX = z.getZombieView().getLayoutX();
+        System.out.println("x1 " + x1 + "x2 " + x2 + "zombie : "+ zombieX);
+
         return ((z.getCol() == col) || (z.getCol() == col - 1) || (z.getCol() == col + 1))
-                && (z.getZombieView().getLayoutX() < x2) && (z.getZombieView().getLayoutX() > x1);
+                && (zombieX > x1 && zombieX < x2);
     }
+
 
     protected void killZombie(){
         for (Zombie z : GameManager.getZombies()){

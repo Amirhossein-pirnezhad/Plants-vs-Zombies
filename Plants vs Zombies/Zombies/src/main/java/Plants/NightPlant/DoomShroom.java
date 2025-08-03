@@ -1,6 +1,7 @@
 package Plants.NightPlant;
 
 import Map.GameManager;
+import Map.Sizes;
 import Plants.Plant;
 import Zombies.Zombie;
 import javafx.animation.Animation;
@@ -29,9 +30,20 @@ public class DoomShroom extends Plant {
         boom.play();
     }
 
+    protected boolean isKilled(Zombie z) {
+        double x1 = Sizes.START_X_GRID + (row - 4) * Sizes.CELL_SIZE;
+        double x2 = x1 + 5 * Sizes.CELL_SIZE;
+        double zombieX = z.getZombieView().getLayoutX();
+        System.out.println("x1 " + x1 + "x2 " + x2 + "zombie : "+ zombieX);
+
+        return ((z.getCol() == col) || (z.getCol() == col - 1) || (z.getCol() == col + 1)
+                || (z.getCol() == col - 2) || (z.getCol() == col + 2))
+                && (zombieX > x1 && zombieX < x2);
+    }
+
     protected void kill(){
         for(Zombie z : GameManager.getZombies()){
-            if(!z.isHypnosis())
+            if(!z.isHypnosis() && isKilled(z))
                 z.bomDie();
         }
         dead();

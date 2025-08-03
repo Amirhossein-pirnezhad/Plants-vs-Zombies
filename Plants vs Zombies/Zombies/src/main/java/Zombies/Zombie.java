@@ -230,8 +230,7 @@ public class Zombie implements Serializable {
                 if(Math.abs((p.getRow() * cell_size + Sizes.START_X_GRID) - this.zombieView.getLayoutX()) < distance){
                     if(p.getClass() == HypenoShroom.class) {
                         hypnosis();
-
-                        p.setHP(0);
+                        p.dead();
                         return null;
                     }
                     return p;

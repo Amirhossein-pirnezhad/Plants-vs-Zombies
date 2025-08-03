@@ -1,5 +1,6 @@
 package Plants;
 
+import Map.Cell;
 import Map.GameManager;
 import Zombies.Zombie;
 
@@ -10,8 +11,9 @@ public class Jalapeno extends CherryBomb{
     }
 
     @Override
-    protected boolean isKilled(Zombie z){
-        return ((z.getCol() == col));
+    protected void killZombie() {
+        for (Zombie z : GameManager.getZombies())
+            if (z.getCol() == col) z.bomDie();
     }
 
     @Override
