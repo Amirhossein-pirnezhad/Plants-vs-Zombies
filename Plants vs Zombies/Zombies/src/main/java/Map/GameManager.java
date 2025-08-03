@@ -36,7 +36,10 @@ public class GameManager {
     private static List<Sun> suns = new ArrayList<>();
     private GridPane gridPane;
     private static int map_row , map_col;
-    private static Cell[][] cells;
+    private static Cell[][] cells ;
+
+    private static Meh[][] mehGrid;
+
     public static int sunPoint;
     private VBox plantMenuVBox;
     private static Label sunPointLabel;
@@ -184,6 +187,9 @@ public class GameManager {
 
     private void buildMeh(){
         int row = map_row / 2;
+
+        mehGrid = new Meh[map_row][map_col];
+
         paneMeh.setPrefWidth(Sizes.SCREEN_WIDTH/2);
         paneMeh.setPrefHeight(Sizes.SCREEN_HEIGHT);
         paneMeh.setLayoutX(Sizes.SCREEN_WIDTH - (row) * Sizes.CELL_SIZE);
@@ -191,7 +197,11 @@ public class GameManager {
         GridPane grid = new GridPane();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < map_col; j++) {
-                grid.add(new Meh(i,j) , i , j);
+
+                Meh mehCell = new Meh(i, j);
+                mehGrid[i][j] = mehCell;
+
+                grid.add(mehCell, i, j);
             }
         }
         paneMeh.getChildren().add(grid);
@@ -357,6 +367,7 @@ public class GameManager {
             case SCARREDYSHROOM: plantClass = ScaredyShroom.class;  break;
             case GRAVEBUSTER:    plantClass = GraveBuster.class;    break;
             case FAN:            plantClass = Blover.class;         break;
+            case FANOUS:         plantClass = Planter.class;        break;
             default:             return;
         }
         System.out.println("p :" + plantClass.toString());
@@ -553,6 +564,12 @@ public class GameManager {
     public static Cell[][] getCells() {
         return cells;
     }
+
+    public static Meh[][] getMehcell(){
+        return  mehGrid;
+    }
+
+
 
     public static Pane getPanePlantVsZombie() {
         return panePlantVsZombie;

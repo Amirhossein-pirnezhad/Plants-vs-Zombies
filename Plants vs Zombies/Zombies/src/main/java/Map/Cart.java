@@ -47,7 +47,7 @@ public class Cart implements Serializable {
             case PUFFSHROOM: this.price = 0; this.rechargeTime = 5;     break;
             case SCARREDYSHROOM: this.price = 25; this.rechargeTime = 10;break;
             case GRAVEBUSTER: this.price = 75; this.rechargeTime = 10;  break;
-            case FANOUS: this.price = 25 ; this.rechargeTime = 10;      break;
+            case FANOUS: this.price = 25 ; this.rechargeTime = 5;      break;
             case FAN:   this.price = 100;  this.rechargeTime = 10;      break;
         }
 
