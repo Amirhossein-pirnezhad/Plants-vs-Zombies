@@ -511,6 +511,7 @@ public class GameManager {
     }
 
     public void spawnSun(){
+        if (night) return;
         tlSunBuild = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if(timerSun == timeBuildSun) {
                 int row = (int) (Math.random() * 100) % 5;

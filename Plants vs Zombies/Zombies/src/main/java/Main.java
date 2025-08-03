@@ -111,8 +111,10 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.show();
-
-        ImageView imageView= new ImageView(new Image(getClass().getResourceAsStream("/Items/Background/background_5.jpg")));
+        String imagePath = isNight
+                ? "/Items/Background/Background_1.jpg"
+                : "/Items/Background/Background_5.jpg";
+        ImageView imageView= new ImageView(new Image(getClass().getResourceAsStream(imagePath)));
         imageView.setFitWidth(Sizes.SCREEN_WIDTH);//set background
         imageView.setFitHeight(Sizes.SCREEN_HEIGHT);
         cardSelectionPane.getChildren().add(imageView);
