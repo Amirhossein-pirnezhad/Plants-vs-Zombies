@@ -20,6 +20,8 @@ public class ImpZombie extends Zombie{
         imgAttackLen = 26;
         zombieImages = setZombieImages(imgPath , imgLen);
         zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
+        imgFreezedZombie = "/Zombies/FreezedZombie/freezConeheadZombie.png"; //should be change this image
+
     }
 
     @Override

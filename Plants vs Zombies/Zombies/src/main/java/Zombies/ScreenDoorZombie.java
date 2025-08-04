@@ -16,6 +16,8 @@ public class ScreenDoorZombie extends Zombie{
         imgAttackLen = 10;
         zombieImages = setZombieImages( imgPath, imgLen);
         zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
+        imgFreezedZombie = "/Zombies/FreezedZombie/freezBucketheadZombie.png";
+
     }
 
 //    @Override

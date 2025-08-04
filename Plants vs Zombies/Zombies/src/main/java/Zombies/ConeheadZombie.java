@@ -16,6 +16,8 @@ public class ConeheadZombie extends Zombie{
         imgAttackLen = 10;
         zombieImages = setZombieImages(imgPath , imgLen);
         zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
+        imgFreezedZombie = "/Zombies/FreezedZombie/freezConeheadZombie.png";
+
     }
     @Override
     public void speedIsHalf(){

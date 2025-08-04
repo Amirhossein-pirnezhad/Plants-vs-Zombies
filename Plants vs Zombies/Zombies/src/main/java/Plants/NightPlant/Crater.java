@@ -20,8 +20,8 @@ public class Crater extends Plant {
         super(row, col);
         HP = Integer.MAX_VALUE;
         plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Crafter/crater1.png")));
-        plantView.setFitHeight(cell_size * 0.75);
-        plantView.setFitWidth(cell_size * 0.75);
+        plantView.setFitHeight(cell_size * 0.9);
+        plantView.setFitWidth(cell_size * 0.9);
         startLife();
     }
 
