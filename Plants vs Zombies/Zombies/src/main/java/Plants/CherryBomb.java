@@ -43,7 +43,6 @@ public class CherryBomb extends Plant{
         double x1 = Sizes.START_X_GRID + (row - 2) * Sizes.CELL_SIZE;
         double x2 = x1 + 3 * Sizes.CELL_SIZE;
         double zombieX = z.getZombieView().getLayoutX();
-        System.out.println("x1 " + x1 + "x2 " + x2 + "zombie : "+ zombieX);
 
         return ((z.getCol() == col) || (z.getCol() == col - 1) || (z.getCol() == col + 1))
                 && (zombieX > x1 && zombieX < x2);

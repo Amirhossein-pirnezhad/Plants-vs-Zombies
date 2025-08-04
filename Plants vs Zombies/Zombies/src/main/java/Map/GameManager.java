@@ -263,13 +263,6 @@ public class GameManager {
         });
     }
 
-//    private void if_game_over(){
-//        for (Zombie z : zombies){
-//            if (z.getZombieView().getLayoutX() < Sizes.START_X_GRID)
-//                lose();
-//        }
-//    }
-
     private void pauseGame(){
         if(game != null && game.getStatus() == Animation.Status.RUNNING)
             game.stop();
@@ -457,6 +450,14 @@ public class GameManager {
         }
         return choose.get((int)(Math.random() * choose.size()));
     }
+    
+    private void mainAttack(int timeAttack , int type){
+        Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
+            spawnZombie(type);
+        }));
+        tl.setCycleCount(timeAttack);
+        tl.play();
+    }
 
     private void gameAttack(){
         game = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
@@ -465,6 +466,12 @@ public class GameManager {
                 checkWin();
             }
             System.out.println(timeLevel);
+            if(timeLevel == 26){
+                mainAttack(7 , 2);
+            }
+            if (timeLevel == 47){
+                mainAttack(13 , 4);
+            }
             if(timeLevel > 3 && timeLevel <=15){
                 if(timeLevel % 3 == 0){
                     spawnZombie(1);

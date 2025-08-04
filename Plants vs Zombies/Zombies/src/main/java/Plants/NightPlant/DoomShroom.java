@@ -14,7 +14,7 @@ import javafx.util.Duration;
 import static Map.Cell.cell_size;
 
 public class DoomShroom extends Plant {
-    private Timeline boom;
+    protected Timeline boom;
     public DoomShroom(int row, int col) {
         super(row, col);
         HP = Integer.MAX_VALUE;
@@ -31,10 +31,9 @@ public class DoomShroom extends Plant {
     }
 
     protected boolean isKilled(Zombie z) {
-        double x1 = Sizes.START_X_GRID + (row - 4) * Sizes.CELL_SIZE;
+        double x1 = Sizes.START_X_GRID + (row - 3) * Sizes.CELL_SIZE;
         double x2 = x1 + 5 * Sizes.CELL_SIZE;
         double zombieX = z.getZombieView().getLayoutX();
-        System.out.println("x1 " + x1 + "x2 " + x2 + "zombie : "+ zombieX);
 
         return ((z.getCol() == col) || (z.getCol() == col - 1) || (z.getCol() == col + 1)
                 || (z.getCol() == col - 2) || (z.getCol() == col + 2))
@@ -57,6 +56,7 @@ public class DoomShroom extends Plant {
                 boom.stop();
             isAlive = false;
             GameManager.removePlant(this);
+            GameManager.addPlant(new Crater(row , col));
             plantView.setOnMouseClicked(null);
         }));
         dead.setCycleCount(1);
