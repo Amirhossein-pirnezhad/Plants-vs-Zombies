@@ -55,8 +55,8 @@ public class Zombie implements Serializable {
         hypnosis = false;
         zombieView = new ImageView();
         zombieImages = setZombieImages(imgPath , imgLen);
-        zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
-        zombieDei = setZombieImages(imgPathDead , imgDieLen);
+//        zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
+//        zombieDei = setZombieImages(imgPathDead , imgDieLen);
         zombieView.setLayoutX(1500);
         zombieView.setLayoutY(col * cell_size + 30);
         imgFreezedZombie = "/Zombies/FreezedZombie/freezNormalZombie.png";
@@ -141,6 +141,7 @@ public class Zombie implements Serializable {
     }
 
     protected void attackZombie(){
+        zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
         if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) return;
 //        zombieImages = null;
         if(runZombie != null)
@@ -181,6 +182,7 @@ public class Zombie implements Serializable {
     }
 
     protected void attackZombie(Zombie z){//for hypnosis mode
+        zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
         if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) return;
 
         if(runZombie != null)
@@ -299,6 +301,7 @@ public class Zombie implements Serializable {
            getDamage.stop();
         }
 
+        zombieDei = setZombieImages(imgPathDead , imgDieLen);
         Image[] zombieLostHead = setZombieImages("/Zombies/NormalZombie/ZombieHead/ZombieHead_" , 11);//anim lost head
         ImageView lostHead = new ImageView(zombieLostHead[0]);
         lostHead.setLayoutX(zombieView.getLayoutX() + 30);

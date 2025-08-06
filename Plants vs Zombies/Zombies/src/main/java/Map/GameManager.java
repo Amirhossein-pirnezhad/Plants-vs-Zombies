@@ -59,6 +59,7 @@ public class GameManager {
     private ArrayList<String> data;
     private Client client ;
     private Shovel shovel;
+    private int howMuch = 0;
 
 
     public GameManager(Pane gamePane , SaveLoad savedGame , boolean isNight , boolean online) {
@@ -106,6 +107,7 @@ public class GameManager {
         if (online){
             client = new Client();
             data = Client.data;
+            System.out.println("data" + data.size());
         }
 
         menuButton = new Button("menu");
@@ -431,6 +433,8 @@ public class GameManager {
     public void spawnZombie(int model){
         if (online){
             System.out.println("ONLINE");
+            howMuch++;
+            System.out.println("how much :" + howMuch);
             spawnZombie();
             return;
         }
@@ -450,11 +454,16 @@ public class GameManager {
     }
 
     private void spawnZombie(){
+        if (data.isEmpty()){
+            spawnZombie(4);
+            return;
+        }
         String serverData = data.get(0);
         data.remove(data.get(0));
         String[] serverNum = serverData.split(",");
         int col = Integer.parseInt(serverNum[0]);
         int type = Integer.parseInt(serverNum[1]);
+
         Zombie z;
         if(type == 0)
             z = new Zombie(col);
@@ -480,9 +489,11 @@ public class GameManager {
         return choose.get((int)(Math.random() * choose.size()));
     }
     
-    private void mainAttack(int timeAttack , int type){
+    private void mainAttack(int timeAttack , int type , int more){
         Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
-            spawnZombie(type);
+            for (int i = 0; i < more; i++) {
+                spawnZombie(type);
+            }
         }));
         tl.setCycleCount(timeAttack);
         tl.play();
@@ -491,14 +502,15 @@ public class GameManager {
     private void gameAttack(){
         game = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
             timeLevel ++;
+            System.out.println("time :" + timeLevel);
             if (timeLevel == timeLevel1){
                 checkWin();
             }
             if(timeLevel == 26){
-                mainAttack(7 , 2);
+                mainAttack(7 , 2 , 2);
             }
             if (timeLevel == 47){
-                mainAttack(13 , 4);
+                mainAttack(13 , 4 , 3);
             }
             if(timeLevel > 3 && timeLevel <=15){
                 if(timeLevel % 3 == 0){

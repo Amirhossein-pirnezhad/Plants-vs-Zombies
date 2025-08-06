@@ -89,13 +89,14 @@ public class Main extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         Adventure_0.setOnMouseClicked(event -> {
-            online = true;
+            online = false;
 
             isNight = false;
             initializeCardSelection();
             stage.close();
         });
         Adventure_2.setOnMouseClicked(event -> {
+            online = false;
             isNight = true;
             initializeCardSelection();
             stage.close();

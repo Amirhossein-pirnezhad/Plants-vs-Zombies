@@ -7,6 +7,7 @@ public class Client {
     private static Socket socket;
     private static BufferedReader in;
     public  static ArrayList<String> data;
+    public  static ArrayList<String> dataAtt1 , dataAtt2;
 
     static{
         socket = null;
@@ -22,11 +23,12 @@ public class Client {
     private static ArrayList<String> connectToServer() {
         try {
             String response = in.readLine();
-            String[] given = response.split("\\|");
+            String[] given = response.split("attack1");
+            String[] know = given[0].split("\\|");
             data = new ArrayList<>();
 
-            for (int i = 0; i < given.length; i++) {//col,type of each elements
-                data.add(given[i]);
+            for (int i = 0; i < know.length; i++) {//col,type of each elements
+                data.add(know[i]);
             }
 
             return data;
