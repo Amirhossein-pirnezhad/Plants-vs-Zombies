@@ -52,14 +52,17 @@ public class GameManager {
     private SaveLoad saveLoad;
     private Button save , pause , resume ,menuButton;
     private Game_Timer game_timer;
-    private boolean night = true;
+    private boolean night , online;
 
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
+    private ArrayList<String> data;
+    private Client client ;
     private Shovel shovel;
 
 
-    public GameManager(Pane gamePane , SaveLoad savedGame , boolean isNight) {
+    public GameManager(Pane gamePane , SaveLoad savedGame , boolean isNight , boolean online) {
+        this.online = online;
         night = isNight;
         shovel = new Shovel();
         saveLoad = savedGame;
@@ -99,6 +102,10 @@ public class GameManager {
                 addPlant(new Grave(r,c));
             }
             buildMeh();
+        }
+        if (online){
+            client = new Client();
+            data = Client.data;
         }
 
         menuButton = new Button("menu");
@@ -422,6 +429,11 @@ public class GameManager {
     //change random spawn zombie
     private int[] Count = new int[5];
     public void spawnZombie(int model){
+        if (online){
+            System.out.println("ONLINE");
+            spawnZombie();
+            return;
+        }
         int col = balanceRandom();
         int type = (int)(Math.random() * model) ;
             Zombie z;
@@ -435,7 +447,24 @@ public class GameManager {
                 z = new ImpZombie(col);
             addZombie(z);
         Count[col]++;
+    }
 
+    private void spawnZombie(){
+        String serverData = data.get(0);
+        data.remove(data.get(0));
+        String[] serverNum = serverData.split(",");
+        int col = Integer.parseInt(serverNum[0]);
+        int type = Integer.parseInt(serverNum[1]);
+        Zombie z;
+        if(type == 0)
+            z = new Zombie(col);
+        else if(type == 1)
+            z = new ConeheadZombie(col);
+        else if(type  == 2)
+            z = new ScreenDoorZombie(col);
+        else
+            z = new ImpZombie(col);
+        addZombie(z);
     }
 
     private int balanceRandom(){
@@ -465,7 +494,6 @@ public class GameManager {
             if (timeLevel == timeLevel1){
                 checkWin();
             }
-            System.out.println(timeLevel);
             if(timeLevel == 26){
                 mainAttack(7 , 2);
             }
