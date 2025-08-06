@@ -35,6 +35,7 @@ public class Main extends Application {
     private List<Cart> selectedCards = new ArrayList<>();
     private Pane cardSelectionPane;
     private boolean isNight;
+    private boolean online;
 
     //initadda
     @Override
@@ -88,6 +89,8 @@ public class Main extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         Adventure_0.setOnMouseClicked(event -> {
+            online = true;
+
             isNight = false;
             initializeCardSelection();
             stage.close();
@@ -291,7 +294,7 @@ public class Main extends Application {
 
         Pane pane = new Pane( background);
         pane.getChildren().add(sunCounter);
-        GameManager g = new GameManager(pane , saveLoad , isNight);
+        GameManager g = new GameManager(pane , saveLoad , isNight , online);
 
         Label sunLabel = new Label("SunPoints: 0");
         sunLabel.setFont(new Font("Arial", 60));
