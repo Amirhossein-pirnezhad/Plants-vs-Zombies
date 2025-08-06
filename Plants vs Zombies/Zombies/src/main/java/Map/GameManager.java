@@ -57,6 +57,7 @@ public class GameManager {
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
     private Shovel shovel;
+    private RandomSpawn spawn = new RandomSpawn();
 
 
     public GameManager(Pane gamePane , SaveLoad savedGame , boolean isNight) {
@@ -174,6 +175,7 @@ public class GameManager {
             sunPointLabel.setText("" + sunPoint);
         }
     }
+//online
 
     public void buildMap(){
             for (int i = 0; i < map_row; i++) {
@@ -423,7 +425,7 @@ public class GameManager {
     private int[] Count = new int[5];
     public void spawnZombie(int model){
         int col = balanceRandom();
-        int type = (int)(Math.random() * model) ;
+        int type = (int)(Math.random() * model);
             Zombie z;
             if(type == 0)
                 z = new Zombie(col);
@@ -435,7 +437,6 @@ public class GameManager {
                 z = new ImpZombie(col);
             addZombie(z);
         Count[col]++;
-
     }
 
     private int balanceRandom(){
@@ -450,7 +451,7 @@ public class GameManager {
         }
         return choose.get((int)(Math.random() * choose.size()));
     }
-    
+
     private void mainAttack(int timeAttack , int type){
         Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
             spawnZombie(type);
