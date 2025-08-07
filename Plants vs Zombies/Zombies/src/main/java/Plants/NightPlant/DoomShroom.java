@@ -15,7 +15,6 @@ import static Map.Cell.cell_size;
 
 public class DoomShroom extends Plant {
     protected Timeline boom;
-    protected boolean coffee;
     protected boolean started = false;
 
     protected String img = "/Plants/DoomShroom/DoomShroom.gif";
@@ -93,14 +92,10 @@ public class DoomShroom extends Plant {
     public void update() {
         if (coffee && !started){
             started = true;
-//            plantView = new ImageView(new Image(getClass().getResourceAsStream(img)));
+            plantView.setImage(new Image(getClass().getResourceAsStream(img)));
             bomb();
         }
         if (HP <= 0)
             dead();
-    }
-
-    public void setCoffee(boolean coffee) {
-        this.coffee = coffee;
     }
 }

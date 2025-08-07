@@ -13,8 +13,7 @@ import javafx.util.Duration;
 import static Map.Cell.cell_size;
 
 public class HypenoShroom extends Plant {
-    protected boolean coffee;
-
+    private boolean started = false;
     public HypenoShroom(int row, int col) {
         super(row, col);
         coffee = GameManager.night;
@@ -50,15 +49,13 @@ public class HypenoShroom extends Plant {
 
     @Override
     public void update() {
-        if (coffee)
-            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/HypnoShroom/HypnoShroom/HypnoShroom.gif")));
+        if (coffee && !started) {
+            plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/HypnoShroom/HypnoShroom/HypnoShroom.gif")));
+            started = true;
+        }
         if(HP <= 0){
             dead();
         }
-    }
-
-    public void setCoffee(boolean coffee) {
-        this.coffee = coffee;
     }
 
     public boolean isCoffee() {

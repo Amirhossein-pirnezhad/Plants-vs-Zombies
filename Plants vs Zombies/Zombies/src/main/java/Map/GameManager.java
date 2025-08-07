@@ -34,6 +34,7 @@ public class GameManager {
     private static List<Zombie> zombies = new ArrayList<>();
     private static List<Plant> plants = new ArrayList<>();
     private static List<Sun> suns = new ArrayList<>();
+    public static List<Pea> peas = new ArrayList<>();
     private GridPane gridPane;
     private static int map_row , map_col;
     private static Cell[][] cells ;
@@ -45,7 +46,7 @@ public class GameManager {
     private static Label sunPointLabel;
     private static Cart savedCart = null;
     private static Timeline game ;
-    private Timeline tlSunBuild , winTime , updatePlants;
+    private Timeline tlSunBuild , winTime , updatePlants , updatePeas;
     private final int timeBuildSun = 5 , timeLevel1 = 60;
     public static int timeUpdatePlants = 200;
     private int timeLevel = 1 , timerSun;
@@ -140,6 +141,7 @@ public class GameManager {
                 GameManager.getPaneMeh()
         );
         updatePlants();
+        updatePeas();
     }
 
     private void updatePlants(){
@@ -150,6 +152,16 @@ public class GameManager {
         }));
         updatePlants.setCycleCount(Animation.INDEFINITE);
         updatePlants.play();
+    }
+
+    private void updatePeas(){
+        updatePeas = new Timeline(new KeyFrame(Duration.millis(10) , event -> {
+            List<Pea> copy = new ArrayList<>(peas);
+            for (Pea p : peas)
+                p.update();
+        }));
+        updatePeas.setCycleCount(Animation.INDEFINITE);
+        updatePeas.play();
     }
 
 
@@ -238,6 +250,11 @@ public class GameManager {
     }
 
     public static void addPlant(Plant p) {
+        if (p instanceof CoffeeBean) {
+            plants.add(p);
+            cells[p.getRow()][p.getCol()].getChildren().add(p.getPlantView());
+            return;
+        }
         if(cells[p.getRow()][p.getCol()].canSetPlant(p.getClass())) {
             cells[p.getRow()][p.getCol()].setPlant(p);
             plants.add(p);
@@ -365,10 +382,12 @@ public class GameManager {
 
     private void choice(int i, int j) {
         if (savedCart == null && shovel.isClicked()){
-            if (cells[i][j].getPlant().getClass() != Grave.class) {
-                cells[i][j].getPlant().setHP(0);
-                removePlant(cells[i][j].getPlant());
-                shovel.setClicked(false);
+            if (cells[i][j].getPlant() != null) {
+                if (cells[i][j].getPlant().getClass() != Grave.class) {
+                    cells[i][j].getPlant().setHP(0);
+                    removePlant(cells[i][j].getPlant());
+                    shovel.setClicked(false);
+                }
             }
             return;
         }
@@ -394,9 +413,7 @@ public class GameManager {
             case COFFEEBEAN:     plantClass = CoffeeBean.class;     break;
             default:             return;
         }
-        System.out.println("p :" + plantClass.toString());
         if (canBuild() && cells[i][j].canSetPlant(plantClass)) {
-            System.out.println("buiding");
             Plant choose_plant;
             try {
                 Constructor<? extends Plant> constructor = plantClass.getConstructor(int.class, int.class);
@@ -416,7 +433,6 @@ public class GameManager {
     private void buyPlant(Cart cart){
         sunPoint -= cart.getPrice();
         updateSunPointLabel();
-        System.out.println("buying");
     }
 
     private void handleClickOnChoice(){

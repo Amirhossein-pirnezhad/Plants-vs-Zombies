@@ -3,6 +3,7 @@ package Plants;
 import Map.GameManager;
 
 import static Map.Cell.cell_size;
+import static Map.GameManager.peas;
 
 public class Repeater extends Peashooter{
     public Repeater(int row, int col) {

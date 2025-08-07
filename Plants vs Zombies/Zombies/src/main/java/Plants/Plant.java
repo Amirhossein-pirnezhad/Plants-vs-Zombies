@@ -16,6 +16,7 @@ public abstract class Plant extends StackPane implements Serializable {
     protected int row , col;
     protected boolean isAlive;
     protected double x , y;
+    protected boolean coffee;
 
     public Plant(int row , int col){
         this.row = row;
@@ -72,5 +73,9 @@ public abstract class Plant extends StackPane implements Serializable {
 
     public boolean isAlive() {
         return isAlive;
+    }
+
+    public void setCoffee(boolean coffee) {
+        this.coffee = coffee;
     }
 }

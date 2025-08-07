@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 import static Map.Cell.cell_size;
+import static Map.GameManager.peas;
 
 public class SnowPea extends Peashooter{
 

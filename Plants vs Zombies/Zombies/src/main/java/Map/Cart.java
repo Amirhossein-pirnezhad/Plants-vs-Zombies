@@ -33,23 +33,23 @@ public class Cart implements Serializable {
         isAdded = false;
         plantType = cardsType;
         switch (cardsType){
-            case SUNFLOWER: this.price = 50;  this.rechargeTime = 11;   break;
-            case PEASHOOTRER: this.price = 100; this.rechargeTime = 10; break;
-            case REPEATER: this.price = 200; this.rechargeTime = 10;    break;
-            case TALLNUT: this.price = 125; this.rechargeTime = 10;     break;
-            case WALLNUT: this.price = 50;  this.rechargeTime = 10;     break;
-            case CHERRYBOMB: this.price = 150; this.rechargeTime = 10;  break;
-            case JALAPENO: this.price = 200; this.rechargeTime = 11;    break;
-            case SNOWPEA: this.price = 175; this.rechargeTime = 10;     break;
-            case DOOMSHROOM: this.price = 125; this.rechargeTime = 10;  break;
-            case HYPNOSHROOM: this.price = 75; this.rechargeTime = 10;  break;
-            case ICESHROOM: this.price = 75; this.rechargeTime = 10;    break;
+            case SUNFLOWER: this.price = 50;  this.rechargeTime = 5;   break;
+            case PEASHOOTRER: this.price = 100; this.rechargeTime = 5; break;
+            case REPEATER: this.price = 200; this.rechargeTime = 5;    break;
+            case TALLNUT: this.price = 125; this.rechargeTime = 5;     break;
+            case WALLNUT: this.price = 50;  this.rechargeTime = 5;     break;
+            case CHERRYBOMB: this.price = 150; this.rechargeTime = 5;  break;
+            case JALAPENO: this.price = 200; this.rechargeTime = 5;    break;
+            case SNOWPEA: this.price = 175; this.rechargeTime = 5;     break;
+            case DOOMSHROOM: this.price = 125; this.rechargeTime = 5;  break;
+            case HYPNOSHROOM: this.price = 75; this.rechargeTime = 5;  break;
+            case ICESHROOM: this.price = 75; this.rechargeTime = 5;    break;
             case PUFFSHROOM: this.price = 0; this.rechargeTime = 5;     break;
-            case SCARREDYSHROOM: this.price = 25; this.rechargeTime = 10;break;
-            case GRAVEBUSTER: this.price = 75; this.rechargeTime = 10;  break;
+            case SCARREDYSHROOM: this.price = 25; this.rechargeTime = 5;break;
+            case GRAVEBUSTER: this.price = 75; this.rechargeTime = 5;  break;
             case FANOUS: this.price = 25 ; this.rechargeTime = 5;      break;
-            case FAN:   this.price = 100;  this.rechargeTime = 10;      break;
-            case COFFEEBEAN: this.price =75; this.rechargeTime= 10;     break;
+            case FAN:   this.price = 100;  this.rechargeTime = 5;      break;
+            case COFFEEBEAN: this.price =75; this.rechargeTime= 5;     break;
         }
 
         this.imageView = new ImageView(image);

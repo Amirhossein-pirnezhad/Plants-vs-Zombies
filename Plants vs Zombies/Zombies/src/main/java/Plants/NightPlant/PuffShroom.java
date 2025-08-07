@@ -11,11 +11,13 @@ import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
+import static Map.GameManager.peas;
+
 public class PuffShroom extends Peashooter {
     protected String sleepPath = "/Plants/PuffShroom/PuffShroomSleep/PuffShroomSleep_";
     protected String awakePath = "/Plants/PuffShroom/PuffShroom/PuffShroom_";
     protected int imgLenSleep = 16, imgLenAwake = 14;
-    protected boolean isSleep = true, coffee;
+    protected boolean isSleep = true;
 
     public PuffShroom(int row, int col) {
         super(row, col);

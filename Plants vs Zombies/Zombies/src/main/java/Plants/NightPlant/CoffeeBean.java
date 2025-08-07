@@ -5,21 +5,28 @@ import Plants.Plant;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import static Map.Cell.cell_size;
-
 public class CoffeeBean extends Plant {
+    private int count = 0 , time1 = 1000 / GameManager.timeUpdatePlants , time2 = time1 * 2;
+    private Plant p ;
     public CoffeeBean(int row, int col) {
         super(row, col);
         HP = 20;
-        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/GraveBuster/GraveBuster.gif")));
-        plantView.setFitHeight(cell_size);
-        plantView.setFitWidth(cell_size);
+        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/CoffeeBean/CoffeeBean.gif")));
+        findSleepPlant();
+    }
+
+    private void findSleepPlant(){
+        p = GameManager.getCells()[row][col].getPlant();
+    }
+
+    private void wakeUpNightPlant(){
+        p.setCoffee(true);
     }
 
     @Override
     public void dead() {
         isAlive = false;
-        GameManager.removePlant(this);
+        GameManager.getCells()[row][col].getChildren().remove(plantView);
 
         plantView.setOnMouseClicked(null);
     }
@@ -36,6 +43,13 @@ public class CoffeeBean extends Plant {
 
     @Override
     public void update() {
-
+        if (count == time1){
+            plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/CoffeeBean/CoffeeBeanEat.gif")));
+        }
+        if (count == time2) {
+            wakeUpNightPlant();
+            dead();
+        }
+        count ++;
     }
 }

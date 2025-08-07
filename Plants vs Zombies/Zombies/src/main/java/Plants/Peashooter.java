@@ -9,11 +9,12 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static Map.Cell.cell_size;
+import static Map.GameManager.peas;
 
 public class Peashooter extends Plant{
-    protected ArrayList<Pea> peas = new ArrayList<>();
     protected transient Timeline shoot;
     protected transient Timeline animPeashooter;
     protected int peaInCircle;
@@ -124,9 +125,5 @@ public class Peashooter extends Plant{
     @Override
     public void update() {
 
-    }
-
-    public ArrayList<Pea> getPeas() {
-        return peas;
     }
 }
