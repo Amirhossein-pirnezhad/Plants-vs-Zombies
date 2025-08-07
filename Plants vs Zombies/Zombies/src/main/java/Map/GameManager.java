@@ -56,7 +56,7 @@ public class GameManager {
 
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
-    private ArrayList<String> data;
+    private ArrayList<String> data , sunData;
     private Client client ;
     private Shovel shovel;
     private int howMuch = 0;
@@ -107,7 +107,7 @@ public class GameManager {
         if (online){
             client = new Client();
             data = Client.data;
-            System.out.println("data" + data.size());
+            sunData = Client.dataSuns;
         }
 
         menuButton = new Button("menu");
@@ -454,7 +454,7 @@ public class GameManager {
     }
 
     private void spawnZombie(){
-        if (data.isEmpty()){
+        if (data == null || data.isEmpty()){
             spawnZombie(4);
             return;
         }
@@ -503,6 +503,9 @@ public class GameManager {
         game = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
             timeLevel ++;
             System.out.println("time :" + timeLevel);
+            if (timeLevel % timeBuildSun == 0) {
+                spawnSun();
+            }
             if (timeLevel == timeLevel1){
                 checkWin();
             }
@@ -565,18 +568,22 @@ public class GameManager {
 
     public void spawnSun(){
         if (night) return;
-        tlSunBuild = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            if(timerSun == timeBuildSun) {
-                int row = (int) (Math.random() * 100) % 5;
-                int col = (int) (Math.random() * 100) % 9;
+        if (online){
+            if (sunData != null && !sunData.isEmpty()) {
+                String serverData = sunData.get(0);
+                sunData.remove(sunData.get(0));
+                String[] serverNum = serverData.split(",");
+                int row = Integer.parseInt(serverNum[0]);
+                int col = Integer.parseInt(serverNum[1]);
                 Sun s = new Sun(row, col, 0);
                 addSun(s, row, col);
-                timerSun = -1;
+                return;
             }
-            timerSun ++;
-        }));
-        tlSunBuild.setCycleCount(timeLevel1);
-        tlSunBuild.play();
+        }
+        int row = (int) (Math.random() * 100) % 5;
+        int col = (int) (Math.random() * 100) % 9;
+        Sun s = new Sun(row, col, 0);
+        addSun(s, row, col);
     }
 
     private void showMenuOptions() {
