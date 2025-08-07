@@ -2,7 +2,6 @@ package Map;
 
 import Plants.NightPlant.*;
 import Plants.Plant;
-import Zombies.Zombie;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;

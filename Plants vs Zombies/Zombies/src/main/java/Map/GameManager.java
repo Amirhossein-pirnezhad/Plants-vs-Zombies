@@ -47,8 +47,8 @@ public class GameManager {
     private static Timeline game ;
     private Timeline tlSunBuild , winTime , updatePlants;
     private final int timeBuildSun = 5 , timeLevel1 = 60;
-    private int timerSun;
-    private int timeLevel = 1;
+    public static int timeUpdatePlants = 200;
+    private int timeLevel = 1 , timerSun;
     private SaveLoad saveLoad;
     private Button save , pause , resume ,menuButton;
     private Game_Timer game_timer;
@@ -143,7 +143,7 @@ public class GameManager {
     }
 
     private void updatePlants(){
-        updatePlants = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
+        updatePlants = new Timeline(new KeyFrame(Duration.millis(timeUpdatePlants) , event -> {
             List<Plant> copy = new ArrayList<>(plants);
             for (Plant p : copy)
                 p.update();
@@ -368,6 +368,7 @@ public class GameManager {
             if (cells[i][j].getPlant().getClass() != Grave.class) {
                 cells[i][j].getPlant().setHP(0);
                 removePlant(cells[i][j].getPlant());
+                shovel.setClicked(false);
             }
             return;
         }

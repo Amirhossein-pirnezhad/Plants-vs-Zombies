@@ -12,18 +12,13 @@ import static Map.Cell.cell_size;
 
 public class GraveBuster extends Plant {
     private Timeline eating;
+    private int counter = 0 , more = (3 * 1000) / GameManager.timeUpdatePlants;
 
     public GraveBuster(int row, int col) {
         super(row, col);
         plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/GraveBuster/GraveBuster.gif")));
         plantView.setFitHeight(cell_size);
         plantView.setFitWidth(cell_size);
-
-        eating = new Timeline(new KeyFrame(Duration.seconds(3) , e->{
-            dead();
-        }));
-        eating.setCycleCount(1);
-        eating.play();
     }
 
     @Override
@@ -41,11 +36,15 @@ public class GraveBuster extends Plant {
 
     @Override
     public void resume() {
-
+        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/GraveBuster/GraveBuster.gif")));
+        plantView.setFitHeight(cell_size);
+        plantView.setFitWidth(cell_size);
     }
 
     @Override
     public void update() {
-
+        if (counter == more)
+            dead();
+        counter ++;
     }
 }

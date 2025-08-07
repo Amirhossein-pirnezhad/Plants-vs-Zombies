@@ -28,7 +28,6 @@ public class Planter extends Plant {
         Meh[][] cellsMeh = GameManager.getMehcell();
         hideFogAround(cellsMeh);
 
-        animPlanter();
     }
 
     private void hideFogAround(Meh[][] cellsMeh) {
@@ -76,16 +75,6 @@ public class Planter extends Plant {
                 && r >= 0 && r < grid.length
                 && c >= 0 && c < grid[0].length;
     }
-    protected void animPlanter(){
-        time = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
-            if(HP <= 0){
-                dead();
-            }
-
-        }));
-        time.setCycleCount(Animation.INDEFINITE);
-        time.play();
-    }
 
     @Override
     public void dead() {
@@ -111,6 +100,8 @@ public class Planter extends Plant {
 
     @Override
     public void update() {
-
+        if(HP <= 0){
+            dead();
+        }
     }
 }

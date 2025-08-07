@@ -16,6 +16,8 @@ import static Map.Cell.cell_size;
 public class DoomShroom extends Plant {
     protected Timeline boom;
     protected boolean coffee;
+    protected boolean started = false;
+
     protected String img = "/Plants/DoomShroom/DoomShroom.gif";
     public DoomShroom(int row, int col) {
         super(row, col);
@@ -28,8 +30,6 @@ public class DoomShroom extends Plant {
         }
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
-        if (coffee)
-            bomb();
     }
 
     protected void bomb(){
@@ -58,6 +58,7 @@ public class DoomShroom extends Plant {
 
     @Override
     public void dead() {
+        System.out.println("DOOMSHROOM dead!!!!!!!!!!!!!!!!");
         plantView.setImage(new Image(getClass().getResourceAsStream("/Screen/Boom.gif")));
         Timeline dead = new Timeline(new KeyFrame(Duration.seconds(1.2) , event -> {
             if(boom != null && boom.getStatus() == Animation.Status.RUNNING)
@@ -79,13 +80,20 @@ public class DoomShroom extends Plant {
 
     @Override
     public void resume() {
-
+        if(coffee)
+            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/DoomShroom.gif")));
+        if (!coffee){
+            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/Sleep.gif")));
+        }
+        plantView.setFitHeight(cell_size * 0.75);
+        plantView.setFitWidth(cell_size * 0.75);
     }
 
     @Override
     public void update() {
-        if (coffee){
-            plantView = new ImageView(new Image(getClass().getResourceAsStream(img)));
+        if (coffee && !started){
+            started = true;
+//            plantView = new ImageView(new Image(getClass().getResourceAsStream(img)));
             bomb();
         }
         if (HP <= 0)
