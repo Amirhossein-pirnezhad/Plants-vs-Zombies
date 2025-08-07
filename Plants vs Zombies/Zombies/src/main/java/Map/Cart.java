@@ -49,6 +49,7 @@ public class Cart implements Serializable {
             case GRAVEBUSTER: this.price = 75; this.rechargeTime = 10;  break;
             case FANOUS: this.price = 25 ; this.rechargeTime = 5;      break;
             case FAN:   this.price = 100;  this.rechargeTime = 10;      break;
+            case COFFEEBEAN: this.price =75; this.rechargeTime= 10;     break;
         }
 
         this.imageView = new ImageView(image);

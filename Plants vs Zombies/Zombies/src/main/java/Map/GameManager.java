@@ -391,6 +391,7 @@ public class GameManager {
             case GRAVEBUSTER:    plantClass = GraveBuster.class;    break;
             case FAN:            plantClass = Blover.class;         break;
             case FANOUS:         plantClass = Planter.class;        break;
+            case COFFEEBEAN:     plantClass = CoffeeBean.class;     break;
             default:             return;
         }
         System.out.println("p :" + plantClass.toString());

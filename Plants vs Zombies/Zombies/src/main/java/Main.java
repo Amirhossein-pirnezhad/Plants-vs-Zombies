@@ -21,6 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import Map.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,6 +39,8 @@ public class Main extends Application {
     private Pane cardSelectionPane;
     private boolean isNight;
     private boolean online;
+    private MediaPlayer backgroundMusic;
+
 
     //initadda
     @Override
@@ -45,6 +50,13 @@ public class Main extends Application {
 
     private void startGame(Stage stage){
         stage.setTitle("Plants vs Zombies");
+        String musicPath = getClass().getResource("/sounds/Grasswalk.mp3").toExternalForm();
+        Media media = new Media(musicPath);
+        backgroundMusic = new MediaPlayer(media);
+        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+        backgroundMusic.setVolume(0.5);
+        backgroundMusic.play();
+
         stage.setFullScreen(true);
         ImageView imageView= new ImageView(new Image(getClass().getResourceAsStream("/Screen/main-menu.png")));
         ImageView Adventure_0= new ImageView(new Image(getClass().getResourceAsStream("/Screen/daymode.png")));
