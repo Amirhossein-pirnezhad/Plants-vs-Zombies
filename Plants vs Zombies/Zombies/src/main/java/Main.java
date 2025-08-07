@@ -101,13 +101,50 @@ public class Main extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         Adventure_0.setOnMouseClicked(event -> {
+//            online = false;
+//
+//            isNight = false;
+//            initializeCardSelection();
+            showOfflineMode();
+//            stage.close();
+        });
+        Adventure_2.setOnMouseClicked(event -> {
             online = false;
+            isNight = true;
+            initializeCardSelection();
+            stage.close();
+        });
+        stage.show();
+    }
 
+    public void showOfflineMode(){
+        Stage stage = new Stage();
+        stage.setFullScreen(true);
+        ImageView backgrand = new ImageView(new Image(getClass().getResourceAsStream("/Screen/choosNightDayMod.png")));
+        backgrand.setFitWidth(Sizes.SCREEN_WIDTH);
+        backgrand.setFitHeight(Sizes.SCREEN_HEIGHT);
+
+        Button dayBtn = new Button("Day Mode");
+        Button nightBtn = new Button("Night Mode");
+        dayBtn.setLayoutX(200);
+        dayBtn.setLayoutY(400);
+        nightBtn.setLayoutX(600);
+        nightBtn.setLayoutY(400);
+        dayBtn.setPrefWidth(200);
+        dayBtn.setPrefHeight(60);
+        nightBtn.setPrefWidth(200);
+        nightBtn.setPrefHeight(60);
+
+        Pane pane = new Pane(backgrand,dayBtn,nightBtn);
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
+        dayBtn.setOnMouseClicked(event -> {
+            online = false;
             isNight = false;
             initializeCardSelection();
             stage.close();
         });
-        Adventure_2.setOnMouseClicked(event -> {
+        nightBtn.setOnMouseClicked(event -> {
             online = false;
             isNight = true;
             initializeCardSelection();
