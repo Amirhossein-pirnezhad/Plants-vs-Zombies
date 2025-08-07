@@ -74,4 +74,9 @@ public class SunFlower extends Plant{
         buildSun();
         GameManager.getCells()[row][col].setPlant(this);
     }
+
+    @Override
+    public void update() {
+
+    }
 }

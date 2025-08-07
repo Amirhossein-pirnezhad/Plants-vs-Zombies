@@ -108,4 +108,9 @@ public class Planter extends Plant {
     public void resume() {
 
     }
+
+    @Override
+    public void update() {
+
+    }
 }

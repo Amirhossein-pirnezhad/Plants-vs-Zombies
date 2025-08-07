@@ -13,7 +13,11 @@ import javafx.util.Duration;
 public class IceShroom extends DoomShroom {
     public IceShroom(int row, int col) {
         super(row, col);
-        plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/IceShroom/IceShroom/IceShroom.gif")));
+        img = "/Plants/IceShroom/IceShroom/IceShroom.gif";
+        if (coffee)
+            plantView.setImage(new Image(getClass().getResourceAsStream(img)));
+        else
+            plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/IceShroom/IceShroom/IceShroomSleep.gif")));
     }
 
     @Override

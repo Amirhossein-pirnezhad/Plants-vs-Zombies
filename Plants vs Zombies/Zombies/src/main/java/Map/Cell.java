@@ -1,7 +1,6 @@
 package Map;
 
-import Plants.NightPlant.Grave;
-import Plants.NightPlant.GraveBuster;
+import Plants.NightPlant.*;
 import Plants.Plant;
 import Zombies.Zombie;
 import javafx.scene.image.ImageView;
@@ -53,29 +52,27 @@ public class Cell extends StackPane {
         this.getChildren().add(cellView);
     }
 
-    public boolean canSetPlant(Class p) {
+    public boolean canSetPlant(Class<?> newPlantClass) {
+        if (newPlantClass == CoffeeBean.class) {
+            if (plant != null &&
+                    (plant instanceof PuffShroom || plant instanceof ScaredyShroom || plant instanceof DoomShroom ||
+                     plant instanceof HypenoShroom || plant instanceof IceShroom)) {
+                return true;
+            }
+            return false;
+        }
+
         if (hasGrave) {
-            if (p == GraveBuster.class){
+            if (newPlantClass == GraveBuster.class){
                 removePlant();
                 return true;
             }
-            return p == GraveBuster.class;
+            return false;
         } else {
-            return plant == null && p != GraveBuster.class;
+            return plant == null && newPlantClass != GraveBuster.class && newPlantClass != CoffeeBean.class;
         }
     }
 
-    public boolean hasZombie() {
-        for (Zombie z : GameManager.getZombies()) {
-            if (!z.isAlive()) continue;
-            if (z.getCol() != this.col)   continue;
-            if (z.getZombieView().getBoundsInParent()
-                    .intersects( this.getBoundsInParent() )) { // if zombie on it
-                return true;
-            }
-        }
-        return false;
-    }
 
 
 

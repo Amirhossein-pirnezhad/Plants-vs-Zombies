@@ -229,9 +229,11 @@ public class Zombie implements Serializable {
                     continue;
                 if(Math.abs((p.getRow() * cell_size + Sizes.START_X_GRID) - this.zombieView.getLayoutX()) < distance){
                     if(p.getClass() == HypenoShroom.class) {
-                        hypnosis();
-                        p.dead();
-                        return null;
+                        if(((HypenoShroom) p).isCoffee()) {
+                            hypnosis();
+                            p.dead();
+                            return null;
+                        }
                     }
                     return p;
                 }

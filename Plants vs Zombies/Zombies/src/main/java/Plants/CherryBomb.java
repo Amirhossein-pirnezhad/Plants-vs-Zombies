@@ -103,4 +103,9 @@ public class CherryBomb extends Plant{
         bomb(frame);
         GameManager.getCells()[row][col].setPlant(this);
     }
+
+    @Override
+    public void update() {
+
+    }
 }

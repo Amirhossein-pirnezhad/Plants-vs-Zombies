@@ -100,4 +100,9 @@ public class Sun extends Plant{
         startLifeTime();
     }
 
+    @Override
+    public void update() {
+
+    }
+
 }

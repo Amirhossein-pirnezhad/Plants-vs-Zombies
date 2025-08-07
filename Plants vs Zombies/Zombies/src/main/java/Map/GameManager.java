@@ -45,14 +45,14 @@ public class GameManager {
     private static Label sunPointLabel;
     private static Cart savedCart = null;
     private static Timeline game ;
-    private Timeline tlSunBuild , winTime;
+    private Timeline tlSunBuild , winTime , updatePlants;
     private final int timeBuildSun = 5 , timeLevel1 = 60;
     private int timerSun;
     private int timeLevel = 1;
     private SaveLoad saveLoad;
     private Button save , pause , resume ,menuButton;
     private Game_Timer game_timer;
-    private boolean night , online;
+    public static boolean night , online;
 
     private List<Cart> selectedCards = new ArrayList<>();
     private List<BorderPane> cartView_recharge = new ArrayList<>();
@@ -139,7 +139,17 @@ public class GameManager {
                 GameManager.getPanePlantVsZombie() ,
                 GameManager.getPaneMeh()
         );
+        updatePlants();
+    }
 
+    private void updatePlants(){
+        updatePlants = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
+            List<Plant> copy = new ArrayList<>(plants);
+            for (Plant p : copy)
+                p.update();
+        }));
+        updatePlants.setCycleCount(Animation.INDEFINITE);
+        updatePlants.play();
     }
 
 

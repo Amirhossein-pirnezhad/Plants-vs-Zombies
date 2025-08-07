@@ -89,4 +89,9 @@ public class WallNut extends Plant{
         animWallNut();
         GameManager.getCells()[row][col].setPlant(this);
     }
+
+    @Override
+    public void update() {
+
+    }
 }

@@ -61,4 +61,9 @@ public class Crater extends Plant {
     public void resume() {
 
     }
+
+    @Override
+    public void update() {
+
+    }
 }

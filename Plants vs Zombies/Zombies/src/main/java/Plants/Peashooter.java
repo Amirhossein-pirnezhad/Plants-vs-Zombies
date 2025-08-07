@@ -121,6 +121,11 @@ public class Peashooter extends Plant{
         GameManager.addPlant(this);
     }
 
+    @Override
+    public void update() {
+
+    }
+
     public ArrayList<Pea> getPeas() {
         return peas;
     }

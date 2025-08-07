@@ -89,7 +89,7 @@ public class Main extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         Adventure_0.setOnMouseClicked(event -> {
-            online = true;
+            online = false;
 
             isNight = false;
             initializeCardSelection();

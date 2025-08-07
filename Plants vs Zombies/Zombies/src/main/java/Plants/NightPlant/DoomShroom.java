@@ -15,13 +15,21 @@ import static Map.Cell.cell_size;
 
 public class DoomShroom extends Plant {
     protected Timeline boom;
+    protected boolean coffee;
+    protected String img = "/Plants/DoomShroom/DoomShroom.gif";
     public DoomShroom(int row, int col) {
         super(row, col);
-        HP = Integer.MAX_VALUE;
-        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/DoomShroom.gif")));
+        coffee = GameManager.night;
+        HP = 10;
+        if(coffee)
+            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/DoomShroom.gif")));
+        if (!coffee){
+            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/Sleep.gif")));
+        }
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
-        bomb();
+        if (coffee)
+            bomb();
     }
 
     protected void bomb(){
@@ -56,7 +64,8 @@ public class DoomShroom extends Plant {
                 boom.stop();
             isAlive = false;
             GameManager.removePlant(this);
-            GameManager.addPlant(new Crater(row , col));
+            if(coffee)
+                GameManager.addPlant(new Crater(row , col));
             plantView.setOnMouseClicked(null);
         }));
         dead.setCycleCount(1);
@@ -71,5 +80,19 @@ public class DoomShroom extends Plant {
     @Override
     public void resume() {
 
+    }
+
+    @Override
+    public void update() {
+        if (coffee){
+            plantView = new ImageView(new Image(getClass().getResourceAsStream(img)));
+            bomb();
+        }
+        if (HP <= 0)
+            dead();
+    }
+
+    public void setCoffee(boolean coffee) {
+        this.coffee = coffee;
     }
 }

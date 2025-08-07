@@ -39,4 +39,9 @@ public class Grave extends Plant {
     public void resume() {
         setImage(shapeGrave[shape] , 1);
     }
+
+    @Override
+    public void update() {
+
+    }
 }

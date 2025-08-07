@@ -48,6 +48,8 @@ public abstract class Plant extends StackPane implements Serializable {
 
     public abstract void resume();
 
+    public abstract void update();
+
     public void setHP(int HP) {
         this.HP = HP;
     }

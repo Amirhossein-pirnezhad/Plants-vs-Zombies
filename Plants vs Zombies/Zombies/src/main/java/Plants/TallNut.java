@@ -59,4 +59,9 @@ public class TallNut extends Plant{
     public void resume() {
 
     }
+
+    @Override
+    public void update() {
+
+    }
 }
