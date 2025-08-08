@@ -1,18 +1,14 @@
 package Plants;
 
 import Map.GameManager;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.image.Image;
-import javafx.util.Duration;
 
 import static Map.Cell.cell_size;
 
 
 public class WallNut extends Plant{
     private final int initialHp = 15;
-    protected transient Timeline hpGood;
+    private int count = 0;
     protected int frame = 0;
     protected transient Image[] wallCracked1;
     protected transient Image[] wallCracked2;
@@ -24,7 +20,6 @@ public class WallNut extends Plant{
         this.getChildren().addAll(plantView);
         wallCracked1 = setImageCracked("/Plants/WallNut/WallNut_cracked1/WallNut_cracked1_" , 10);
         wallCracked2 = setImageCracked("/Plants/WallNut/WallNut_cracked2/WallNut_cracked2_" , 14);
-        animWallNut();
     }
 
     protected Image[] setImageCracked(String path , int len){
@@ -37,25 +32,6 @@ public class WallNut extends Plant{
         return images;
     }
 
-    protected void animWallNut(){
-        hpGood = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
-            if(HP <= 0){
-                dead();
-            }
-            else if(HP > initialHp * 0.6){
-                changeImage(plantImage);
-            }
-            else if(HP > initialHp * 0.3){
-                changeImage(wallCracked1);
-            }
-            else{
-                changeImage(wallCracked2);
-            }
-        }));
-        hpGood.setCycleCount(Animation.INDEFINITE);
-        hpGood.play();
-    }
-
     protected void changeImage(Image [] images){
         if(frame >= images.length) frame = 0;
         plantView.setImage(images[frame]);
@@ -64,9 +40,6 @@ public class WallNut extends Plant{
 
     @Override
     public void dead() {
-        if(hpGood.getStatus() == Animation.Status.RUNNING){
-            hpGood.stop();
-        }
         isAlive = false;
         System.out.println("plant dead");
 
@@ -76,8 +49,7 @@ public class WallNut extends Plant{
     }
 
     public void pause(){
-        if (hpGood != null && hpGood.getStatus() == Animation.Status.RUNNING)
-            hpGood.stop();
+
     }
 
     public void resume(){
@@ -86,12 +58,22 @@ public class WallNut extends Plant{
         this.getChildren().addAll(plantView);
         wallCracked1 = setImageCracked("/Plants/WallNut/WallNut_cracked1/WallNut_cracked1_" , 10);
         wallCracked2 = setImageCracked("/Plants/WallNut/WallNut_cracked2/WallNut_cracked2_" , 14);
-        animWallNut();
         GameManager.getCells()[row][col].setPlant(this);
     }
 
     @Override
     public void update() {
-
+        if(count % 2 == 0) {
+            if (HP <= 0) {
+                dead();
+            } else if (HP > initialHp * 0.6) {
+                changeImage(plantImage);
+            } else if (HP > initialHp * 0.3) {
+                changeImage(wallCracked1);
+            } else {
+                changeImage(wallCracked2);
+            }
+        }
+        count ++;
     }
 }

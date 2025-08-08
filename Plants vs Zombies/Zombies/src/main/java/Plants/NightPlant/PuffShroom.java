@@ -82,6 +82,11 @@ public class PuffShroom extends Peashooter {
 
     @Override
     public void update() {
+        if(HP <= 0){
+            dead();
+        }
+        changeImage(plantImage);
+
         if (!coffee) {
             if (!isSleep) {
                 isSleep = true;

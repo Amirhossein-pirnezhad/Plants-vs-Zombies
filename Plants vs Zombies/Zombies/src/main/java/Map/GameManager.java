@@ -48,7 +48,7 @@ public class GameManager {
     private static Timeline game ;
     private Timeline tlSunBuild , winTime , updatePlants , updatePeas;
     private final int timeBuildSun = 5 , timeLevel1 = 60;
-    public static int timeUpdatePlants = 200;
+    public static int timeUpdatePlants = 100;
     private int timeLevel = 1 , timerSun;
     private SaveLoad saveLoad;
     private Button save , pause , resume ,menuButton;
@@ -267,6 +267,8 @@ public class GameManager {
         cells[p.getRow()][p.getCol()].removePlant();
         plants.remove(p);
         panePlantVsZombie.getChildren().remove(p.getPlantView());
+        if(p.isAlive())
+            p.dead();
     }
 
     public static void addSun(Sun sun , int row , int col){
@@ -304,6 +306,10 @@ public class GameManager {
             game.stop();
         if (tlSunBuild != null && tlSunBuild.getStatus() == Animation.Status.RUNNING)
             tlSunBuild.stop();
+        if (updatePlants != null && updatePlants.getStatus() == Animation.Status.RUNNING)
+            updatePlants.stop();
+        if (updatePeas != null && updatePeas.getStatus() == Animation.Status.RUNNING)
+            updatePeas.stop();
 
         for (Zombie z : zombies)
             z.pause();
@@ -319,9 +325,11 @@ public class GameManager {
         for (Zombie z : zombies)
             z.resume();
         for(Plant p : plants)
-            p.resume();
+//            p.resume();
         for(Sun s : suns)
             s.resume();
+        updatePeas();
+        updatePlants();
     }
 
     private void SaveGame(SaveLoad save, String fileName) {
@@ -651,7 +659,7 @@ public class GameManager {
 
         Scene scene = new Scene(vbox, 300, 200);
         menuStage.setScene(scene);
-        menuStage.showAndWait();
+        menuStage.show();
     }
 
     public static Cell[][] getCells() {

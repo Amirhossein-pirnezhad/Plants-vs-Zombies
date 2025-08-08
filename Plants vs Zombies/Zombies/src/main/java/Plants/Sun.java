@@ -16,7 +16,7 @@ import static Map.GameManager.sunPoint;
 public class Sun extends Plant{
     private transient Timeline lifeTimeline;
     private transient Timeline animTimeline;
-    private int point = 50;
+    private int point = 50 , frame = 0;
     private int lifeTime = 10;
     private double x , y;
 
@@ -37,6 +37,12 @@ public class Sun extends Plant{
 
         animSun();
         startLifeTime();
+    }
+
+    protected void changeImage(Image[] images){
+        if(frame >= images.length) frame = 0;
+        plantView.setImage(images[frame]);
+        frame = (frame + 1) % images.length;
     }
 
     @Override
@@ -69,10 +75,9 @@ public class Sun extends Plant{
 
         animTimeline.getKeyFrames().add(
                 new KeyFrame(Duration.millis(100), e -> {
-                    plantView.setImage(plantImage[frameIndex[0]]);
                     if(plantView.getLayoutY() < row * cell_size + Sizes.START_Y_GRID + 30)
                         plantView.setLayoutY(plantView.getLayoutY() + 10);
-                    frameIndex[0] = (frameIndex[0] + 1) % plantImage.length;
+                    changeImage(plantImage);
                 })
         );
         animTimeline.play();

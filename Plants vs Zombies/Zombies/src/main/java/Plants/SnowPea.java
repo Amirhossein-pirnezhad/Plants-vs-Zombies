@@ -40,7 +40,6 @@ public class SnowPea extends Peashooter{
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
         this.getChildren().addAll(plantView);
-        animPeashooter();
         for(Pea p : peas){
             p.resume();
             GameManager.getPanePeas().getChildren().addAll(p.getPeaView());

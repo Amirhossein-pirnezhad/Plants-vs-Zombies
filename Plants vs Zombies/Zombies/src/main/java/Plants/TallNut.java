@@ -19,17 +19,6 @@ public class TallNut extends Plant{
         plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/TallNut/TallNut.gif")));
         plantView.setFitHeight(cell_size);
         plantView.setFitHeight(cell_size);
-        animTallNut();
-    }
-
-    protected void animTallNut(){
-        hpGood = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
-            if(HP <= 0){
-                dead();
-            }
-        }));
-        hpGood.setCycleCount(Animation.INDEFINITE);
-        hpGood.play();
     }
 
     @Override
@@ -62,6 +51,8 @@ public class TallNut extends Plant{
 
     @Override
     public void update() {
-
+        if(HP <= 0){
+            dead();
+        }
     }
 }

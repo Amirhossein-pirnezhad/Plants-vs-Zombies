@@ -285,7 +285,12 @@ public class Zombie implements Serializable {
             zombieImages = setZombieImages(imgPath , imgLen);
             zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
             zombieDei = setZombieImages(imgPathDead , imgDieLen);
-            run();
+            switch (mode) {
+                case RUN: run();            break;
+                case EATING: attackZombie();break;
+                case DEAD: deadZombie();    break;
+                default: run();        break;
+            }
         }));
         t.setCycleCount(1);
         t.play();
@@ -415,7 +420,7 @@ public class Zombie implements Serializable {
                 case RUN: run();            break;
                 case EATING: attackZombie();break;
                 case DEAD: deadZombie();    break;
-                default: mode = RUN;        break;
+                default: run();        break;
             }
         }
     }

@@ -16,7 +16,6 @@ import static Map.GameManager.peas;
 
 public class Peashooter extends Plant{
     protected transient Timeline shoot;
-    protected transient Timeline animPeashooter;
     protected int peaInCircle;
     protected double secondInCircle = 1.5;
     protected boolean isPauses;
@@ -32,7 +31,8 @@ public class Peashooter extends Plant{
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
         this.getChildren().addAll(plantView);
-        animPeashooter();
+
+        shooting();
     }
 
     @Override
@@ -41,29 +41,10 @@ public class Peashooter extends Plant{
         System.out.println("plant dead");
         if(shoot.getStatus() == Animation.Status.RUNNING)
             shoot.stop();
-        if(animPeashooter.getStatus() == Animation.Status.RUNNING)
-            animPeashooter.stop();
 
         GameManager.removePlant(this);
 
         plantView.setOnMouseClicked(null);//don't click again
-    }
-
-    protected void animPeashooter(){
-        if(isAlive)
-            shooting();
-            animPeashooter = new Timeline();
-            animPeashooter.setCycleCount(Timeline.INDEFINITE);
-
-            animPeashooter.getKeyFrames().add(
-                    new KeyFrame(Duration.millis(100), e -> {
-                        if(HP <= 0){
-                            dead();
-                        }
-                        changeImage(plantImage);
-                    })
-            );
-            animPeashooter.play();
     }
 
     protected void changeImage(Image[] images){
@@ -100,8 +81,6 @@ public class Peashooter extends Plant{
         isPauses = true;
         if(shoot != null && shoot.getStatus() == Animation.Status.RUNNING)
             shoot.stop();
-        if(animPeashooter != null && animPeashooter.getStatus() == Animation.Status.RUNNING)
-            animPeashooter.stop();
         for(Pea p : peas){
             p.pause();
         }
@@ -114,7 +93,6 @@ public class Peashooter extends Plant{
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
 //        this.getChildren().addAll(plantView);
-        animPeashooter();
         for(Pea p : peas){
             p.resume();
             GameManager.getPanePeas().getChildren().addAll(p.getPeaView());
@@ -124,6 +102,9 @@ public class Peashooter extends Plant{
 
     @Override
     public void update() {
-
+        if(HP <= 0){
+            dead();
+        }
+        changeImage(plantImage);
     }
 }

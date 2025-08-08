@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Planter extends Plant {
-    protected transient Timeline time;
     private final List<int[]> hiddenMehPositions = new ArrayList<>();
     private boolean fogHidden = false;
 
@@ -78,9 +77,6 @@ public class Planter extends Plant {
 
     @Override
     public void dead() {
-        if(time.getStatus() == Animation.Status.RUNNING){
-            time.stop();
-        }
         if (!isAlive) return;
         isAlive = false;
         restoreFogAround();

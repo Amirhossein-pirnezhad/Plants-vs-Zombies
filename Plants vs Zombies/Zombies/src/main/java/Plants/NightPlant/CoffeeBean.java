@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class CoffeeBean extends Plant {
-    private int count = 0 , time1 = 1000 / GameManager.timeUpdatePlants , time2 = time1 * 2;
+    private int count = 0 , time1 = (int) 1000 / GameManager.timeUpdatePlants , time2 = (int) (time1 * 2.5);
     private Plant p ;
     public CoffeeBean(int row, int col) {
         super(row, col);
@@ -27,6 +27,7 @@ public class CoffeeBean extends Plant {
     public void dead() {
         isAlive = false;
         GameManager.getCells()[row][col].getChildren().remove(plantView);
+        GameManager.getPlants().remove(this);
 
         plantView.setOnMouseClicked(null);
     }

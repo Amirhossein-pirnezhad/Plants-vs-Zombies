@@ -12,7 +12,6 @@ import javafx.util.Duration;
 import static Map.Cell.cell_size;
 
 public class Crater extends Plant {
-    private Timeline lifeTime;
     private final int timeDead = (20 * 1000) / GameManager.timeUpdatePlants;
     private int t = timeDead;
 
