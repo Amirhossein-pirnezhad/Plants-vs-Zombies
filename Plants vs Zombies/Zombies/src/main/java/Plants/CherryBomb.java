@@ -14,7 +14,6 @@ public class CherryBomb extends Plant{
     protected transient Timeline dead;
     protected boolean isBoom = false;
     protected double timer = 20;
-    protected int frame = 0;
     protected boolean isPauses;
 
     public CherryBomb(int row, int col) {
@@ -55,12 +54,6 @@ public class CherryBomb extends Plant{
                 z.bomDie();
             }
         }
-    }
-
-    protected void changeImage(Image[] images){
-        if(frame >= images.length) frame = 0;
-        plantView.setImage(images[frame]);
-        frame = (frame + 1) % images.length;
     }
 
     protected void setAnimDie(){

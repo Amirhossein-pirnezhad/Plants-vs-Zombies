@@ -34,7 +34,7 @@ public class GameManager {
     private static List<Zombie> zombies = new ArrayList<>();
     private static List<Plant> plants = new ArrayList<>();
     private static List<Sun> suns = new ArrayList<>();
-    public static List<Pea> peas = new ArrayList<>();
+    public  static List<Pea> peas = new ArrayList<>();
     private GridPane gridPane;
     private static int map_row , map_col;
     private static Cell[][] cells ;
@@ -46,8 +46,8 @@ public class GameManager {
     private static Label sunPointLabel;
     private static Cart savedCart = null;
     private static Timeline game ;
-    private Timeline tlSunBuild , winTime , updatePlants , updatePeas;
-    private final int timeBuildSun = 5 , timeLevel1 = 60;
+    private Timeline  winTime , updatePlants , updatePeas , mainAttack;
+    private final int timeBuildSun = 10 , timeLevel1 = 60;
     public static int timeUpdatePlants = 100;
     private int timeLevel = 1 , timerSun;
     private SaveLoad saveLoad;
@@ -56,6 +56,7 @@ public class GameManager {
     public static boolean night , online;
 
     private List<Cart> selectedCards = new ArrayList<>();
+    private StackPane overlayPane;
     private List<BorderPane> cartView_recharge = new ArrayList<>();
     private ArrayList<String> data , sunData;
     private Client client ;
@@ -84,17 +85,25 @@ public class GameManager {
         gridPane.setGridLinesVisible(true);
         buildMap();
         initializePlantMenu();
-        for (Sun s : savedGame.getSuns()){
+        suns = savedGame.getSuns();
+        plants = savedGame.getPlants();
+        zombies = savedGame.getZombies();
+        peas = savedGame.getPeas();
+
+        for (Sun s : suns){
             s.resume();
-            addSun(s , s.getRow() , s.getCol());
+            addSun(s);
         }
-        for(Zombie z : savedGame.getZombies()){
+        for(Zombie z : zombies){
             z.resume();
             addZombie(z);
         }
-        for (Plant p : savedGame.getPlants()){
+        for (Plant p : plants){
             p.resume();
             addPlant(p);
+        }
+        for (Pea p : peas){
+            p.resume();
         }
 
         if (night){
@@ -149,6 +158,9 @@ public class GameManager {
             List<Plant> copy = new ArrayList<>(plants);
             for (Plant p : copy)
                 p.update();
+            List<Sun> copy1 = new ArrayList<>(suns);
+            for (Sun s : copy1)
+                s.update();
         }));
         updatePlants.setCycleCount(Animation.INDEFINITE);
         updatePlants.play();
@@ -207,12 +219,13 @@ public class GameManager {
     }
 
     public void buildMap(){
-            for (int i = 0; i < map_row; i++) {
-                for (int j = 0; j < map_col; j++) {
-                    cells[i][j] = new Cell(i , j);
-                    gridPane.add(cells[i][j], i, j);
-                }
+        for (int i = 0; i < map_row; i++) {
+            for (int j = 0; j < map_col; j++) {
+                cells[i][j] = new Cell(i , j);
+                gridPane.add(cells[i][j], i, j);
             }
+        }
+        gridPane.setGridLinesVisible(false);
         panePlantVsZombie.getChildren().add(gridPane);
         gameAttack();
     }
@@ -271,12 +284,16 @@ public class GameManager {
             p.dead();
     }
 
-    public static void addSun(Sun sun , int row , int col){
-        suns.add(sun);
-        ImageView view = sun.getPlantView();
-        if(!background.getChildren().contains(view))
-            background.getChildren().add(view);
+    public static void addSun(Sun sun) {
+        if (!suns.contains(sun)) {
+            suns.add(sun);
+            ImageView view = sun.getPlantView();
+            if (!background.getChildren().contains(view)) {
+                background.getChildren().add(view);
+            }
+        }
     }
+
     public void updateGame() {
         handleClickOnChoice();
         for (int i = 0; i < map_row; i++) {
@@ -304,12 +321,12 @@ public class GameManager {
     private void pauseGame(){
         if(game != null && game.getStatus() == Animation.Status.RUNNING)
             game.stop();
-        if (tlSunBuild != null && tlSunBuild.getStatus() == Animation.Status.RUNNING)
-            tlSunBuild.stop();
         if (updatePlants != null && updatePlants.getStatus() == Animation.Status.RUNNING)
             updatePlants.stop();
         if (updatePeas != null && updatePeas.getStatus() == Animation.Status.RUNNING)
             updatePeas.stop();
+        if (mainAttack != null && mainAttack.getStatus() == Animation.Status.RUNNING)
+            mainAttack.stop();
 
         for (Zombie z : zombies)
             z.pause();
@@ -321,12 +338,13 @@ public class GameManager {
 
     private void resumeGame(){
         gameAttack();
-        spawnSun();
         for (Zombie z : zombies)
             z.resume();
-        for(Plant p : plants)
-//            p.resume();
-        for(Sun s : suns)
+        List<Plant> copy = new ArrayList<>(plants);
+        for(Plant p :copy)
+            p.resume();
+        List<Sun> copy1 = new ArrayList<>(suns);
+        for(Sun s : copy1)
             s.resume();
         updatePeas();
         updatePlants();
@@ -362,6 +380,7 @@ public class GameManager {
         saveLoad.setPlants(plants);
         saveLoad.setSuns(suns);
         saveLoad.setSunPoint(sunPoint);
+        saveLoad.setPeas(peas);
         getSaveName(saveLoad);
     }
 
@@ -526,13 +545,13 @@ public class GameManager {
     }
     
     private void mainAttack(int timeAttack , int type , int more){
-        Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
+        mainAttack = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
             for (int i = 0; i < more; i++) {
                 spawnZombie(type);
             }
         }));
-        tl.setCycleCount(timeAttack);
-        tl.play();
+        mainAttack.setCycleCount(timeAttack);
+        mainAttack.play();
     }
 
     private void gameAttack(){
@@ -612,55 +631,68 @@ public class GameManager {
                 int row = Integer.parseInt(serverNum[0]);
                 int col = Integer.parseInt(serverNum[1]);
                 Sun s = new Sun(row, col, 0);
-                addSun(s, row, col);
+                addSun(s);
                 return;
             }
         }
         int row = (int) (Math.random() * 100) % 5;
         int col = (int) (Math.random() * 100) % 9;
         Sun s = new Sun(row, col, 0);
-        addSun(s, row, col);
+        addSun(s);
     }
 
     private void showMenuOptions() {
         pauseGame();
 
-        Stage menuStage = new Stage();
-        menuStage.setTitle("Game Menu");
+        if (overlayPane != null && background.getChildren().contains(overlayPane)) return;
+
+        overlayPane = new StackPane();
+        overlayPane.prefWidthProperty().bind(background.widthProperty());
+        overlayPane.prefHeightProperty().bind(background.heightProperty());
+        overlayPane.setStyle("-fx-background-color: rgba(0,0,0,0.5);");
+        overlayPane.setPickOnBounds(true);
+
+        VBox vbox = new VBox(10);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+
+        String buttonStyle = "-fx-background-color: #8B4513; -fx-text-fill: white; -fx-font-size: 16; -fx-padding: 10; -fx-background-radius: 8;";
 
         Button saveButton = new Button("Save Game");
         Button resumeButton = new Button("Resume Game");
         Button exitButton = new Button("Exit Game");
-
-        String buttonStyle = "-fx-background-color: #8B4513; -fx-text-fill: white; -fx-font-size: 16; -fx-padding: 10;";
         saveButton.setStyle(buttonStyle);
         resumeButton.setStyle(buttonStyle);
         exitButton.setStyle(buttonStyle);
 
         saveButton.setOnAction(e -> {
             initialSaveGame();
-            menuStage.close();
+            if (overlayPane != null && background.getChildren().contains(overlayPane)) {
+                background.getChildren().remove(overlayPane);
+                overlayPane = null;
+            }
         });
 
         resumeButton.setOnAction(e -> {
             resumeGame();
-            menuStage.close();
+            if (overlayPane != null && background.getChildren().contains(overlayPane)) {
+                background.getChildren().remove(overlayPane);
+                overlayPane = null;
+            }
         });
 
         exitButton.setOnAction(e -> {
-            menuStage.close();
             System.exit(0);
         });
 
-        VBox vbox = new VBox(10, saveButton, resumeButton, exitButton);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(20));
-        vbox.setStyle("-fx-background-color: #f5f5dc;");
+        vbox.getChildren().addAll(saveButton, resumeButton, exitButton);
 
-        Scene scene = new Scene(vbox, 300, 200);
-        menuStage.setScene(scene);
-        menuStage.show();
+        overlayPane.getChildren().add(vbox);
+        StackPane.setAlignment(vbox, Pos.CENTER);
+        background.getChildren().add(overlayPane);
+        overlayPane.requestFocus();
     }
+
 
     public static Cell[][] getCells() {
         return cells;
@@ -702,5 +734,9 @@ public class GameManager {
 
     public static Pane getPaneMeh() {
         return paneMeh;
+    }
+
+    public static List<Sun> getSuns() {
+        return suns;
     }
 }

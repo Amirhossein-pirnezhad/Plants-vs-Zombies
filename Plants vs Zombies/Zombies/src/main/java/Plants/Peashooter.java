@@ -5,11 +5,7 @@ import Zombies.Zombie;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.image.Image;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static Map.Cell.cell_size;
 import static Map.GameManager.peas;
@@ -19,13 +15,15 @@ public class Peashooter extends Plant{
     protected int peaInCircle;
     protected double secondInCircle = 1.5;
     protected boolean isPauses;
-    protected int frame = 0;
+    protected String typePea;
+    protected String imgPath = "/Plants/Peashooter/Peashooter_";
 
 
     public Peashooter(int row, int col) {
         super(row, col);
         isPauses = false;
-        setImage("/Plants/Peashooter/Peashooter_" , 13);
+        typePea = "Pea";
+        setImage(imgPath , 13);
         HP = 4;
         peaInCircle = 1;
         plantView.setFitHeight(cell_size * 0.75);
@@ -47,19 +45,12 @@ public class Peashooter extends Plant{
         plantView.setOnMouseClicked(null);//don't click again
     }
 
-    protected void changeImage(Image[] images){
-        if(frame >= images.length) frame = 0;
-        plantView.setImage(images[frame]);
-        frame = (frame + 1) % images.length;
-    }
-
     protected void shooting(){
         if(isAlive)
             shoot = new Timeline(new KeyFrame(Duration.seconds(secondInCircle) , event -> {
                 if(if_Zombie_exist()) {
                         Timeline tl =  new Timeline(new KeyFrame(Duration.millis(200) , event1 -> {
-                            peas.add(new Pea(this));
-                            GameManager.getPanePeas().getChildren().add(peas.get(peas.size() - 1).getPeaView());
+                            peas.add(typePea == "Pea" ? new Pea(this) : new PeaIce(this));
                         }));
                         tl.setCycleCount(peaInCircle);
                         tl.play();
@@ -88,16 +79,14 @@ public class Peashooter extends Plant{
 
     public void resume(){
         isPauses = false;
-        GameManager.getCells()[row][col].removePlant();
-        setImage("/Plants/Peashooter/Peashooter_" , 13);
+        setImage(imgPath , 13);
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
-//        this.getChildren().addAll(plantView);
-        for(Pea p : peas){
-            p.resume();
-            GameManager.getPanePeas().getChildren().addAll(p.getPeaView());
-        }
-        GameManager.addPlant(this);
+        this.getChildren().addAll(plantView);
+
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
+        shooting();
     }
 
     @Override

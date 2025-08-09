@@ -59,7 +59,6 @@ public class PuffShroom extends Peashooter {
                 if(if_Zombie_exist() && coffee) {
                     Timeline tl =  new Timeline(new KeyFrame(Duration.millis(200) , event1 -> {
                         peas.add(new Pea(this));
-                        GameManager.getPanePeas().getChildren().add(peas.get(peas.size() - 1).getPeaView());
                     }));
                     tl.setCycleCount(peaInCircle);
                     tl.play();
@@ -102,5 +101,21 @@ public class PuffShroom extends Peashooter {
         } else if (!isSleep && !zombieNearby) {
             sleep();
         }
+    }
+
+    @Override
+    public void resume(){
+        isPauses = false;
+        if (coffee){
+            setAwakeImage();
+        }
+        else setSleepImage();
+
+        plantView.setTranslateY(-30);
+        this.getChildren().addAll(plantView);
+
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
+        shooting();
     }
 }

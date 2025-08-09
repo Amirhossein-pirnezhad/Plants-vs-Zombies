@@ -1,5 +1,6 @@
 package Map;
 
+import Plants.Pea;
 import Plants.Plant;
 import Plants.Sun;
 import Zombies.Zombie;
@@ -13,6 +14,7 @@ public class SaveLoad implements Serializable {
     private List<Zombie> zombies;
     private List<Plant> plants;
     private List<Sun> suns;
+    private List<Pea> peas;
     private int sunPoint;
     private int timeLevel;
 
@@ -21,6 +23,7 @@ public class SaveLoad implements Serializable {
         zombies = new ArrayList<>();
         plants = new ArrayList<>();
         suns = new ArrayList<>();
+        peas = new ArrayList<>();
         sunPoint = 0;
         timeLevel = 0;
     }
@@ -43,6 +46,10 @@ public class SaveLoad implements Serializable {
 
     public void setTimeLevel(int timeLevel) {
         this.timeLevel = timeLevel;
+    }
+
+    public void setPeas(List<Pea> peas) {
+        this.peas = peas;
     }
 
     public int getSunPoint() {
@@ -69,4 +76,7 @@ public class SaveLoad implements Serializable {
         return selectedCards;
     }
 
+    public List<Pea> getPeas() {
+        return peas;
+    }
 }

@@ -11,19 +11,13 @@ import static Map.Cell.cell_size;
 
 public class SunFlower extends Plant{
     private final int timeBuild = 10;
-    private int time , frame = 0 , counter = 0;
+    private int time , counter = 0;
     private final int more = 1 * 1000 / GameManager.timeUpdatePlants;
 
     public SunFlower(int row, int col) {
         super(row, col);
         HP = 4;
         setImage("/Plants/SunFlower/SunFlower_" , 18);
-    }
-
-    protected void changeImage(Image[] images){
-        if(frame >= images.length) frame = 0;
-        plantView.setImage(images[frame]);
-        frame = (frame + 1) % images.length;
     }
 
     @Override
@@ -51,7 +45,7 @@ public class SunFlower extends Plant{
             time++;
             if(time % timeBuild == 0) {
                 System.out.println("AADD SUN");
-                GameManager.addSun(new Sun(col, row, cell_size * col + Sizes.START_Y_GRID), row, col);
+                GameManager.addSun(new Sun(col, row, cell_size * col + Sizes.START_Y_GRID));
             }
         }
         if(HP <= 0){

@@ -6,6 +6,7 @@ import Zombies.Zombie;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -39,12 +40,30 @@ public class HypenoShroom extends Plant {
 
     @Override
     public void pause() {
-
+        Platform.runLater(() -> {
+            Image frozenImage = plantView.snapshot(null, null);
+            plantView.setImage(frozenImage);
+        });
     }
 
     @Override
     public void resume() {
-
+        if (plantView == null){
+            if (coffee)
+                plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/HypnoShroom/HypnoShroom/HypnoShroom.gif")));
+            if (!coffee){
+                plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/HypnoShroom/HypnoShroom/HypnoShroomSleep.gif")));
+            }
+            plantView.setFitHeight(cell_size * 0.75);
+            plantView.setFitWidth(cell_size * 0.75);
+        }
+        else{
+            if (coffee)
+                plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/HypnoShroom/HypnoShroom/HypnoShroom.gif")));
+            if (!coffee){
+                plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/HypnoShroom/HypnoShroom/HypnoShroomSleep.gif")));
+            }
+        }
     }
 
     @Override

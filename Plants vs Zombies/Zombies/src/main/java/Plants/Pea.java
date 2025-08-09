@@ -36,6 +36,7 @@ public class Pea implements Serializable {
         peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
         isAlive = true;
         this.peashooter = peashooter;
+        GameManager.getPanePeas().getChildren().add(peaView);
     }
 
     public void update(){
@@ -48,7 +49,6 @@ public class Pea implements Serializable {
             for (Zombie z : GameManager.getZombies()){
                 if(z.getCol() == peashooter.col && z.isAlive()){
                     if(Math.abs(peaView.getLayoutX() - z.getZombieView().getLayoutX()) < 5) {
-//                        System.out.println(peaView.getLayoutX());
                         z.setHP(z.getHP() - 1); //zombie health
                         dead();
                         break;
@@ -79,10 +79,17 @@ public class Pea implements Serializable {
     }
 
     public void resume(){
-        if(peaView != null)
-            GameManager.getPanePeas().getChildren().remove(peaView);
-        peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
-        peaView = new ImageView(peaImage);
+        if(peaView != null) {
+            peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
+            peaView.setImage(peaImage);
+        }
+        else {
+            peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
+            peaView = new ImageView(peaImage);
+        }
+        if (!GameManager.getPanePeas().getChildren().contains(peaView)){
+            GameManager.getPanePeas().getChildren().add(peaView);
+        }
         peaView.setLayoutX(x);
         peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
     }

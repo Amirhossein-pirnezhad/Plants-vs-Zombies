@@ -9,7 +9,6 @@ import static Map.Cell.cell_size;
 public class WallNut extends Plant{
     private final int initialHp = 15;
     private int count = 0;
-    protected int frame = 0;
     protected transient Image[] wallCracked1;
     protected transient Image[] wallCracked2;
 
@@ -32,12 +31,6 @@ public class WallNut extends Plant{
         return images;
     }
 
-    protected void changeImage(Image [] images){
-        if(frame >= images.length) frame = 0;
-        plantView.setImage(images[frame]);
-        frame = (frame + 1) % images.length;
-    }
-
     @Override
     public void dead() {
         isAlive = false;
@@ -53,11 +46,13 @@ public class WallNut extends Plant{
     }
 
     public void resume(){
+        if (plantView == null || plantImage == null) {
+            setImage("/Plants/WallNut/WallNut/WallNut_", 15);
+            this.getChildren().addAll(plantView);
+            wallCracked1 = setImageCracked("/Plants/WallNut/WallNut_cracked1/WallNut_cracked1_", 10);
+            wallCracked2 = setImageCracked("/Plants/WallNut/WallNut_cracked2/WallNut_cracked2_", 14);
+        }
         GameManager.getCells()[row][col].removePlant();
-        setImage("/Plants/WallNut/WallNut/WallNut_" , 15);
-        this.getChildren().addAll(plantView);
-        wallCracked1 = setImageCracked("/Plants/WallNut/WallNut_cracked1/WallNut_cracked1_" , 10);
-        wallCracked2 = setImageCracked("/Plants/WallNut/WallNut_cracked2/WallNut_cracked2_" , 14);
         GameManager.getCells()[row][col].setPlant(this);
     }
 

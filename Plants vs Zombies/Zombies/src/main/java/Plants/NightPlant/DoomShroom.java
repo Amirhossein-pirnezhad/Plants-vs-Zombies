@@ -57,7 +57,6 @@ public class DoomShroom extends Plant {
 
     @Override
     public void dead() {
-        System.out.println("DOOMSHROOM dead!!!!!!!!!!!!!!!!");
         plantView.setImage(new Image(getClass().getResourceAsStream("/Screen/Boom.gif")));
         Timeline dead = new Timeline(new KeyFrame(Duration.seconds(1.2) , event -> {
             if(boom != null && boom.getStatus() == Animation.Status.RUNNING)
