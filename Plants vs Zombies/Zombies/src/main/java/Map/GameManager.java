@@ -156,11 +156,13 @@ public class GameManager {
     private void updatePlants(){
         updatePlants = new Timeline(new KeyFrame(Duration.millis(timeUpdatePlants) , event -> {
             List<Plant> copy = new ArrayList<>(plants);
-            for (Plant p : copy)
+            for (Plant p : copy)//update plants
                 p.update();
             List<Sun> copy1 = new ArrayList<>(suns);
-            for (Sun s : copy1)
+            for (Sun s : copy1) //update suns
                 s.update();
+            for (Cart c : selectedCards)//update carts
+                c.update();
         }));
         updatePlants.setCycleCount(Animation.INDEFINITE);
         updatePlants.play();
@@ -201,7 +203,6 @@ public class GameManager {
             borderPane.setCenter(imageView);
 
             cartView_recharge.add(borderPane);
-            cart.startRechargeTimer();
         }
         plantMenuVBox.getChildren().addAll(cartView_recharge);
         panePlantVsZombie.getChildren().add(plantMenuVBox);
@@ -304,18 +305,11 @@ public class GameManager {
                     choice(finalI , finalJ);
                 });
                 shovel.getImageView().setOnMouseClicked(event -> {
-                    System.out.println("shovel");
                     shovel.setClicked(true);
                     savedCart = null;
                 });
             }
         }
-        panePlantVsZombie.setOnMouseClicked(event -> {
-            System.out.println("pane zombie" + event.getX());
-        });
-        panePeas.setOnMouseClicked(event -> {
-            System.out.println("pea" + event.getX());
-        });
     }
 
     private void pauseGame(){
@@ -451,7 +445,7 @@ public class GameManager {
             }
             addPlant(choose_plant);
             buyPlant(savedCart);
-            savedCart.startRechargeTimer();
+            savedCart.setReady(false);
             savedCart = null;
         }
     }
@@ -474,6 +468,7 @@ public class GameManager {
             }
             s.setOnMouseClicked(event -> {
                 savedCart = c;
+                shovel.setClicked(false);
                 System.out.println(savedCart.getPlantType());
             });
         }
