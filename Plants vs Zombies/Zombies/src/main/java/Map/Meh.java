@@ -37,6 +37,7 @@ public class Meh extends StackPane {
         fogLayer3 = createFogLayer("/Screen/meh/Fog3.png");
         this.getChildren().addAll(fogLayer1, fogLayer2, fogLayer3);
     }
+
     private ImageView createFogLayer(String resourcePath) {
         double imgSize = cell_size * 1.5;
         ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream(resourcePath)));

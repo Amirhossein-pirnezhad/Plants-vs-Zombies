@@ -16,6 +16,8 @@ public abstract class Plant extends StackPane implements Serializable {
     protected int row , col;
     protected boolean isAlive;
     protected double x , y;
+    protected boolean coffee;
+    protected int frame = 0;
 
     public Plant(int row , int col){
         this.row = row;
@@ -26,6 +28,7 @@ public abstract class Plant extends StackPane implements Serializable {
         System.out.println(x);
         System.out.println(y);
     }
+
     protected void setImage(String path , int len){
         plantImage = new Image[len];
         for (int i = 0; i < len; i++) {
@@ -38,6 +41,13 @@ public abstract class Plant extends StackPane implements Serializable {
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
     }
+
+    protected void changeImage(Image[] images){
+        if(frame >= images.length) frame = 0;
+        plantView.setImage(images[frame]);
+        frame = (frame + 1) % images.length;
+    }
+
     public ImageView getPlantView() {
         return plantView;
     }
@@ -47,6 +57,8 @@ public abstract class Plant extends StackPane implements Serializable {
     public abstract void pause();
 
     public abstract void resume();
+
+    public abstract void update();
 
     public void setHP(int HP) {
         this.HP = HP;
@@ -70,5 +82,9 @@ public abstract class Plant extends StackPane implements Serializable {
 
     public boolean isAlive() {
         return isAlive;
+    }
+
+    public void setCoffee(boolean coffee) {
+        this.coffee = coffee;
     }
 }

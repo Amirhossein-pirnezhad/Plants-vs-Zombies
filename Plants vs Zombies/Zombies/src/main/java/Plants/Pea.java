@@ -28,6 +28,7 @@ public class Pea implements Serializable {
         if(peashooter.getClass() == PuffShroom.class ||
                 peashooter.getClass() == ScaredyShroom.class)
             peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNight.png"));
+
         peaView = new ImageView(peaImage);
         peaView.setFitHeight(45);
         peaView.setFitWidth(45);
@@ -35,16 +36,12 @@ public class Pea implements Serializable {
         peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
         isAlive = true;
         this.peashooter = peashooter;
-        animPea();
+        GameManager.getPanePeas().getChildren().add(peaView);
     }
 
-    public void animPea(){
-        shoot = new Timeline(new KeyFrame(Duration.millis(10) , event -> {
-            if_touch_Zombie();
-            peaView.setLayoutX(peaView.getLayoutX() + 2);
-        }));
-        shoot.setCycleCount(Animation.INDEFINITE);
-        shoot.play();
+    public void update(){
+        if_touch_Zombie();
+        peaView.setLayoutX(peaView.getLayoutX() + 2);
     }
 
     protected void if_touch_Zombie(){
@@ -52,7 +49,6 @@ public class Pea implements Serializable {
             for (Zombie z : GameManager.getZombies()){
                 if(z.getCol() == peashooter.col && z.isAlive()){
                     if(Math.abs(peaView.getLayoutX() - z.getZombieView().getLayoutX()) < 5) {
-//                        System.out.println(peaView.getLayoutX());
                         z.setHP(z.getHP() - 1); //zombie health
                         dead();
                         break;
@@ -69,7 +65,7 @@ public class Pea implements Serializable {
         shoot.setCycleCount(1);
         shoot.play();
         shoot = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {//for delete pea
-            peashooter.getPeas().remove(this);
+            GameManager.peas.remove(this);
             GameManager.getPanePeas().getChildren().remove(peaView);
         }));
         shoot.setCycleCount(1);
@@ -83,13 +79,19 @@ public class Pea implements Serializable {
     }
 
     public void resume(){
-        if(peaView != null)
-            GameManager.getPanePeas().getChildren().remove(peaView);
-        peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
-        peaView = new ImageView(peaImage);
+        if(peaView != null) {
+            peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
+            peaView.setImage(peaImage);
+        }
+        else {
+            peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaNormal/PeaNormal_0.png"));
+            peaView = new ImageView(peaImage);
+        }
+        if (!GameManager.getPanePeas().getChildren().contains(peaView)){
+            GameManager.getPanePeas().getChildren().add(peaView);
+        }
         peaView.setLayoutX(x);
         peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
-        animPea();
     }
 
     public ImageView getPeaView() {

@@ -1,13 +1,10 @@
 package Map;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
 import java.io.Serializable;
 
@@ -16,39 +13,40 @@ public class Cart implements Serializable {
     private transient ImageView imageView;
     private final CardsType plantType;
     private int price ;
-    private transient Timeline scheduler;
-    private transient Timeline recharge;
     private int rechargeTime;
     private int timer = 0;
-    private boolean isReady;
+    private boolean isReady , isStart;
     private boolean isAdded;
     public transient BorderPane borderPane;
     private transient Rectangle border;
     private double x;
     private double width = 160;
+    private int counter = 0 , more = 1000/GameManager.timeUpdatePlants;
 
 
     public Cart(CardsType cardsType) {
         Image image = new Image(getClass().getResourceAsStream("/Cards/" + cardsType.toString() + ".png"));
         isAdded = false;
+        isStart = false;
         plantType = cardsType;
         switch (cardsType){
-            case SUNFLOWER: this.price = 50;  this.rechargeTime = 11;   break;
-            case PEASHOOTRER: this.price = 100; this.rechargeTime = 10; break;
-            case REPEATER: this.price = 200; this.rechargeTime = 10;    break;
-            case TALLNUT: this.price = 125; this.rechargeTime = 10;     break;
-            case WALLNUT: this.price = 50;  this.rechargeTime = 10;     break;
-            case CHERRYBOMB: this.price = 150; this.rechargeTime = 10;  break;
-            case JALAPENO: this.price = 200; this.rechargeTime = 11;    break;
-            case SNOWPEA: this.price = 175; this.rechargeTime = 10;     break;
-            case DOOMSHROOM: this.price = 125; this.rechargeTime = 10;  break;
-            case HYPNOSHROOM: this.price = 75; this.rechargeTime = 10;  break;
-            case ICESHROOM: this.price = 75; this.rechargeTime = 10;    break;
+            case SUNFLOWER: this.price = 50;  this.rechargeTime = 5;   break;
+            case PEASHOOTRER: this.price = 100; this.rechargeTime = 5; break;
+            case REPEATER: this.price = 200; this.rechargeTime = 5;    break;
+            case TALLNUT: this.price = 125; this.rechargeTime = 5;     break;
+            case WALLNUT: this.price = 50;  this.rechargeTime = 5;     break;
+            case CHERRYBOMB: this.price = 150; this.rechargeTime = 5;  break;
+            case JALAPENO: this.price = 200; this.rechargeTime = 5;    break;
+            case SNOWPEA: this.price = 175; this.rechargeTime = 5;     break;
+            case DOOMSHROOM: this.price = 125; this.rechargeTime = 5;  break;
+            case HYPNOSHROOM: this.price = 75; this.rechargeTime = 5;  break;
+            case ICESHROOM: this.price = 75; this.rechargeTime = 5;    break;
             case PUFFSHROOM: this.price = 0; this.rechargeTime = 5;     break;
-            case SCARREDYSHROOM: this.price = 25; this.rechargeTime = 10;break;
-            case GRAVEBUSTER: this.price = 75; this.rechargeTime = 10;  break;
+            case SCARREDYSHROOM: this.price = 25; this.rechargeTime = 5;break;
+            case GRAVEBUSTER: this.price = 75; this.rechargeTime = 5;  break;
             case FANOUS: this.price = 25 ; this.rechargeTime = 5;      break;
-            case FAN:   this.price = 100;  this.rechargeTime = 10;      break;
+            case FAN:   this.price = 100;  this.rechargeTime = 5;      break;
+            case COFFEEBEAN: this.price =75; this.rechargeTime= 5;     break;
         }
 
         this.imageView = new ImageView(image);
@@ -65,34 +63,31 @@ public class Cart implements Serializable {
         this.borderPane.setBottom(border);
     }
 
-    public void startRechargeTimer() {
-        isReady = false;
-        scheduler = new Timeline(new KeyFrame(Duration.seconds(1) , event -> {
-            timer ++;
-            if(timer == rechargeTime) {
-                timer = 0;
-                isReady = true;
-                border.setFill(Color.GREEN);
-                System.out.println("isReady" + plantType);
-                scheduler.stop();
+    public void update() {
+        counter++;
+        if (counter % more == 0) {
+            if (!isReady) {
+                timer++;
+                if (timer == rechargeTime) {
+                    timer = 0;
+                    isReady = true;
+                    border.setFill(Color.GREEN);
+                    System.out.println("isReady" + plantType);
+                }
             }
-        }));
-        scheduler.setCycleCount(rechargeTime);
-        scheduler.play();
-        animCharging();
-    }
-
-    public void animCharging() {
-        border.setWidth(0);
-        border.setFill(Color.RED);
-        int timeForEachFrame = 100;
-        int cycle = (int)rechargeTime * 1000 / timeForEachFrame;
-        double valueForIncrease = imageView.getFitWidth() / cycle;
-        recharge = new Timeline(new KeyFrame(Duration.millis(timeForEachFrame) , event -> {
+        }
+        if (!isReady){
+            double currentWidth = (timer / (double) rechargeTime) * imageView.getFitWidth();
+            if (!isStart){
+                border.setWidth(currentWidth);
+                isStart = true;
+            }
+            int remainTime = rechargeTime - timer;
+            int cycle = (int)remainTime * 1000 / GameManager.timeUpdatePlants;
+            double valueForIncrease = (imageView.getFitWidth() - currentWidth) / cycle;
             border.setWidth(border.getWidth() + valueForIncrease);
-        }));
-        recharge.setCycleCount(cycle);
-        recharge.play();
+        }
+
     }
 
     public void repair(){
@@ -150,5 +145,10 @@ public class Cart implements Serializable {
 
     public void setTimer(int timer) {
         this.timer = timer;
+    }
+
+    public void setReady(boolean ready) {
+        isReady = ready;
+        isStart = ready;
     }
 }

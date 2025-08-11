@@ -1,6 +1,5 @@
 package Plants.NightPlant;
 
-import Map.Cell;
 import Map.GameManager;
 import Plants.Plant;
 import javafx.scene.image.Image;
@@ -37,6 +36,13 @@ public class Grave extends Plant {
 
     @Override
     public void resume() {
-        setImage(shapeGrave[shape] , 1);
+        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Screen/Grave/" + shapeGrave[shape])));
+        plantView.setFitHeight(cell_size * 1.5);
+        plantView.setFitWidth(cell_size );
+    }
+
+    @Override
+    public void update() {
+
     }
 }

@@ -3,20 +3,13 @@ package Plants.NightPlant;
 import Map.GameManager;
 import Map.Meh;
 import Plants.Plant;
-import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Planter extends Plant {
-    protected transient Timeline time;
     private final List<int[]> hiddenMehPositions = new ArrayList<>();
     private boolean fogHidden = false;
 
@@ -28,7 +21,6 @@ public class Planter extends Plant {
         Meh[][] cellsMeh = GameManager.getMehcell();
         hideFogAround(cellsMeh);
 
-        animPlanter();
     }
 
     private void hideFogAround(Meh[][] cellsMeh) {
@@ -76,22 +68,9 @@ public class Planter extends Plant {
                 && r >= 0 && r < grid.length
                 && c >= 0 && c < grid[0].length;
     }
-    protected void animPlanter(){
-        time = new Timeline(new KeyFrame(Duration.millis(200) , event -> {
-            if(HP <= 0){
-                dead();
-            }
-
-        }));
-        time.setCycleCount(Animation.INDEFINITE);
-        time.play();
-    }
 
     @Override
     public void dead() {
-        if(time.getStatus() == Animation.Status.RUNNING){
-            time.stop();
-        }
         if (!isAlive) return;
         isAlive = false;
         restoreFogAround();
@@ -107,5 +86,12 @@ public class Planter extends Plant {
     @Override
     public void resume() {
 
+    }
+
+    @Override
+    public void update() {
+        if(HP <= 0){
+            dead();
+        }
     }
 }

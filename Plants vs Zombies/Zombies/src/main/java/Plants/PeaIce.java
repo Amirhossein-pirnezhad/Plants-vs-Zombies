@@ -41,6 +41,5 @@ public class PeaIce extends Pea{
         peaView = new ImageView(peaImage);
         peaView.setLayoutX(x);
         peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
-        animPea();
     }
 }
