@@ -20,6 +20,7 @@ public class Client {
             socket = new Socket(ip, 12345);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+            data = connectToServer();
 
             new Thread(() -> {
                 try {
@@ -38,7 +39,6 @@ public class Client {
             e.printStackTrace();
             System.out.println("can't connect");
         }
-        data = connectToServer();
     }
 
     public static void sendMessage(String message) {

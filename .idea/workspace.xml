@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e2adeea-777d-4883-95bf-6024f26dbc5a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plants vs Zombies/Zombies/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Plants vs Zombies/Zombies/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Plants vs Zombies/Zombies/src/main/java/Map/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/Plants vs Zombies/Zombies/src/main/java/Map/Client.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -83,7 +85,7 @@
       <workItem from="1754363096657" duration="1054000" />
       <workItem from="1754366477505" duration="3789000" />
       <workItem from="1754454053710" duration="1419000" />
-      <workItem from="1754878125408" duration="4732000" />
+      <workItem from="1754878125408" duration="7097000" />
     </task>
     <servers />
   </component>
