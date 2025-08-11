@@ -353,7 +353,9 @@ public class Main extends Application {
         pane.getChildren().add(sunCounter);
         GameManager g;
         while (true){
+            System.out.println("nt st");
             if (Client.message == "START"){
+                System.out.println("start");
                 g = new GameManager(pane , saveLoad , isNight , online);
                 break;
             }
