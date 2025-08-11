@@ -40,11 +40,15 @@ public class Main extends Application {
     private boolean isNight;
     private boolean online;
     private MediaPlayer backgroundMusic;
+    private Client client;
+    private SaveLoad saveLoad = new SaveLoad(selectedCards);
+    public static Main instance;
 
 
     //initadda
     @Override
     public void start(Stage primaryStage) {
+        instance = this;
         startGame(primaryStage);
     }
 
@@ -109,12 +113,16 @@ public class Main extends Application {
 //            stage.close();
         });
         Adventure_2.setOnMouseClicked(event -> {
-            online = false;
-            isNight = true;
-            initializeCardSelection();
+            online = true;
+            isNight = false;
+            initializeCardSelection(online);
             stage.close();
         });
         stage.show();
+    }
+
+    private void online(){
+        client = new Client();
     }
 
     public void showOfflineMode(){
@@ -139,21 +147,21 @@ public class Main extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         dayBtn.setOnMouseClicked(event -> {
-            online = true;
+            online = false;
             isNight = false;
-            initializeCardSelection();
+            initializeCardSelection(online);
             stage.close();
         });
         nightBtn.setOnMouseClicked(event -> {
-            online = true;
+            online = false;
             isNight = true;
-            initializeCardSelection();
+            initializeCardSelection(online);
             stage.close();
         });
         stage.show();
     }
 
-    public void initializeCardSelection() {
+    public void initializeCardSelection(boolean online) {
         Stage stage = new Stage();
         Button button = new Button("Start Game");
 
@@ -233,7 +241,10 @@ public class Main extends Application {
         loading.setLayoutX(frame.getLayoutX() + (frame.getBoundsInParent().getWidth() / 2) + 3);
         loading.setLayoutY(frame.getLayoutY() + frame.getBoundsInParent().getHeight() - 75);
 
-        cardSelectionPane.getChildren().addAll(frame , button ,loading);
+        cardSelectionPane.getChildren().addAll(frame);
+        if(!online){
+            cardSelectionPane.getChildren().addAll(button , loading);
+        }
 
         double tempx = (Sizes.SCREEN_WIDTH / 2) - (scaledWidth / 2) + 15;
         double tempy = (Sizes.SCREEN_HEIGHT / 2) - (scaledHeight / 1.7) + 40;
@@ -314,7 +325,7 @@ public class Main extends Application {
         }
         button.setOnAction(event -> {
             if(selectedCards.size() == 6) {
-                Game(selectedCards , new SaveLoad(selectedCards));
+                Game();
                 stage.close();
             }
 
@@ -322,9 +333,15 @@ public class Main extends Application {
         loading.setOnAction(event -> {
             createLoadMenu();
         });
+        while (true){
+            if (Client.message == "START"){
+                Game();
+                break;
+            }
+        }
     }
 
-    private void Game(List<Cart> selectedCards , SaveLoad saveLoad){
+    public void Game(){
         Stage primaryStage = new Stage();
         String imagePath = isNight
                 ? "/Items/Background/Background_6.jpg"
@@ -441,7 +458,7 @@ public class Main extends Application {
 
             saveLoad = (SaveLoad) objectIn.readObject();
             System.out.println("Loading game: " + saveName);
-            Game(saveLoad.getSelectedCards(), saveLoad);
+            Game();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -59,7 +59,6 @@ public class GameManager {
     private StackPane overlayPane;
     private List<BorderPane> cartView_recharge = new ArrayList<>();
     private ArrayList<String> data , sunData;
-    private Client client ;
     private Shovel shovel;
     private int howMuch = 0;
 
@@ -115,7 +114,6 @@ public class GameManager {
             buildMeh();
         }
         if (online){
-            client = new Client();
             data = Client.data;
             sunData = Client.dataSuns;
         }
