@@ -30,6 +30,12 @@ public class Client {
                             System.out.println("Server says START — starting game!");
                             message = "START";
                         }
+                        if (line.equals("lose")){
+                            GameManager.lose();
+                        }
+                        if (line.equals("win")){
+                            GameManager.win();
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
