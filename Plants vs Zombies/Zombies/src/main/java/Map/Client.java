@@ -11,7 +11,7 @@ public class Client {
     static{
         socket = null;
         try {
-            socket = new Socket("localhost", 12345);
+            socket = new Socket("192.168.251.80", 12345);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();

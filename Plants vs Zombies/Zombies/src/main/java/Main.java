@@ -95,15 +95,13 @@ public class Main extends Application {
             initializeCardSelection();
             stage.close();
         });
-//        Adventure_2.setOnMouseClicked(event -> {
-//            isNight = true;
-//            initializeCardSelection();
-//            stage.close();
-//        });
         Adventure_2.setOnMouseClicked(event -> {
-
+            isNight = true;
+            online = true;
+            initializeCardSelection();
             stage.close();
         });
+
         stage.show();
     }
 
