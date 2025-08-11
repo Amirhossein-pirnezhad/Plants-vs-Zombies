@@ -8,11 +8,11 @@ public class Client {
     private static BufferedReader in;
     public  static ArrayList<String> data;
     public  static ArrayList<String> dataSuns = new ArrayList<>();
-
+    public  static String ip = "192.168.251.211";
     static{
         socket = null;
         try {
-            socket = new Socket("192.168.251.80", 12345);
+            socket = new Socket(ip, 12345);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();

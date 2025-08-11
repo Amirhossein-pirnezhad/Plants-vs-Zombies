@@ -139,13 +139,13 @@ public class Main extends Application {
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         dayBtn.setOnMouseClicked(event -> {
-            online = false;
+            online = true;
             isNight = false;
             initializeCardSelection();
             stage.close();
         });
         nightBtn.setOnMouseClicked(event -> {
-            online = false;
+            online = true;
             isNight = true;
             online = true;
             initializeCardSelection();

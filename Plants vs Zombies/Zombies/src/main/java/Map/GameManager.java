@@ -178,7 +178,6 @@ public class GameManager {
         updatePeas.play();
     }
 
-
     private void initializePlantMenu() {
         plantMenuVBox = new VBox(8);
         plantMenuVBox.setLayoutX(0);
@@ -539,19 +538,11 @@ public class GameManager {
         }
         return choose.get((int)(Math.random() * choose.size()));
     }
-<<<<<<< HEAD
-
-    private void mainAttack(int timeAttack , int type){
-        Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
-            spawnZombie(type);
-=======
-    
     private void mainAttack(int timeAttack , int type , int more){
         mainAttack = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
             for (int i = 0; i < more; i++) {
                 spawnZombie(type);
             }
->>>>>>> 93c20ea5516a5147a39838fac6842cf939fb0842
         }));
         mainAttack.setCycleCount(timeAttack);
         mainAttack.play();
