@@ -242,9 +242,9 @@ public class Main extends Application {
         loading.setLayoutY(frame.getLayoutY() + frame.getBoundsInParent().getHeight() - 75);
 
         cardSelectionPane.getChildren().addAll(frame);
-        if(!online){
+
             cardSelectionPane.getChildren().addAll(button , loading);
-        }
+
 
         double tempx = (Sizes.SCREEN_WIDTH / 2) - (scaledWidth / 2) + 15;
         double tempy = (Sizes.SCREEN_HEIGHT / 2) - (scaledHeight / 1.7) + 40;
