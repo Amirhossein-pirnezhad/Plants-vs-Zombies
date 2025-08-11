@@ -333,12 +333,6 @@ public class Main extends Application {
         loading.setOnAction(event -> {
             createLoadMenu();
         });
-        while (true){
-            if (Client.message == "START"){
-                Game();
-                break;
-            }
-        }
     }
 
     public void Game(){
@@ -357,7 +351,13 @@ public class Main extends Application {
 
         Pane pane = new Pane( background);
         pane.getChildren().add(sunCounter);
-        GameManager g = new GameManager(pane , saveLoad , isNight , online);
+        GameManager g;
+        while (true){
+            if (Client.message == "START"){
+                g = new GameManager(pane , saveLoad , isNight , online);
+                break;
+            }
+        }
 
         Label sunLabel = new Label("SunPoints: 0");
         sunLabel.setFont(new Font("Arial", 60));
