@@ -591,6 +591,7 @@ public class GameManager {
             System.out.println("zmbi Aive" + zombies.size());
             if (zombies.isEmpty()){
                 win();
+                Client.sendMessage("win");
                 winTime.stop();
             }
         }));
@@ -598,7 +599,7 @@ public class GameManager {
         winTime.play();
     }
 
-    private void win(){
+    public static void win(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("You Win!");
         Platform.runLater(() -> alert.showAndWait());
@@ -608,6 +609,7 @@ public class GameManager {
         game.stop();
         for (Zombie z : zombies)
             z.pause();
+        Client.sendMessage("lose");
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("You lost!");
         Platform.runLater(() -> alert.showAndWait());
