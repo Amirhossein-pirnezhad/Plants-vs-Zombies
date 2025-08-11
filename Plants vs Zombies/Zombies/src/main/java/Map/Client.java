@@ -28,7 +28,7 @@ public class Client {
                     while ((line = in.readLine()) != null) {
                         if (line.equals("START")) {
                             System.out.println("Server says START — starting game!");
-                            message = line;
+                            message = "START";
                         }
                     }
                 } catch (IOException e) {
