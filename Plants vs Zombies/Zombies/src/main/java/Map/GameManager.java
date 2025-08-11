@@ -176,7 +176,6 @@ public class GameManager {
         updatePeas.play();
     }
 
-
     private void initializePlantMenu() {
         plantMenuVBox = new VBox(8);
         plantMenuVBox.setLayoutX(0);
@@ -216,6 +215,7 @@ public class GameManager {
             sunPointLabel.setText("" + sunPoint);
         }
     }
+//online
 
     public void buildMap(){
         for (int i = 0; i < map_row; i++) {
@@ -487,7 +487,7 @@ public class GameManager {
             return;
         }
         int col = balanceRandom();
-        int type = (int)(Math.random() * model) ;
+        int type = (int)(Math.random() * model);
             Zombie z;
             if(type == 0)
                 z = new Zombie(col);
@@ -536,7 +536,6 @@ public class GameManager {
         }
         return choose.get((int)(Math.random() * choose.size()));
     }
-    
     private void mainAttack(int timeAttack , int type , int more){
         mainAttack = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
             for (int i = 0; i < more; i++) {

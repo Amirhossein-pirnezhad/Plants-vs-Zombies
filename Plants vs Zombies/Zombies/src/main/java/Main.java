@@ -158,6 +158,7 @@ public class Main extends Application {
             initializeCardSelection(online);
             stage.close();
         });
+
         stage.show();
     }
 
@@ -242,8 +243,7 @@ public class Main extends Application {
         loading.setLayoutY(frame.getLayoutY() + frame.getBoundsInParent().getHeight() - 75);
 
         cardSelectionPane.getChildren().addAll(frame);
-
-            cardSelectionPane.getChildren().addAll(button , loading);
+        cardSelectionPane.getChildren().addAll(button , loading);
 
 
         double tempx = (Sizes.SCREEN_WIDTH / 2) - (scaledWidth / 2) + 15;
