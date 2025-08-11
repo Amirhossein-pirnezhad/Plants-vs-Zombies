@@ -25,16 +25,19 @@ public class Client {
             new Thread(() -> {
                 try {
                     String line;
-                    while ((line = in.readLine()) != null) {
+                    while (true) {
+                        System.out.println("wrking");
+                        line = in.readLine();
+                        System.out.println("SERVER SAY" + line);
                         if (line.equals("START")) {
                             System.out.println("Server says START — starting game!");
                             message = "START";
                         }
-                        if (line.equals("lose")){
-                            GameManager.lose();
+                        if (line.equals("win")) {
+                            Platform.runLater(() -> GameManager.win());
                         }
-                        if (line.equals("win")){
-                            GameManager.win();
+                        if (line.equals("lose")) {
+                            Platform.runLater(() -> GameManager.lose());
                         }
                     }
                 } catch (IOException e) {
