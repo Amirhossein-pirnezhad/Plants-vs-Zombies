@@ -155,12 +155,7 @@ public class Main extends Application {
         nightBtn.setOnMouseClicked(event -> {
             online = false;
             isNight = true;
-<<<<<<< HEAD
-            online = true;
-            initializeCardSelection();
-=======
             initializeCardSelection(online);
->>>>>>> e0335560126647721ab8ae34130da259ea7ebc84
             stage.close();
         });
 

@@ -11,15 +11,10 @@ public class Client {
     private static BufferedReader in;
     public  static ArrayList<String> data;
     public  static ArrayList<String> dataSuns = new ArrayList<>();
-<<<<<<< HEAD
-    public  static String ip = "192.168.251.211";
-    static{
-=======
     public  static String ip = "192.168.251.211" , message;
     private static PrintWriter out;
 
     static {
->>>>>>> e0335560126647721ab8ae34130da259ea7ebc84
         socket = null;
         try {
             socket = new Socket(ip, 12345);
