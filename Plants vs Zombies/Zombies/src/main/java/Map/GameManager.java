@@ -91,25 +91,33 @@ public class GameManager {
 
         for (Sun s : suns){
             s.resume();
-            addSun(s);
+//            addSun(s);
         }
         for(Zombie z : zombies){
             z.resume();
-            addZombie(z);
+//            addZombie(z);
         }
         for (Plant p : plants){
             p.resume();
-            addPlant(p);
+//            addPlant(p);
         }
         for (Pea p : peas){
             p.resume();
         }
 
         if (night){
-            for (int i = 0; i < 3; i++) { //random grave in map
-                int r = (int)(Math.random() * 100) % 5 + 3;
-                int c = (int)(Math.random() * 100) % 4;
-                addPlant(new Grave(r,c));
+            Plant plant = null;
+            for (Plant p : plants){
+                if (p instanceof Grave){
+                    plant = p;
+                }
+            }
+            if (plant == null) {//if load game and have grave
+                for (int i = 0; i < 3; i++) { //random grave in map
+                    int r = (int) (Math.random() * 100) % 5 + 3;
+                    int c = (int) (Math.random() * 100) % 4;
+                    addPlant(new Grave(r, c));
+                }
             }
             buildMeh();
         }
@@ -255,10 +263,12 @@ public class GameManager {
     }
 
     public void addZombie(Zombie z) {
-        zombies.add(z);
+        if (!zombies.contains(z)){
+            zombies.add(z);
+            z.run();
+        }
         if(!panePlantVsZombie.getChildren().contains(z.getZombieView()))
             panePlantVsZombie.getChildren().add(z.getZombieView());
-        z.run();
     }
 
     public static void addPlant(Plant p) {
@@ -373,6 +383,7 @@ public class GameManager {
         saveLoad.setSuns(suns);
         saveLoad.setSunPoint(sunPoint);
         saveLoad.setPeas(peas);
+        saveLoad.setNight(night);
         getSaveName(saveLoad);
     }
 
@@ -617,7 +628,9 @@ public class GameManager {
         game.stop();
         for (Zombie z : zombies)
             z.pause();
-        Client.sendMessage("lose");
+        if (online) {
+            Client.sendMessage("lose");
+        }
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("You lost!");
         Platform.runLater(() -> alert.showAndWait());

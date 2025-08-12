@@ -1,5 +1,5 @@
 package Map;
-import com.sun.tools.javac.Main;
+
 import javafx.application.Platform;
 
 import java.io.*;
@@ -44,9 +44,10 @@ public class Client {
                     e.printStackTrace();
                 }
             }).start();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) { // if server not connected switch to offline
+            System.out.println(e.getMessage());
             System.out.println("can't connect");
+            message = "offline";
         }
     }
 

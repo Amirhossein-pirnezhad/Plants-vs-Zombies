@@ -17,6 +17,7 @@ public class SaveLoad implements Serializable {
     private List<Pea> peas;
     private int sunPoint;
     private int timeLevel;
+    private boolean night;
 
     public SaveLoad(List<Cart> selectedCards){
         this.selectedCards = selectedCards;
@@ -26,6 +27,7 @@ public class SaveLoad implements Serializable {
         peas = new ArrayList<>();
         sunPoint = 0;
         timeLevel = 0;
+        night = false;
     }
 
     public void setZombies(List<Zombie> zombies) {
@@ -58,6 +60,14 @@ public class SaveLoad implements Serializable {
 
     public int getTimeLevel() {
         return timeLevel;
+    }
+
+    public boolean isNight() {
+        return night;
+    }
+
+    public void setNight(boolean night) {
+        this.night = night;
     }
 
     public List<Zombie> getZombies() {

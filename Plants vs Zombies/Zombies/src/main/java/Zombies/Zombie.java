@@ -39,7 +39,7 @@ public class Zombie implements Serializable {
                      imgPathAttack = "/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" ,
                      imgPathDead = "/Zombies/NormalZombie/ZombieDie/ZombieDie_" ,
                      imgPathBoomDie = "/Zombies/NormalZombie/BoomDie/BoomDie_" ,
-                     imgFreezedZombie = "/Zombies/FreezedZombie";
+                     imgFreezedZombie = "/Zombies/FreezedZombie/freezNormalZombie.png";
     protected int imgLen = 22 , imgAttackLen = 21 , imgDieLen = 10;
     protected ZombieState state;
     protected boolean hypnosis;
@@ -279,14 +279,17 @@ public class Zombie implements Serializable {
 
     public void ice(){
         stopTimeLines();
-        Image frozenImage = new Image(getClass().getResourceAsStream(imgFreezedZombie));
-        zombieView.setImage(frozenImage);
+        try {
+            Image frozenImage = new Image(getClass().getResourceAsStream(imgFreezedZombie));
+            zombieView.setImage(frozenImage);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(4) , event -> {
             zombieImages = setZombieImages(imgPath , imgLen);
             zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
             zombieDei = setZombieImages(imgPathDead , imgDieLen);
             switch (mode) {
-                case RUN: run();            break;
                 case EATING: attackZombie();break;
                 case DEAD: deadZombie();    break;
                 default: run();        break;
@@ -417,7 +420,6 @@ public class Zombie implements Serializable {
             zombieView.setLayoutY(col * cell_size + 30);
 
             switch (mode) {
-                case RUN: run();            break;
                 case EATING: attackZombie();break;
                 case DEAD: deadZombie();    break;
                 default: run();        break;

@@ -3,6 +3,7 @@ package Plants.NightPlant;
 import Map.GameManager;
 import Map.Meh;
 import Plants.Plant;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -11,7 +12,6 @@ import java.util.List;
 
 public class Planter extends Plant {
     private final List<int[]> hiddenMehPositions = new ArrayList<>();
-    private boolean fogHidden = false;
 
     public Planter(int row, int col) {
         super(row, col);
@@ -23,8 +23,8 @@ public class Planter extends Plant {
 
     }
 
-    private void hideFogAround(Meh[][] cellsMeh) {
-        if (fogHidden || cellsMeh == null) return;
+    public void hideFogAround(Meh[][] cellsMeh) {
+        if (cellsMeh == null) return;
 
         int[][] deltas = {
                 {-1, 0}, {1, 0}, {0, -1}, {0, 1},
@@ -42,12 +42,11 @@ public class Planter extends Plant {
                 }
             }
         }
-        fogHidden = true;
     }
 
-    private void restoreFogAround() {
+    public void restoreFogAround() {
         Meh[][] cellsMeh = GameManager.getMehcell();
-        if (!fogHidden || cellsMeh == null) return;
+        if (cellsMeh == null) return;
 
         for (int[] s : hiddenMehPositions) {
             int r = s[0];
@@ -60,7 +59,6 @@ public class Planter extends Plant {
             }
         }
         hiddenMehPositions.clear();
-        fogHidden = false;
     }
 
     private boolean isValidCell(Meh[][] grid, int r, int c) {
@@ -74,18 +72,34 @@ public class Planter extends Plant {
         if (!isAlive) return;
         isAlive = false;
         restoreFogAround();
+        for (Plant p : GameManager.getPlants()){
+            if (p instanceof Planter && p != this){
+                ((Planter) p).hideFogAround(GameManager.getMehcell());
+            }
+        }
         GameManager.removePlant(this);
         plantView.setOnMouseClicked(null);
     }
 
     @Override
     public void pause() {
-
+        Platform.runLater(() -> {
+            Image frozenImage = plantView.snapshot(null, null);
+            plantView.setImage(frozenImage);
+        });
     }
 
     @Override
     public void resume() {
+        if (plantView == null)
+            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Plantern/Plantern.gif")));
+        else plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/Plantern/Plantern.gif")));
 
+        Meh[][] cellsMeh = GameManager.getMehcell();
+        hideFogAround(cellsMeh);
+
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
     @Override

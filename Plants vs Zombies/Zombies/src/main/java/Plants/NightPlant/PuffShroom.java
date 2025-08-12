@@ -9,8 +9,10 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
+import static Map.Cell.cell_size;
 import static Map.GameManager.peas;
 
 public class PuffShroom extends Peashooter {
@@ -106,6 +108,11 @@ public class PuffShroom extends Peashooter {
     @Override
     public void resume(){
         isPauses = false;
+        if (plantView == null){
+            plantView = new ImageView();
+            plantView.setFitHeight(cell_size * 0.75);
+            plantView.setFitWidth(cell_size * 0.75);
+        }
         if (coffee){
             setAwakeImage();
         }
