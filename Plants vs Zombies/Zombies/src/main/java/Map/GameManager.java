@@ -540,6 +540,14 @@ public class GameManager {
     }
     
     private void mainAttack(int timeAttack , int type , int more){
+        for (Plant p : plants){
+            if (p instanceof Grave){
+                Zombie z = new Zombie(p.getCol());
+                z.getZombieView().setLayoutX(Sizes.START_X_GRID + (p.getRow() + 1) * Sizes.CELL_SIZE);
+                addZombie(z);
+
+            }
+        }
         mainAttack = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
             for (int i = 0; i < more; i++) {
                 spawnZombie(type);
