@@ -59,7 +59,6 @@ public class GameManager {
     private StackPane overlayPane;
     private List<BorderPane> cartView_recharge = new ArrayList<>();
     private ArrayList<String> data , sunData;
-    private Client client ;
     private Shovel shovel;
     private int howMuch = 0;
 
@@ -115,7 +114,6 @@ public class GameManager {
             buildMeh();
         }
         if (online){
-            client = new Client();
             data = Client.data;
             sunData = Client.dataSuns;
         }
@@ -178,7 +176,6 @@ public class GameManager {
         updatePeas.play();
     }
 
-
     private void initializePlantMenu() {
         plantMenuVBox = new VBox(8);
         plantMenuVBox.setLayoutX(0);
@@ -218,6 +215,7 @@ public class GameManager {
             sunPointLabel.setText("" + sunPoint);
         }
     }
+//online
 
     public void buildMap(){
         for (int i = 0; i < map_row; i++) {
@@ -489,7 +487,7 @@ public class GameManager {
             return;
         }
         int col = balanceRandom();
-        int type = (int)(Math.random() * model) ;
+        int type = (int)(Math.random() * model);
             Zombie z;
             if(type == 0)
                 z = new Zombie(col);
@@ -538,7 +536,6 @@ public class GameManager {
         }
         return choose.get((int)(Math.random() * choose.size()));
     }
-    
     private void mainAttack(int timeAttack , int type , int more){
         for (Plant p : plants){
             if (p instanceof Grave){
@@ -602,6 +599,7 @@ public class GameManager {
             System.out.println("zmbi Aive" + zombies.size());
             if (zombies.isEmpty()){
                 win();
+                Client.sendMessage("win");
                 winTime.stop();
             }
         }));
@@ -609,7 +607,7 @@ public class GameManager {
         winTime.play();
     }
 
-    private void win(){
+    public static void win(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("You Win!");
         Platform.runLater(() -> alert.showAndWait());
@@ -619,6 +617,7 @@ public class GameManager {
         game.stop();
         for (Zombie z : zombies)
             z.pause();
+        Client.sendMessage("lose");
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("You lost!");
         Platform.runLater(() -> alert.showAndWait());

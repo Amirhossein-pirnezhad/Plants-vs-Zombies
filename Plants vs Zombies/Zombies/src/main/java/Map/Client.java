@@ -1,4 +1,7 @@
 package Map;
+import com.sun.tools.javac.Main;
+import javafx.application.Platform;
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -8,17 +11,47 @@ public class Client {
     private static BufferedReader in;
     public  static ArrayList<String> data;
     public  static ArrayList<String> dataSuns = new ArrayList<>();
+    public  static String ip = "192.168.251.211" , message;
+    private static PrintWriter out;
 
-    static{
+    static {
         socket = null;
         try {
-            socket = new Socket("localhost", 12345);
+            socket = new Socket(ip, 12345);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            data = connectToServer();
+
+            new Thread(() -> {
+                try {
+                    String line;
+                    while (true) {
+                        System.out.println("wrking");
+                        line = in.readLine();
+                        System.out.println("SERVER SAY" + line);
+                        if (line.equals("START")) {
+                            System.out.println("Server says START — starting game!");
+                            message = "START";
+                        }
+                        if (line.equals("win")) {
+                            Platform.runLater(() -> GameManager.win());
+                        }
+                        if (line.equals("lose")) {
+                            Platform.runLater(() -> GameManager.lose());
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("can't connect");
         }
-        data = connectToServer();
+    }
+
+    public static void sendMessage(String message) {
+        out.println(message);
     }
 
     private static ArrayList<String> connectToServer() {
