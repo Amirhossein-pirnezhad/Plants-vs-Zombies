@@ -1,5 +1,5 @@
 package Map;
-import com.sun.tools.javac.Main;
+
 import javafx.application.Platform;
 
 import java.io.*;
@@ -25,25 +25,29 @@ public class Client {
             new Thread(() -> {
                 try {
                     String line;
-                    while ((line = in.readLine()) != null) {
+                    while (true) {
+                        System.out.println("wrking");
+                        line = in.readLine();
+                        System.out.println("SERVER SAY" + line);
                         if (line.equals("START")) {
                             System.out.println("Server says START — starting game!");
                             message = "START";
                         }
-                        if (line.equals("lose")){
-                            GameManager.lose();
+                        if (line.equals("win")) {
+                            Platform.runLater(() -> GameManager.win());
                         }
-                        if (line.equals("win")){
-                            GameManager.win();
+                        if (line.equals("lose")) {
+                            Platform.runLater(() -> GameManager.lose());
                         }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }).start();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) { // if server not connected switch to offline
+            System.out.println(e.getMessage());
             System.out.println("can't connect");
+            message = "offline";
         }
     }
 

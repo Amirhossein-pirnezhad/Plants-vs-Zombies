@@ -7,6 +7,7 @@ import Zombies.Zombie;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -14,8 +15,8 @@ import javafx.util.Duration;
 import static Map.Cell.cell_size;
 
 public class DoomShroom extends Plant {
-    protected Timeline boom;
     protected boolean started = false;
+    protected int counter = 0 , bombTime = 800 / GameManager.timeUpdatePlants;
 
     protected String img = "/Plants/DoomShroom/DoomShroom.gif";
     public DoomShroom(int row, int col) {
@@ -23,7 +24,7 @@ public class DoomShroom extends Plant {
         coffee = GameManager.night;
         HP = 10;
         if(coffee)
-            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/DoomShroom.gif")));
+            plantView = new ImageView(new Image(getClass().getResourceAsStream(img)));
         if (!coffee){
             plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/Sleep.gif")));
         }
@@ -31,11 +32,6 @@ public class DoomShroom extends Plant {
         plantView.setFitWidth(cell_size * 0.75);
     }
 
-    protected void bomb(){
-        boom = new Timeline(new KeyFrame(Duration.seconds(0.75) , event -> kill()));
-        boom.setCycleCount(1);
-        boom.play();
-    }
 
     protected boolean isKilled(Zombie z) {
         double x1 = Sizes.START_X_GRID + (row - 3) * Sizes.CELL_SIZE;
@@ -59,8 +55,6 @@ public class DoomShroom extends Plant {
     public void dead() {
         plantView.setImage(new Image(getClass().getResourceAsStream("/Screen/Boom.gif")));
         Timeline dead = new Timeline(new KeyFrame(Duration.seconds(1.2) , event -> {
-            if(boom != null && boom.getStatus() == Animation.Status.RUNNING)
-                boom.stop();
             isAlive = false;
             GameManager.removePlant(this);
             if(coffee)
@@ -73,28 +67,41 @@ public class DoomShroom extends Plant {
 
     @Override
     public void pause() {
-
+        Platform.runLater(() -> {
+            Image frozenImage = plantView.snapshot(null, null);
+            plantView.setImage(frozenImage);
+        });
     }
 
     @Override
     public void resume() {
         if(coffee)
-            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/DoomShroom.gif")));
+            if (plantView == null) {
+                plantView = new ImageView(new Image(getClass().getResourceAsStream(img)));
+            }else plantView.setImage(new Image(getClass().getResourceAsStream(img)));
         if (!coffee){
-            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/Sleep.gif")));
+            if (plantView == null)
+                plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/Sleep.gif")));
+            else plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/DoomShroom/Sleep.gif")));
         }
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
+
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
     @Override
     public void update() {
-        if (coffee && !started){
+        if (coffee && !started){ // if bomb not started , start!
             started = true;
             plantView.setImage(new Image(getClass().getResourceAsStream(img)));
-            bomb();
         }
         if (HP <= 0)
             dead();
+        counter++;
+        if (counter == bombTime){
+            kill();
+        }
     }
 }

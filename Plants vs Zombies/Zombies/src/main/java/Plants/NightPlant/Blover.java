@@ -3,6 +3,7 @@ package Plants.NightPlant;
 import Map.GameManager;
 import Plants.Plant;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -34,18 +35,27 @@ public class Blover extends Plant {
     public void dead() {
         isAlive = false;
         GameManager.removePlant(this);
-
+        for (Plant p : GameManager.getPlants()){
+            if (p instanceof Planter){
+                ((Planter) p).hideFogAround(GameManager.getMehcell());
+            }
+        }
         plantView.setOnMouseClicked(null);
     }
 
     @Override
     public void pause() {
-
+        Platform.runLater(() -> {
+            Image frozenImage = plantView.snapshot(null, null);
+            plantView.setImage(frozenImage);
+        });
     }
 
     @Override
     public void resume() {
-        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Blover/Blover.gif")));
+        if (plantView == null) {
+            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Blover/Blover.gif")));
+        }else plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/Blover/Blover.gif")));
 
         //animation by chat gpt :)
         fadeOut = new FadeTransition(Duration.seconds(1), GameManager.getPaneMeh());
@@ -58,6 +68,9 @@ public class Blover extends Plant {
         fadeIn.setToValue(1.0);
         fadeIn.setOnFinished(e -> dead());
         fadeOut.play();
+
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
     @Override

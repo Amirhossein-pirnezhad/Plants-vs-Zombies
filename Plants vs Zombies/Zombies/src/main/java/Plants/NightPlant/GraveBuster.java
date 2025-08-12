@@ -2,6 +2,7 @@ package Plants.NightPlant;
 
 import Map.GameManager;
 import Plants.Plant;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -28,14 +29,22 @@ public class GraveBuster extends Plant {
 
     @Override
     public void pause() {
-
+        Platform.runLater(() -> {
+            Image frozenImage = plantView.snapshot(null, null);
+            plantView.setImage(frozenImage);
+        });
     }
 
     @Override
     public void resume() {
-        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/GraveBuster/GraveBuster.gif")));
-        plantView.setFitHeight(cell_size);
-        plantView.setFitWidth(cell_size);
+        if (plantView == null) {
+            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/GraveBuster/GraveBuster.gif")));
+            plantView.setFitHeight(cell_size);
+            plantView.setFitWidth(cell_size);
+        }else plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/GraveBuster/GraveBuster.gif")));
+
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
     @Override

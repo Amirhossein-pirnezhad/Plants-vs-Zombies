@@ -64,6 +64,9 @@ public class HypenoShroom extends Plant {
                 plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/HypnoShroom/HypnoShroom/HypnoShroomSleep.gif")));
             }
         }
+
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
     @Override

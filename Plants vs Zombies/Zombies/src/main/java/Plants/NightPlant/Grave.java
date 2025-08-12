@@ -36,9 +36,14 @@ public class Grave extends Plant {
 
     @Override
     public void resume() {
-        plantView = new ImageView(new Image(getClass().getResourceAsStream("/Screen/Grave/" + shapeGrave[shape])));
-        plantView.setFitHeight(cell_size * 1.5);
-        plantView.setFitWidth(cell_size );
+        if (plantView == null) {
+            plantView = new ImageView(new Image(getClass().getResourceAsStream("/Screen/Grave/" + shapeGrave[shape])));
+            plantView.setFitHeight(cell_size * 1.5);
+            plantView.setFitWidth(cell_size);
+        }else plantView.setImage(new Image(getClass().getResourceAsStream("/Screen/Grave/" + shapeGrave[shape])));
+
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
     @Override

@@ -83,7 +83,7 @@ public class Peashooter extends Plant{
         plantView.setFitHeight(cell_size * 0.75);
         plantView.setFitWidth(cell_size * 0.75);
         this.getChildren().addAll(plantView);
-
+        System.out.println(typePea);
         GameManager.getCells()[row][col].removePlant();
         GameManager.getCells()[row][col].setPlant(this);
         shooting();

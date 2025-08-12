@@ -351,14 +351,23 @@ public class Main extends Application {
 
         Pane pane = new Pane( background);
         pane.getChildren().add(sunCounter);
-        GameManager g;
-        while (true){
-            System.out.println("nt st");
-            if (Client.message == "START"){
-                System.out.println("start");
-                g = new GameManager(pane , saveLoad , isNight , online);
-                break;
+        GameManager g = null;
+        if(online) {
+            while (true) {
+                if (Client.message == "START") {
+                    System.out.println("start");
+                    g = new GameManager(pane, saveLoad, isNight, online);
+                    break;
+                }
+                if(Client.message == "offline"){
+                    online = false;
+                    break;
+                }
             }
+        }
+
+        if (!online){
+            g = new GameManager(pane, saveLoad, isNight, online);
         }
 
         Label sunLabel = new Label("SunPoints: 0");
@@ -371,19 +380,16 @@ public class Main extends Application {
         GameManager.addPlant(new ScaredyShroom(1 ,1));
         GameManager.addPlant(new HypenoShroom(3 , 2));
 
-        pane.setOnMouseClicked(event -> {
-            System.out.println("Pane clicked at X = " + event.getX() + ", Y = " + event.getY());
-        });
-
         Scene scene = new Scene(pane);
 
         GameManager.setSunPointLabel(sunLabel);
         g.spawnSun();
 
+        GameManager finalG = g;
         gameUpdate = new AnimationTimer() {//game loop
             @Override
             public void handle(long now) {
-                g.updateGame();
+                finalG.updateGame();
             }
         };
         gameUpdate.start();
@@ -460,7 +466,7 @@ public class Main extends Application {
 
             saveLoad = (SaveLoad) objectIn.readObject();
             System.out.println("Loading game: " + saveName);
-            Game();
+            playLoadingGame(saveLoad);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -470,6 +476,50 @@ public class Main extends Application {
             alert.setContentText("Could not load the selected save file.");
             alert.showAndWait();
         }
+    }
+
+    private void playLoadingGame(SaveLoad saveLoad){
+        Stage primaryStage = new Stage();
+        String imagePath = saveLoad.isNight()
+                ? "/Items/Background/Background_6.jpg"
+                : "/Items/Background/Background_0.jpg";
+
+        ImageView background = new ImageView(new Image(getClass().getResourceAsStream(imagePath)));
+        background.setFitHeight(Sizes.SCREEN_HEIGHT);
+        background.setFitWidth(Sizes.SCREEN_WIDTH);
+        ImageView sunCounter = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Sun/sunCounter.png")));
+        sunCounter.setFitHeight(90);
+        sunCounter.setFitWidth(250);
+
+
+        Pane pane = new Pane( background);
+        pane.getChildren().add(sunCounter);
+
+        GameManager g = new GameManager(pane , saveLoad , saveLoad.isNight() , false);
+
+        Label sunLabel = new Label("SunPoints: 0");
+        sunLabel.setFont(new Font("Arial", 60));
+        sunLabel.setTextFill(Color.BLACK);
+        sunLabel.setLayoutX(110);
+        sunLabel.setLayoutY(7);
+        pane.getChildren().add(sunLabel);
+
+        Scene scene = new Scene(pane);
+
+        GameManager.setSunPointLabel(sunLabel);
+        g.spawnSun();
+
+        GameManager finalG = g;
+        gameUpdate = new AnimationTimer() {//game loop
+            @Override
+            public void handle(long now) {
+                finalG.updateGame();
+            }
+        };
+        gameUpdate.start();
+        primaryStage.setFullScreen(true);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
     public static void main(String[] args) {
         launch(args);

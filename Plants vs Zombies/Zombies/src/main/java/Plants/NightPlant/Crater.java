@@ -35,7 +35,33 @@ public class Crater extends Plant {
 
     @Override
     public void resume() {
+        if (t > timeDead * 0.75) {
+            if (plantView == null) {
+                plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Crafter/crater1.png")));
+            } else
+                plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/Crafter/crater1.png")));
+        }
+        else if (t <= timeDead * 0.75){
+            if (plantView == null){
+                plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Crafter/crater2.png")));
+            }else
+                plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/Crafter/crater2.png")));
+        }else if (t <= timeDead * 0.5){
+            if (plantView == null){
+                plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Crafter/crater4.png")));
+            }else
+                plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/Crafter/crater4.png")));
+        }else if (t <= timeDead * 0.25){
+            if (plantView == null){
+                plantView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Crafter/crater3.png")));
+            }else
+                plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/Crafter/crate3.png")));
+        }
+        plantView.setFitHeight(cell_size * 0.9);
+        plantView.setFitWidth(cell_size * 0.9);
 
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
     @Override
@@ -48,7 +74,7 @@ public class Crater extends Plant {
         }if (t == timeDead * 0.25){
             plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/Crafter/crater3.png")));
         }
-        if (t == 0){
+        if (t <= 0){
             dead();
         }
     }
