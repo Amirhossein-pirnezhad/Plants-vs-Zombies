@@ -58,7 +58,7 @@ public class Zombie implements Serializable {
         zombieImages = setZombieImages(imgPath , imgLen);
 //        zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
 //        zombieDei = setZombieImages(imgPathDead , imgDieLen);
-        zombieView.setLayoutX(1500);
+        zombieView.setLayoutX(Sizes.SCREEN_WIDTH);
         zombieView.setLayoutY(col * cell_size + 30);
         imgFreezedZombie = "/Zombies/FreezedZombie/freezNormalZombie.png";
     }
@@ -154,6 +154,7 @@ public class Zombie implements Serializable {
                 runZombie.stop();
             }
             speed = speed * 2;
+            distance = distance * 2;
             run();
         }else{
             HP = HP * 2;

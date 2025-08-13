@@ -588,10 +588,16 @@ public class GameManager {
     private void mainAttack(int timeAttack , int type , int more){
         for (Plant p : plants){
             if (p instanceof Grave){
+                ImageView animZombieBurn = new ImageView(new Image(getClass().getResourceAsStream("/Screen/Boom.gif")));
+                cells[p.getRow()][p.getCol()].getChildren().add(animZombieBurn);
                 Zombie z = new Zombie(p.getCol());
-                z.getZombieView().setLayoutX(Sizes.START_X_GRID + (p.getRow() + 1) * Sizes.CELL_SIZE);
+                z.getZombieView().setLayoutX(Sizes.START_X_GRID + (p.getRow()) * Sizes.CELL_SIZE);
                 addZombie(z);
-
+                Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
+                    cells[p.getRow()][p.getCol()].getChildren().remove(animZombieBurn);
+                }));
+                tl.setCycleCount(1);
+                tl.play();
             }
         }
         mainAttack = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
@@ -713,7 +719,7 @@ public class GameManager {
         int col = (int) (Math.random() * 100) % 5 + 4;
         Brain b = new Brain(row , col , 0);
         plants.add(b);
-        background.getChildren().add(b.getPlantView());
+        panePeas.getChildren().add(b.getPlantView());
     }
 
     private void showMenuOptions() {

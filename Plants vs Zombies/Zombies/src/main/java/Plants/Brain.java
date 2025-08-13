@@ -21,7 +21,7 @@ public class Brain extends Sun{
                 plantView.setLayoutY(plantView.getLayoutY() + 10);
             }
             for (Zombie z : GameManager.getZombies()) {
-                if (intersectsAccurately(z) && !z.getBonus) {
+                if (intersectsAccurately(z) && !z.getBonus && !z.isHypnosis()) {
                     z.bonus();
                     dead();
                     break;
