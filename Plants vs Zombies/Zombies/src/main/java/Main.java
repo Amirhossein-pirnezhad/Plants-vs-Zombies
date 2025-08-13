@@ -106,16 +106,16 @@ public class Main extends Application {
         stage.setScene(scene);
         Adventure_0.setOnMouseClicked(event -> {
 //            online = false;
-//
 //            isNight = false;
 //            initializeCardSelection();
             showOfflineMode();
-//            stage.close();
+            stage.close();
         });
         Adventure_2.setOnMouseClicked(event -> {
-            online = true;
-            isNight = false;
-            initializeCardSelection(online);
+//            online = true;
+//            isNight = false;
+//            initializeCardSelection(online);
+            showOnlineMode();
             stage.close();
         });
         stage.show();
@@ -123,6 +123,43 @@ public class Main extends Application {
 
     private void online(){
         client = new Client();
+    }
+
+    public void showOnlineMode(){
+        Stage stage = new Stage();
+        stage.setFullScreen(true);
+        ImageView backgrand = new ImageView(new Image(getClass().getResourceAsStream("/Screen/choosNightDayMod.png")));
+        backgrand.setFitWidth(Sizes.SCREEN_WIDTH);
+        backgrand.setFitHeight(Sizes.SCREEN_HEIGHT);
+
+        Button dayBtn = new Button("Day Mode");
+        Button nightBtn = new Button("Night Mode");
+        dayBtn.setLayoutX(200);
+        dayBtn.setLayoutY(400);
+        nightBtn.setLayoutX(600);
+        nightBtn.setLayoutY(400);
+        dayBtn.setPrefWidth(200);
+        dayBtn.setPrefHeight(60);
+        nightBtn.setPrefWidth(200);
+        nightBtn.setPrefHeight(60);
+//menu
+        Pane pane = new Pane(backgrand,dayBtn,nightBtn);
+        Scene scene = new Scene(pane);
+        stage.setScene(scene);
+        dayBtn.setOnMouseClicked(event -> {
+            online = true;
+            isNight = false;
+            initializeCardSelection(online);
+            stage.close();
+        });
+        nightBtn.setOnMouseClicked(event -> {
+            online = true;
+            isNight = true;
+            initializeCardSelection(online);
+            stage.close();
+        });
+
+        stage.show();
     }
 
     public void showOfflineMode(){

@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -57,6 +58,7 @@ public class GameManager {
 
     private List<Cart> selectedCards = new ArrayList<>();
     private StackPane overlayPane;
+    private static StackPane overlayPaneOfLose;
     private List<BorderPane> cartView_recharge = new ArrayList<>();
     private ArrayList<String> data , sunData;
     private Shovel shovel;
@@ -392,13 +394,47 @@ public class GameManager {
         stage.setTitle("Save");
         Button enter = new Button("Enter");
         Text text = new Text("Please enter your save's name\nthen press enter");
+        text.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        text.setFill(Color.DARKGREEN);
         TextField textField = new TextField();
         textField.setPromptText("Please enter your save's name:");
-        BorderPane borderPane = new BorderPane(textField);
-        borderPane.setTop(text);
-        borderPane.setBottom(enter);
+        textField.setPrefWidth(250);
+        textField.setStyle(
+                "-fx-background-color: #fff8dc;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-border-color: darkgreen;" +
+                        "-fx-padding: 8;"
+        );
+        enter.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        enter.setTextFill(Color.WHITE);
+        enter.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #4CAF50, #2E7D32);" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-padding: 10 20;" +
+                        "-fx-cursor: hand;"
+        );
+        enter.setOnMouseEntered(e -> enter.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #66BB6A, #388E3C);" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-padding: 10 20;" +
+                        "-fx-cursor: hand;"
+        ));
+        enter.setOnMouseExited(e -> enter.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #4CAF50, #2E7D32);" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-padding: 10 20;" +
+                        "-fx-cursor: hand;"
+        ));
+        VBox layout = new VBox(15, text, textField, enter);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20));
+        layout.setStyle("-fx-background-color: #c8e6c9; -fx-background-radius: 20;");
 
-        Scene scene = new Scene(borderPane);
+        Scene scene = new Scene(layout, 400, 200);
         stage.setScene(scene);
         stage.show();
         enter.setOnAction(event -> {
@@ -631,9 +667,28 @@ public class GameManager {
         if (online) {
             Client.sendMessage("lose");
         }
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("You lost!");
-        Platform.runLater(() -> alert.showAndWait());
+//        Alert alert = new Alert(Alert.AlertType.ERROR);
+//        alert.setTitle("You lost!");
+//        Platform.runLater(() -> alert.showAndWait());
+        ImageView lose= new ImageView(new Image(GameManager.class.getResourceAsStream("/Screen/LoseAnim.png")));
+        if (overlayPaneOfLose != null && background.getChildren().contains(overlayPaneOfLose)) return;
+
+        overlayPaneOfLose = new StackPane();
+        overlayPaneOfLose.prefWidthProperty().bind(background.widthProperty());
+        overlayPaneOfLose.prefHeightProperty().bind(background.heightProperty());
+        overlayPaneOfLose.setStyle("-fx-background-color: rgba(0,0,0,0.5);");
+        overlayPaneOfLose.setPickOnBounds(true);
+        lose.setOnMouseClicked(e -> {
+            if (overlayPaneOfLose != null && background.getChildren().contains(overlayPaneOfLose)) {
+                background.getChildren().remove(overlayPaneOfLose);
+                overlayPaneOfLose = null;
+            }
+            System.exit(0);
+        });
+        overlayPaneOfLose.getChildren().add(lose);
+        StackPane.setAlignment(lose, Pos.CENTER);
+        background.getChildren().add(overlayPaneOfLose);
+        overlayPaneOfLose.requestFocus();
     }
 
     public void spawnSun(){
