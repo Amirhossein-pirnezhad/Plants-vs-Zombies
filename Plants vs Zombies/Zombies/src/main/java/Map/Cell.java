@@ -27,6 +27,9 @@ public class Cell extends StackPane {
         border.setFill(Color.TRANSPARENT);
         border.setStroke(Color.TRANSPARENT);
         this.getChildren().add(border);
+
+        this.setOnMouseEntered(e -> border.setFill(Color.color(1, 1, 0, 0.3)));
+        this.setOnMouseExited(e -> border.setFill(Color.TRANSPARENT));
     }
 
     public void setPlant(Plant plant) {

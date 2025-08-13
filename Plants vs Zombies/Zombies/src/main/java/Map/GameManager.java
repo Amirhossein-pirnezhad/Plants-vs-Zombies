@@ -24,7 +24,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class GameManager {
     public static int timeUpdatePlants = 100;
     private int timeLevel = 1 , timerSun;
     private SaveLoad saveLoad;
-    private Button save , pause , resume ,menuButton;
+    private Button menuButton;
     private Game_Timer game_timer;
     public static boolean night , online;
 
@@ -709,6 +708,7 @@ public class GameManager {
     }
 
     public void spawnBrain(){
+        if (online) return;
         int row = (int) (Math.random() * 100) % 5;
         int col = (int) (Math.random() * 100) % 5 + 4;
         Brain b = new Brain(row , col , 0);
