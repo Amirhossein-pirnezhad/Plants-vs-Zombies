@@ -134,10 +134,13 @@ public class Zombie implements Serializable {
         if(isSpeedHalf)
             return;
         isSpeedHalf = true;
+        pause();
         speed = speed/2;
         zombieImages = null;
         imgPath = "/Zombies/NormalZombie/ZombieIce/Zombie_";
         zombieImages = setZombieImages(imgPath , 22);
+        state =  new ZombieState(this);
+        resume();
     }
 
     protected void attackZombie(){
