@@ -43,6 +43,7 @@ public class Zombie implements Serializable {
     protected int imgLen = 22 , imgAttackLen = 21 , imgDieLen = 10;
     protected ZombieState state;
     protected boolean hypnosis;
+    public boolean getBonus = false;
 
     public Zombie(int col){
         mode = RUN;
@@ -134,13 +135,29 @@ public class Zombie implements Serializable {
         if(isSpeedHalf)
             return;
         isSpeedHalf = true;
-        pause();
+        if (runZombie != null && runZombie.getStatus() == Animation.Status.RUNNING){
+            runZombie.stop();
+        }
         speed = speed/2;
-        zombieImages = null;
         imgPath = "/Zombies/NormalZombie/ZombieIce/Zombie_";
         zombieImages = setZombieImages(imgPath , 22);
-        state =  new ZombieState(this);
-        resume();
+        run();
+    }
+
+    public void bonus(){
+        if (getBonus) return;
+        getBonus = true;
+        System.out.println("BRAIN EAT");
+        int bonus = (int) (Math.random() * 100);
+        if (bonus < 70){
+            if (runZombie != null && runZombie.getStatus() == Animation.Status.RUNNING){
+                runZombie.stop();
+            }
+            speed = speed * 2;
+            run();
+        }else{
+            HP = HP * 2;
+        }
     }
 
     protected void attackZombie(){

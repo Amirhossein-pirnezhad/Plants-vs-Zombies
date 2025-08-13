@@ -47,7 +47,10 @@ public class GameManager {
     private static Label sunPointLabel;
     private static Cart savedCart = null;
     private static Timeline game ;
-    private Timeline  winTime , updatePlants , updatePeas , mainAttack;
+    private Timeline  winTime;
+    private static Timeline updatePlants;
+    private static Timeline updatePeas;
+    private static Timeline mainAttack;
     private final int timeBuildSun = 10 , timeLevel1 = 60;
     public static int timeUpdatePlants = 100;
     private int timeLevel = 1 , timerSun;
@@ -322,7 +325,7 @@ public class GameManager {
         }
     }
 
-    private void pauseGame(){
+    private static void pauseGame(){
         if(game != null && game.getStatus() == Animation.Status.RUNNING)
             game.stop();
         if (updatePlants != null && updatePlants.getStatus() == Animation.Status.RUNNING)
@@ -607,6 +610,7 @@ public class GameManager {
             System.out.println("time :" + timeLevel);
             if (timeLevel % timeBuildSun == 0) {
                 spawnSun();
+                spawnBrain();
             }
             if (timeLevel == timeLevel1){
                 checkWin();
@@ -661,15 +665,8 @@ public class GameManager {
     }
 
     public static void lose(){
-        game.stop();
-        for (Zombie z : zombies)
-            z.pause();
-        if (online) {
-            Client.sendMessage("lose");
-        }
-//        Alert alert = new Alert(Alert.AlertType.ERROR);
-//        alert.setTitle("You lost!");
-//        Platform.runLater(() -> alert.showAndWait());
+        pauseGame();
+
         ImageView lose= new ImageView(new Image(GameManager.class.getResourceAsStream("/Screen/LoseAnim.png")));
         if (overlayPaneOfLose != null && background.getChildren().contains(overlayPaneOfLose)) return;
 
@@ -709,6 +706,14 @@ public class GameManager {
         int col = (int) (Math.random() * 100) % 9;
         Sun s = new Sun(row, col, 0);
         addSun(s);
+    }
+
+    public void spawnBrain(){
+        int row = (int) (Math.random() * 100) % 5;
+        int col = (int) (Math.random() * 100) % 5 + 4;
+        Brain b = new Brain(row , col , 0);
+        plants.add(b);
+        background.getChildren().add(b.getPlantView());
     }
 
     private void showMenuOptions() {

@@ -31,7 +31,7 @@ public class Cart implements Serializable {
         plantType = cardsType;
         switch (cardsType){
             case SUNFLOWER: this.price = 50;  this.rechargeTime = 5;   break;
-            case PEASHOOTRER: this.price = 100; this.rechargeTime = 5; break;
+            case PEASHOOTRER: this.price = 100; this.rechargeTime = 10; break;
             case REPEATER: this.price = 200; this.rechargeTime = 5;    break;
             case TALLNUT: this.price = 125; this.rechargeTime = 5;     break;
             case WALLNUT: this.price = 50;  this.rechargeTime = 5;     break;
@@ -71,8 +71,6 @@ public class Cart implements Serializable {
                 if (timer == rechargeTime) {
                     timer = 0;
                     isReady = true;
-                    border.setFill(Color.GREEN);
-                    System.out.println("isReady" + plantType);
                 }
             }
         }
@@ -87,6 +85,10 @@ public class Cart implements Serializable {
             double valueForIncrease = (imageView.getFitWidth() - currentWidth) / cycle;
             border.setWidth(border.getWidth() + valueForIncrease);
         }
+
+        if (isReady && GameManager.sunPoint >= price){
+            border.setFill(Color.GREEN);
+        }else border.setFill(Color.RED);
 
     }
 

@@ -15,7 +15,7 @@ import static Map.GameManager.sunPoint;
 
 public class Sun extends Plant{
     private final int point = 50;
-    private int lifeTime = 10 , counter = 0 , more = 1000 / GameManager.timeUpdatePlants;
+    protected int lifeTime = 10 , counter = 0 , more = 1000 / GameManager.timeUpdatePlants;
     private double x , y;
 
     public Sun(int row, int col , double sty) {
@@ -39,6 +39,7 @@ public class Sun extends Plant{
         if (this.plantView.getParent() instanceof Pane) {
             ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image sun
         }
+        GameManager.getSuns().remove(this);
         plantView.setOnMouseClicked(null);//don't click again
     }
 
