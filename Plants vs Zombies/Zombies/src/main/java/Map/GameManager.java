@@ -625,11 +625,11 @@ public class GameManager {
             if (timeLevel == timeLevel1){
                 checkWin();
             }
-            if(timeLevel == 26){
-                mainAttack(7 , 2 , 2);
+            if(timeLevel == timeLevel1 / 2.3){
+                mainAttack(5 , 2 , 2);
             }
-            if (timeLevel == 47){
-                mainAttack(13 , 4 , 3);
+            if (timeLevel == timeLevel1 / 1.3){
+                mainAttack(5 , 4 , 3);
             }
             if(timeLevel > 3 && timeLevel <=15){
                 if(timeLevel % 3 == 0){
