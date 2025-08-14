@@ -19,6 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import Map.*;
 import javafx.scene.media.Media;
@@ -460,26 +461,73 @@ public class Main extends Application {
     private void createLoadMenu() {
         Stage loadStage = new Stage();
         loadStage.setTitle("Load Game");
-        loadStage.setWidth(400);
-        loadStage.setHeight(500);
-
-        VBox loadMenu = new VBox(10);
-        loadMenu.setPadding(new Insets(20));
-        loadMenu.setAlignment(Pos.TOP_CENTER);
 
         Label title = new Label("Select a save file to load:");
-        title.setFont(Font.font(20));
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 22));
+        title.setTextFill(Color.DARKGREEN);
 
         ListView<String> saveList = new ListView<>();
         saveList.getItems().addAll(getSaveFiles());
-
+        saveList.setStyle(
+                "-fx-control-inner-background: #fff8dc;" +
+                        "-fx-border-color: darkgreen;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-background-radius: 10;"
+        );
         Button loadButton = new Button("Load");
-        loadButton.setDisable(true);
+        loadButton.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        loadButton.setTextFill(Color.WHITE);
+        loadButton.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #4CAF50, #2E7D32);" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-padding: 8 20;" +
+                        "-fx-cursor: hand;"
+        );
+        loadButton.setOnMouseEntered(e -> loadButton.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #66BB6A, #388E3C);" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-padding: 8 20;" +
+                        "-fx-cursor: hand;"
+        ));
+        loadButton.setOnMouseExited(e -> loadButton.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #4CAF50, #2E7D32);" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-padding: 8 20;" +
+                        "-fx-cursor: hand;"
+        ));
 
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        cancelButton.setTextFill(Color.WHITE);
+        cancelButton.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #E53935, #B71C1C);" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-padding: 8 20;" +
+                        "-fx-cursor: hand;"
+        );
+        cancelButton.setOnMouseEntered(e -> cancelButton.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #EF5350, #C62828);" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-padding: 8 20;" +
+                        "-fx-cursor: hand;"
+        ));
+        cancelButton.setOnMouseExited(e -> cancelButton.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #E53935, #B71C1C);" +
+                        "-fx-background-radius: 15;" +
+                        "-fx-border-radius: 15;" +
+                        "-fx-padding: 8 20;" +
+                        "-fx-cursor: hand;"
+        ));
+
+        loadButton.setDisable(true);
         saveList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             loadButton.setDisable(newVal == null);
         });
-
         loadButton.setOnAction(e -> {
             String selectedSave = saveList.getSelectionModel().getSelectedItem();
             if (selectedSave != null) {
@@ -487,16 +535,20 @@ public class Main extends Application {
                 loadStage.close();
             }
         });
+        cancelButton.setOnAction(e -> loadStage.close());
 
-        Button cancelButton = new Button("Cancel");
         cancelButton.setOnAction(e -> loadStage.close());
 
         HBox buttonBox = new HBox(10, loadButton, cancelButton);
         buttonBox.setAlignment(Pos.CENTER);
 
-        loadMenu.getChildren().addAll(title, saveList, buttonBox);
+        VBox loadMenu = new VBox(15, title, saveList, buttonBox);
+        loadMenu.setAlignment(Pos.CENTER);
+        loadMenu.setPadding(new Insets(20));
+        loadMenu.setStyle("-fx-background-color: #c8e6c9; -fx-background-radius: 20;");
 
-        Scene scene = new Scene(loadMenu);
+        //loadMenu.getChildren().addAll(title, saveList, buttonBox);
+        Scene scene = new Scene(loadMenu, 400, 500);
         loadStage.setScene(scene);
         loadStage.show();
     }
