@@ -671,15 +671,32 @@ public class GameManager {
     }
 
     public static void win(){
+        pauseGame();
         String musicPath = GameManager.class.getResource("/sounds/winmusic.mp3").toExternalForm();
         Media media = new Media(musicPath);
         winMedia = new MediaPlayer(media);
         winMedia.setCycleCount(1);
         winMedia.setVolume(2);
         winMedia.play();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("You Win!");
-        Platform.runLater(() -> alert.showAndWait());
+        ImageView win= new ImageView(new Image(GameManager.class.getResourceAsStream("/Screen/win.png")));
+        if (overlayPaneOfLose != null && background.getChildren().contains(overlayPaneOfLose)) return;
+
+        overlayPaneOfLose = new StackPane();
+        overlayPaneOfLose.prefWidthProperty().bind(background.widthProperty());
+        overlayPaneOfLose.prefHeightProperty().bind(background.heightProperty());
+        overlayPaneOfLose.setStyle("-fx-background-color: rgba(0,0,0,0.5);");
+        overlayPaneOfLose.setPickOnBounds(true);
+        win.setOnMouseClicked(e -> {
+            if (overlayPaneOfLose != null && background.getChildren().contains(overlayPaneOfLose)) {
+                background.getChildren().remove(overlayPaneOfLose);
+                overlayPaneOfLose = null;
+            }
+            System.exit(0);
+        });
+        overlayPaneOfLose.getChildren().add(win);
+        StackPane.setAlignment(win, Pos.CENTER);
+        background.getChildren().add(overlayPaneOfLose);
+        overlayPaneOfLose.requestFocus();
     }
 
     public static void lose(){
