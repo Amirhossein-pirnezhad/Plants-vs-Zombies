@@ -64,7 +64,7 @@ public class Main extends Application {
 
         stage.setFullScreen(true);
         ImageView imageView= new ImageView(new Image(getClass().getResourceAsStream("/Screen/main-menu.png")));
-        ImageView Adventure_0= new ImageView(new Image(getClass().getResourceAsStream("/Screen/daymode.png")));
+        ImageView Adventure_0= new ImageView(new Image(getClass().getResourceAsStream("/Screen/Offline.png")));
         ImageView Adventure_2= new ImageView(new Image(getClass().getResourceAsStream("/Screen/onlineMode.png")));
 
         imageView.setFitWidth(Sizes.SCREEN_WIDTH);//set background
