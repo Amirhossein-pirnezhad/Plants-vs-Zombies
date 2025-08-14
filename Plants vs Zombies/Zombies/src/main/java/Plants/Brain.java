@@ -19,13 +19,14 @@ public class Brain extends Sun{
         if (isAlive) {
             if (plantView.getLayoutY() < row * cell_size + Sizes.START_Y_GRID + 30) { // anim
                 plantView.setLayoutY(plantView.getLayoutY() + 10);
-            }
-            for (Zombie z : GameManager.getZombies()) {
-                if (intersectsAccurately(z) && !z.getBonus && !z.isHypnosis()) {
-                    System.out.println("EATING");
-                    z.bonus();
-                    dead();
-                    break;
+            }else {
+                for (Zombie z : GameManager.getZombies()) {
+                    if (intersectsAccurately(z) && !z.getBonus && !z.isHypnosis()) {
+                        System.out.println("EATING");
+                        z.bonus();
+                        dead();
+                        break;
+                    }
                 }
             }
         }
@@ -42,7 +43,7 @@ public class Brain extends Sun{
     }
 
     private boolean intersectsAccurately(Zombie z) {
-        double shrink = 20;
+        double shrink = 30;
         return plantView.getBoundsInParent().intersects(
                 z.getZombieView().getBoundsInParent().getMinX() + shrink,
                 z.getZombieView().getBoundsInParent().getMinY() + shrink,
