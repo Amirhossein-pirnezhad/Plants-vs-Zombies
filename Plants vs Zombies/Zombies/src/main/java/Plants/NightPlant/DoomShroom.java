@@ -4,7 +4,6 @@ import Map.GameManager;
 import Map.Sizes;
 import Plants.Plant;
 import Zombies.Zombie;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -99,9 +98,11 @@ public class DoomShroom extends Plant {
         }
         if (HP <= 0)
             dead();
-        counter++;
-        if (counter == bombTime){
-            kill();
+        if (started) {
+            counter++;
+            if (counter == bombTime) {
+                kill();
+            }
         }
     }
 }

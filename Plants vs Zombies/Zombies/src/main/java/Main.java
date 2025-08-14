@@ -39,7 +39,7 @@ public class Main extends Application {
     private Pane cardSelectionPane;
     private boolean isNight;
     private boolean online;
-    private MediaPlayer backgroundMusic;
+    private MediaPlayer backgroundMusic , startGame;
     private Client client;
     private SaveLoad saveLoad = new SaveLoad(selectedCards);
     public static Main instance;
@@ -434,6 +434,13 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        String musicPath = getClass().getResource("/sounds/siren.wav").toExternalForm();
+        Media media = new Media(musicPath);
+        startGame = new MediaPlayer(media);
+        startGame.setCycleCount(1);
+        startGame.setVolume(1);
+        startGame.play();
+
     }
 
     private List<String> getSaveFiles() {
@@ -512,6 +519,7 @@ public class Main extends Application {
             alert.setHeaderText("Failed to load game");
             alert.setContentText("Could not load the selected save file.");
             alert.showAndWait();
+            initializeCardSelection(false);
         }
     }
 

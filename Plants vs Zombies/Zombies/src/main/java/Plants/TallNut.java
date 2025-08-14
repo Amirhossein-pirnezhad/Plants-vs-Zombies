@@ -71,6 +71,8 @@ public class TallNut extends Plant{
                 plantView.setImage(new Image(getClass().getResourceAsStream("/Plants/TallNut/TallNut.gif")));
             }
         }
+        GameManager.getCells()[row][col].removePlant();
+        GameManager.getCells()[row][col].setPlant(this);
     }
 
     @Override

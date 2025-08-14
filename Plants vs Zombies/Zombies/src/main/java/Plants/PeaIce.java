@@ -35,10 +35,17 @@ public class PeaIce extends Pea{
 
     @Override
     public void resume(){
-        if(peaView != null)
-            GameManager.getPanePeas().getChildren().remove(peaView);
-        peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaIce/PeaIce_0.png"));
-        peaView = new ImageView(peaImage);
+        if(peaView != null) {
+            peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaIce/PeaIce_0.png"));
+            peaView.setImage(peaImage);
+        }
+        else {
+            peaImage = new Image(getClass().getResourceAsStream("/Bullets/PeaIce/PeaIce_0.png"));
+            peaView = new ImageView(peaImage);
+        }
+        if (!GameManager.getPanePeas().getChildren().contains(peaView)){
+            GameManager.getPanePeas().getChildren().add(peaView);
+        }
         peaView.setLayoutX(x);
         peaView.setLayoutY((peashooter.col + 1) * CELL_SIZE - 10);
     }

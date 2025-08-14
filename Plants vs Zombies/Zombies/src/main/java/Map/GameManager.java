@@ -12,6 +12,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import Zombies.ConeheadZombie;
 import javafx.animation.KeyFrame;
@@ -65,6 +67,8 @@ public class GameManager {
     private ArrayList<String> data , sunData;
     private Shovel shovel;
     private int howMuch = 0;
+    private static MediaPlayer loseMedia;
+    private static MediaPlayer winMedia;
 
 
     public GameManager(Pane gamePane , SaveLoad savedGame , boolean isNight , boolean online) {
@@ -161,6 +165,7 @@ public class GameManager {
         );
         updatePlants();
         updatePeas();
+
     }
 
     private void updatePlants(){
@@ -664,6 +669,12 @@ public class GameManager {
     }
 
     public static void win(){
+        String musicPath = GameManager.class.getResource("/sounds/winmusic.mp3").toExternalForm();
+        Media media = new Media(musicPath);
+        winMedia = new MediaPlayer(media);
+        winMedia.setCycleCount(1);
+        winMedia.setVolume(2);
+        winMedia.play();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("You Win!");
         Platform.runLater(() -> alert.showAndWait());
@@ -671,6 +682,14 @@ public class GameManager {
 
     public static void lose(){
         pauseGame();
+
+        String musicPath = GameManager.class.getResource("/sounds/losemusic.mp3").toExternalForm();
+        Media media = new Media(musicPath);
+        loseMedia = new MediaPlayer(media);
+        loseMedia.setCycleCount(1);
+        loseMedia.setVolume(2);
+        loseMedia.play();
+
 
         ImageView lose= new ImageView(new Image(GameManager.class.getResourceAsStream("/Screen/LoseAnim.png")));
         if (overlayPaneOfLose != null && background.getChildren().contains(overlayPaneOfLose)) return;

@@ -50,7 +50,7 @@ public class Peashooter extends Plant{
             shoot = new Timeline(new KeyFrame(Duration.seconds(secondInCircle) , event -> {
                 if(if_Zombie_exist()) {
                         Timeline tl =  new Timeline(new KeyFrame(Duration.millis(200) , event1 -> {
-                            peas.add(typePea == "Pea" ? new Pea(this) : new PeaIce(this));
+                            peas.add(new Pea(this));
                         }));
                         tl.setCycleCount(peaInCircle);
                         tl.play();
