@@ -738,7 +738,7 @@ public class GameManager {
         int col = (int) (Math.random() * 100) % 5 + 4;
         Brain b = new Brain(row , col , 0);
         plants.add(b);
-        panePeas.getChildren().add(b.getPlantView());
+        background.getChildren().add(b.getPlantView());
     }
 
     private void showMenuOptions() {
