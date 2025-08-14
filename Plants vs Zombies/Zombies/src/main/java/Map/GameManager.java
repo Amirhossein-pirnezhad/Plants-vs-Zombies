@@ -660,7 +660,9 @@ public class GameManager {
             System.out.println("zmbi Aive" + zombies.size());
             if (zombies.isEmpty()){
                 win();
-                Client.sendMessage("win");
+                if (online) {
+                    Client.sendMessage("win");
+                }
                 winTime.stop();
             }
         }));
