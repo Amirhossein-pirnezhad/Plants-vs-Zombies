@@ -72,12 +72,10 @@ public class Main extends Application {
         System.out.println(Sizes.SCREEN_WIDTH);
         System.out.println(Sizes.SCREEN_HEIGHT);
 
-
         Adventure_0.setLayoutX(Sizes.SCREEN_WIDTH / 2.05);
         Adventure_0.setLayoutY(Sizes.SCREEN_HEIGHT/7.58);
         Adventure_0.setFitWidth(484);
         Adventure_0.setFitHeight(322);
-
         Adventure_2.setLayoutX(Sizes.SCREEN_WIDTH / 2.05);
         Adventure_2.setLayoutY(280);
         Adventure_2.setFitWidth(380);
@@ -132,28 +130,36 @@ public class Main extends Application {
         ImageView backgrand = new ImageView(new Image(getClass().getResourceAsStream("/Screen/choosNightDayMod.png")));
         backgrand.setFitWidth(Sizes.SCREEN_WIDTH);
         backgrand.setFitHeight(Sizes.SCREEN_HEIGHT);
+        ImageView day = new ImageView(new Image(getClass().getResourceAsStream("/Screen/day.png")));
+        day.setFitWidth(280);
+        day.setFitHeight(280);
+        day.setLayoutX(180);
+        day.setLayoutY(320);
+        ImageView night = new ImageView(new Image(getClass().getResourceAsStream("/Screen/night.png")));
+        night.setLayoutX(530);
+        night.setLayoutY(280);
+        night.setFitWidth(280);
+        night.setFitHeight(280);
+        DropShadow neonEffect = new DropShadow();
+        neonEffect.setColor(Color.web("#D500F9"));
+        neonEffect.setRadius(30);neonEffect.setSpread(0.5);neonEffect.setOffsetX(0);
+        neonEffect.setOffsetY(0);
+        neonEffect.setInput(null);
+        day.setOnMouseEntered(e -> day.setEffect(neonEffect));
+        day.setOnMouseExited(e -> day.setEffect(null));
+        night.setOnMouseEntered(e -> night.setEffect(neonEffect));
+        night.setOnMouseExited(e -> night.setEffect(null));
 
-        Button dayBtn = new Button("Day Mode");
-        Button nightBtn = new Button("Night Mode");
-        dayBtn.setLayoutX(200);
-        dayBtn.setLayoutY(400);
-        nightBtn.setLayoutX(600);
-        nightBtn.setLayoutY(400);
-        dayBtn.setPrefWidth(200);
-        dayBtn.setPrefHeight(60);
-        nightBtn.setPrefWidth(200);
-        nightBtn.setPrefHeight(60);
-//menu
-        Pane pane = new Pane(backgrand,dayBtn,nightBtn);
+        Pane pane = new Pane(backgrand,day,night);
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        dayBtn.setOnMouseClicked(event -> {
+        day.setOnMouseClicked(event -> {
             online = true;
             isNight = false;
             initializeCardSelection(online);
             stage.close();
         });
-        nightBtn.setOnMouseClicked(event -> {
+        night.setOnMouseClicked(event -> {
             online = true;
             isNight = true;
             initializeCardSelection(online);
@@ -169,28 +175,36 @@ public class Main extends Application {
         ImageView backgrand = new ImageView(new Image(getClass().getResourceAsStream("/Screen/choosNightDayMod.png")));
         backgrand.setFitWidth(Sizes.SCREEN_WIDTH);
         backgrand.setFitHeight(Sizes.SCREEN_HEIGHT);
+        ImageView day = new ImageView(new Image(getClass().getResourceAsStream("/Screen/day.png")));
+        day.setFitWidth(280);
+        day.setFitHeight(280);
+        day.setLayoutX(180);
+        day.setLayoutY(320);
+        ImageView night = new ImageView(new Image(getClass().getResourceAsStream("/Screen/night.png")));
+        night.setLayoutX(530);
+        night.setLayoutY(280);
+        night.setFitWidth(280);
+        night.setFitHeight(280);
+        DropShadow neonEffect = new DropShadow();
+        neonEffect.setColor(Color.web("#D500F9"));
+        neonEffect.setRadius(30);neonEffect.setSpread(0.5);neonEffect.setOffsetX(0);
+        neonEffect.setOffsetY(0);
+        neonEffect.setInput(null);
+        day.setOnMouseEntered(e -> day.setEffect(neonEffect));
+        day.setOnMouseExited(e -> day.setEffect(null));
+        night.setOnMouseEntered(e -> night.setEffect(neonEffect));
+        night.setOnMouseExited(e -> night.setEffect(null));
 
-        Button dayBtn = new Button("Day Mode");
-        Button nightBtn = new Button("Night Mode");
-        dayBtn.setLayoutX(200);
-        dayBtn.setLayoutY(400);
-        nightBtn.setLayoutX(600);
-        nightBtn.setLayoutY(400);
-        dayBtn.setPrefWidth(200);
-        dayBtn.setPrefHeight(60);
-        nightBtn.setPrefWidth(200);
-        nightBtn.setPrefHeight(60);
-
-        Pane pane = new Pane(backgrand,dayBtn,nightBtn);
+        Pane pane = new Pane(backgrand,day,night);
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        dayBtn.setOnMouseClicked(event -> {
+        day.setOnMouseClicked(event -> {
             online = false;
             isNight = false;
             initializeCardSelection(online);
             stage.close();
         });
-        nightBtn.setOnMouseClicked(event -> {
+        night.setOnMouseClicked(event -> {
             online = false;
             isNight = true;
             initializeCardSelection(online);
