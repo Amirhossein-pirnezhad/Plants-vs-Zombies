@@ -22,6 +22,7 @@ public class Brain extends Sun{
             }
             for (Zombie z : GameManager.getZombies()) {
                 if (intersectsAccurately(z) && !z.getBonus && !z.isHypnosis()) {
+                    System.out.println("EATING");
                     z.bonus();
                     dead();
                     break;
@@ -41,7 +42,7 @@ public class Brain extends Sun{
     }
 
     private boolean intersectsAccurately(Zombie z) {
-        double shrink = 100;
+        double shrink = 20;
         return plantView.getBoundsInParent().intersects(
                 z.getZombieView().getBoundsInParent().getMinX() + shrink,
                 z.getZombieView().getBoundsInParent().getMinY() + shrink,
