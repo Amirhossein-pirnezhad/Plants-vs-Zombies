@@ -30,6 +30,7 @@ public class IceShroom extends DoomShroom {
 
     @Override
     protected void kill(){
+        GameManager.playOneShot("/Sounds/frozen.wav");
         for (Zombie z : GameManager.getZombies()){
             z.ice();
         }

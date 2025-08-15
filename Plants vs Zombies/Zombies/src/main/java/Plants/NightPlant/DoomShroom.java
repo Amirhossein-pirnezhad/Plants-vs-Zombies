@@ -43,6 +43,7 @@ public class DoomShroom extends Plant {
     }
 
     protected void kill(){
+        GameManager.playOneShot("/Sounds/bomb.mp3");
         for(Zombie z : GameManager.getZombies()){
             if(!z.isHypnosis() && isKilled(z))
                 z.bomDie();

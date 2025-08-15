@@ -95,7 +95,6 @@ public class Zombie implements Serializable {
 
                         if (HP <= 0) {//Dead
                             mode = DEAD;
-                            isAlive = false;
                             runZombie.stop();
                             deadZombie();
                         }
@@ -183,6 +182,7 @@ public class Zombie implements Serializable {
                         zombieView.setImage(zombieAttack[frameIndex[0]]);
                         frameIndex[0] = (frameIndex[0] + 1) % zombieAttack.length;
                         if((int)(time[0] + 0.07) > (int) time[0]) {
+                            GameManager.playOneShot("/Sounds/chomp.wav");
                             targetPlant.setHP(targetPlant.getHP() - 1);
                             System.out.println("eating :" + mode);
                         }
@@ -321,6 +321,7 @@ public class Zombie implements Serializable {
     }
 
     protected void deadZombie(){
+        if (!isAlive) return;
         isAlive = false;
         if((deadZombie != null && deadZombie.getStatus() == Animation.Status.RUNNING)) {
             return;
@@ -368,6 +369,7 @@ public class Zombie implements Serializable {
     }
 
     public void bomDie(){
+        if(!isAlive) return;
         isAlive = false;
         stopTimeLines();
 

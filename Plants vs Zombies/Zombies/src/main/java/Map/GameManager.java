@@ -8,7 +8,6 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -53,7 +52,7 @@ public class GameManager {
     private static Timeline updatePlants;
     private static Timeline updatePeas;
     private static Timeline mainAttack;
-    private final int timeBuildSun = 10 , timeLevel1 = 60;
+    private final int timeBuildSun = 10 , timeLevel1 = 60 , timeBuildBrains = 15;
     public static int timeUpdatePlants = 100;
     private int timeLevel = 1 , timerSun;
     private SaveLoad saveLoad;
@@ -292,6 +291,7 @@ public class GameManager {
     }
 
     public static void addPlant(Plant p) {
+        playOneShot("/Sounds/plant1.wav");
         if (p instanceof CoffeeBean) {
             plants.add(p);
             cells[p.getRow()][p.getCol()].getChildren().add(p.getPlantView());
@@ -636,6 +636,8 @@ public class GameManager {
             System.out.println("time :" + timeLevel);
             if (timeLevel % timeBuildSun == 0) {
                 spawnSun();
+            }
+            if (timeLevel % timeBuildBrains == 0){
                 spawnBrain();
             }
             if (timeLevel == timeLevel1){

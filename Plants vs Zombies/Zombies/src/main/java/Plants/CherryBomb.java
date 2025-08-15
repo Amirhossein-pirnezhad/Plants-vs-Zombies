@@ -49,6 +49,7 @@ public class CherryBomb extends Plant{
 
 
     protected void killZombie(){
+        GameManager.playOneShot("/Sounds/bomb.mp3");
         for (Zombie z : GameManager.getZombies()){
             if(isKilled(z)){
                 z.bomDie();

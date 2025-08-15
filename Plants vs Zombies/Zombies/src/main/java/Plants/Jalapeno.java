@@ -2,7 +2,16 @@ package Plants;
 
 import Map.Cell;
 import Map.GameManager;
+import Map.Sizes;
 import Zombies.Zombie;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+
+import static Map.Sizes.CELL_SIZE;
+import static Map.Sizes.START_Y_GRID;
 
 public class Jalapeno extends CherryBomb{
     public Jalapeno(int row, int col) {
@@ -12,6 +21,17 @@ public class Jalapeno extends CherryBomb{
 
     @Override
     protected void killZombie() {
+        GameManager.playOneShot("/Sounds/bomb.mp3");
+        ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/Plants/Jalapeno/JalapenoAttack.gif")));
+        GameManager.getPanePeas().getChildren().add(imageView);
+        imageView.setFitWidth(Sizes.SCREEN_WIDTH - Sizes.START_X_GRID);
+        imageView.setLayoutX(Sizes.START_X_GRID);
+        imageView.setLayoutY(START_Y_GRID + col * CELL_SIZE + 30);
+        Timeline tl = new Timeline(new KeyFrame(Duration.seconds(2) , e -> {
+            GameManager.getPanePeas().getChildren().remove(imageView);
+        }));
+        tl.setCycleCount(1);
+        tl.play();
         for (Zombie z : GameManager.getZombies())
             if (z.getCol() == col) z.bomDie();
     }
@@ -24,36 +44,4 @@ public class Jalapeno extends CherryBomb{
         GameManager.getCells()[row][col].setPlant(this);
     }
 
-//    @Override
-//    protected void setAnimDie(){
-//        GameManager.getBackground().getChildren().add(plantView);
-//        plantView.setLayoutX(Sizes.START_X_GRID + row * Sizes.CELL_SIZE);
-//        plantView.setLayoutY(Sizes.START_Y_GRID + col * Sizes.CELL_SIZE);
-//        plantView.setFitWidth(GameManager.getMap_row() * Sizes.CELL_SIZE);
-//        setImage("/Plants/Jalapeno/JalapenoExplode/JalapenoExplode_" , 8);
-//    }
-
-//    @Override
-//    public void dead() {
-//        dead = new Timeline(new KeyFrame(Duration.millis(500) , event -> {
-//            if(timerBomb.getStatus() != Animation.Status.RUNNING) {
-//                setImage("/Plants/Jalapeno/JalapenoExplode/JalapenoExplode_" , 8);
-//                Timeline tl = new Timeline(new KeyFrame(Duration.millis(200) , event1 -> {
-//
-//                }));
-//                tl.setCycleCount(plantImage.length);
-//                tl.play();
-//
-//                killZombie();
-//                isAlive = false;
-//                if (this.plantView.getParent() instanceof Pane) {
-//                    ((Pane) this.plantView.getParent()).getChildren().removeAll(plantView , this);// remove image
-//                    GameManager.getPlants().remove(this);
-//                }
-//                dead.stop();
-//            }
-//        }));
-//        dead.setCycleCount(Animation.INDEFINITE);
-//        dead.play();
-//    }
 }
