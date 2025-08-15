@@ -95,7 +95,9 @@ public class Zombie implements Serializable {
 
                         if (HP <= 0) {//Dead
                             mode = DEAD;
-                            runZombie.stop();
+                            if (runZombie != null && runZombie.getStatus() == Animation.Status.RUNNING){
+                                runZombie.stop();
+                            }
                             deadZombie();
                         }
                         if(!hypnosis) {
@@ -164,8 +166,9 @@ public class Zombie implements Serializable {
         zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
         if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) return;
 //        zombieImages = null;
-        if(runZombie != null)
+        if (runZombie != null && runZombie.getStatus() == Animation.Status.RUNNING){
             runZombie.stop();
+        }
         runZombie = null;
 
         final int[] frameIndex = new int[1];
@@ -176,7 +179,9 @@ public class Zombie implements Serializable {
                     if(isAlive && mode == EATING) {
                         if (HP <= 0) {
                             mode = DEAD;
-                            getDamage.stop();
+                            if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) {
+                                getDamage.stop();
+                            }
                             deadZombie();
                         }
                         zombieView.setImage(zombieAttack[frameIndex[0]]);
@@ -192,7 +197,9 @@ public class Zombie implements Serializable {
                     System.out.println("finish eating");
                     mode = RUN;
                     targetPlant = null;
-                    getDamage.stop();
+                    if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) {
+                        getDamage.stop();
+                    }
                     getDamage  = null;
 //                    zombieImages = setZombieImages("/Zombies/NormalZombie/Zombie/Zombie_" , 22);
                     run();
@@ -206,8 +213,9 @@ public class Zombie implements Serializable {
         zombieAttack = setZombieImages(imgPathAttack , imgAttackLen);
         if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) return;
 
-        if(runZombie != null)
+        if (runZombie != null && runZombie.getStatus() == Animation.Status.RUNNING){
             runZombie.stop();
+        }
         runZombie = null;
 
         final int[] frameIndex = new int[1];
@@ -218,7 +226,9 @@ public class Zombie implements Serializable {
                 if(isAlive && mode == EATING) {
                     if (HP <= 0) {
                         mode = DEAD;
-                        getDamage.stop();
+                        if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) {
+                            getDamage.stop();
+                        }
                         deadZombie();
                     }
                     zombieView.setImage(zombieAttack[frameIndex[0]]);
@@ -232,7 +242,9 @@ public class Zombie implements Serializable {
             else{
                 System.out.println("finish eating");
                 mode = RUN;
-                getDamage.stop();
+                if (getDamage != null && getDamage.getStatus() == Animation.Status.RUNNING) {
+                    getDamage.stop();
+                }
                 getDamage  = null;
                 run();
             }

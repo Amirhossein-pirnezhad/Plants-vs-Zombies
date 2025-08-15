@@ -31,6 +31,9 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static Map.Cell.cell_size;
 
 
 public class Main extends Application {
@@ -232,6 +235,11 @@ public class Main extends Application {
         imageView.setFitWidth(Sizes.SCREEN_WIDTH);//set background
         imageView.setFitHeight(Sizes.SCREEN_HEIGHT);
         cardSelectionPane.getChildren().add(imageView);
+        ArrayList<ImageView> views = setZombieGif();
+
+        for (ImageView a : views){
+            cardSelectionPane.getChildren().add(a);
+        }
 
         selectedCardsBox = new VBox(10);
 
@@ -366,8 +374,35 @@ public class Main extends Application {
         });
     }
 
-    private void setZombieGif(){
-        String path = "/Zombies/0/";
+    private ArrayList<ImageView> setZombieGif() {
+        ArrayList<ImageView> views = new ArrayList<>();
+
+        double rightSectionStartX = Sizes.SCREEN_WIDTH * 0.66;
+        double rightSectionEndX = Sizes.SCREEN_WIDTH;
+        double rightSectionWidth = rightSectionEndX - rightSectionStartX;
+
+        double minY = 0;
+        double maxY = Sizes.SCREEN_HEIGHT - 150;
+
+        for (int j = 0 ; j < 2 ; j++)
+            for (int i = 0; i < 5; i++) {
+
+                String path = "/Zombies/0/" + i + ".gif";
+                ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream(path)));
+
+
+                double randomX = rightSectionStartX + Math.random() * (rightSectionWidth - 100);
+                double randomY = minY + Math.random() * (maxY - 120);
+
+                imageView.setLayoutX(randomX);
+                imageView.setLayoutY(randomY);
+                imageView.setFitWidth(cell_size * 1.5);
+                imageView.setFitHeight(cell_size * 1.5);
+
+                views.add(imageView);
+
+            }
+        return views;
     }
 
     public void Game(){
