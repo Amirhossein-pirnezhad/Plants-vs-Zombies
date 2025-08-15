@@ -423,13 +423,15 @@ public class Main extends Application {
         pane.getChildren().add(sunCounter);
         GameManager g = null;
         if(online) {
+            online();
             while (true) {
-                if (Client.message == "START") {
+                System.out.println("nnnn");
+                if ("START".equals(Client.message)) {
                     System.out.println("start");
                     g = new GameManager(pane, saveLoad, isNight, online);
                     break;
                 }
-                if(Client.message == "offline"){
+                if("offline".equals(Client.message)){
                     online = false;
                     break;
                 }

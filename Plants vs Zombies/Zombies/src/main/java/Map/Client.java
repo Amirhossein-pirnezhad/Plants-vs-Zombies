@@ -11,7 +11,7 @@ public class Client {
     private static BufferedReader in;
     public  static ArrayList<String> data;
     public  static ArrayList<String> dataSuns = new ArrayList<>() , dataGrave = new ArrayList<>();
-    public  static String ip = "192.168.251.211" , message;
+    public  static String ip = "192.168.251.206" , message = "";
     private static PrintWriter out;
 
     static {

@@ -122,8 +122,8 @@ public class GameManager {
                     for (int i = 0; i < 3; i++) {
                         String data = graveData.get(i);
                         String[] rowAndCol = data.split(",");
-                        int row = Integer.parseInt(rowAndCol[0]);
-                        int col = Integer.parseInt(rowAndCol[1]);
+                        int row = Integer.parseInt(rowAndCol[1]);
+                        int col = Integer.parseInt(rowAndCol[0]);
                         addPlant(new Grave(row , col));
                     }
             }else {
