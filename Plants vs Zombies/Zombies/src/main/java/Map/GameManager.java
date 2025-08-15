@@ -30,6 +30,7 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameManager {
     private static Pane background , panePlantVsZombie = new Pane() , panePeas = new Pane() , paneMeh = new Pane();
@@ -57,7 +58,6 @@ public class GameManager {
     private int timeLevel = 1 , timerSun;
     private SaveLoad saveLoad;
     private Button menuButton;
-    private Game_Timer game_timer;
     public static boolean night , online;
 
     private List<Cart> selectedCards = new ArrayList<>();
@@ -69,6 +69,7 @@ public class GameManager {
     private int howMuch = 0;
     private static MediaPlayer loseMedia;
     private static MediaPlayer winMedia;
+    private ArrayList<LawnCleaner> lawnCleaners = new ArrayList<>();
 
 
     public GameManager(Pane gamePane , SaveLoad savedGame , boolean isNight , boolean online) {
@@ -99,15 +100,12 @@ public class GameManager {
 
         for (Sun s : suns){
             s.resume();
-//            addSun(s);
         }
         for(Zombie z : zombies){
             z.resume();
-//            addZombie(z);
         }
         for (Plant p : plants){
             p.resume();
-//            addPlant(p);
         }
         for (Pea p : peas){
             p.resume();
@@ -152,11 +150,6 @@ public class GameManager {
         menuButton.setLayoutY( 10);
 
         panePlantVsZombie.getChildren().addAll(menuButton, shovel.getImageView());
-        game_timer = new Game_Timer(timeLevel);
-        StackPane timerBar = game_timer.getClip();
-        timerBar.setLayoutX(100);
-        timerBar.setLayoutY(50);
-//        panePlantVsZombie.getChildren().add(timerBar);
         sunPoint = 1000;
         background.getChildren().addAll(
                 GameManager.getPanePeas() ,
@@ -165,7 +158,23 @@ public class GameManager {
         );
         updatePlants();
         updatePeas();
+        addRandomLawnCleaners();
 
+    }
+
+    private void addRandomLawnCleaners() {
+        Random random = new Random();
+        List<Integer> selectedPositions = new ArrayList<>();
+
+        while (selectedPositions.size() < 3) {
+            int randomPos = random.nextInt(5);
+            if (!selectedPositions.contains(randomPos)) {
+                selectedPositions.add(randomPos);
+                LawnCleaner cleaner = new LawnCleaner(randomPos);
+                lawnCleaners.add(cleaner);
+                panePlantVsZombie.getChildren().add(cleaner.getPlantView());
+            }
+        }
     }
 
     private void updatePlants(){
@@ -188,6 +197,8 @@ public class GameManager {
             List<Pea> copy = new ArrayList<>(peas);
             for (Pea p : copy)
                 p.update();
+            for (LawnCleaner l : lawnCleaners)
+                l.update();
         }));
         updatePeas.setCycleCount(Animation.INDEFINITE);
         updatePeas.play();
@@ -600,6 +611,7 @@ public class GameManager {
                     cells[p.getRow()][p.getCol()].getChildren().add(animZombieBurn);
                     Zombie z = new Zombie(p.getCol());
                     z.getZombieView().setLayoutX(Sizes.START_X_GRID + (p.getRow()) * Sizes.CELL_SIZE);
+                    playOneShot("/Sounds/groan2.wav");
                     addZombie(z);
                     Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
                         cells[p.getRow()][p.getCol()].getChildren().remove(animZombieBurn);
@@ -828,7 +840,7 @@ public class GameManager {
         }
     }
 
-    private static MediaPlayer playOneShot(String resourcePath) {
+    public static MediaPlayer playOneShot(String resourcePath) {
         Media media = new Media(GameManager.class.getResource(resourcePath).toExternalForm());
         MediaPlayer mp = new MediaPlayer(media);
 
@@ -836,11 +848,12 @@ public class GameManager {
             stopAndDispose(mp);
         });
         mp.setCycleCount(1);
+        mp.setVolume(2);
         mp.play();
         return mp;
     }
 
-    private static void stopAllSfx() {
+    public static void stopAllSfx() {
         stopAndDispose(winMedia);
         stopAndDispose(loseMedia);
         winMedia = null;

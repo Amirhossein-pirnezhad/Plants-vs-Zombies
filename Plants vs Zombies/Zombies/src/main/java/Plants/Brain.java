@@ -24,6 +24,7 @@ public class Brain extends Sun{
                     if (intersectsAccurately(z) && !z.getBonus && !z.isHypnosis()) {
                         System.out.println("EATING");
                         z.bonus();
+                        GameManager.playOneShot("/Sounds/groan5.wav");
                         dead();
                         break;
                     }

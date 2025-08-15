@@ -320,27 +320,6 @@ public class Main extends Application {
             cardView.setLayoutX(positions[++k][0]);
             cardView.setLayoutY(positions[k][1]);
 
-
-            // cardView.setOnMouseClicked(e -> {
-            //     ImageView selectedView = card.getCardImageView();
-            //     if (selectedCards.size() < 6  && !card.isAdded()) {
-            //         selectedCards.add(card);
-            //         card.setAdded(true);
-            //         System.out.println("price cart " + card.getPrice());
-
-
-
-            //         selectedView.setFitWidth(142);
-            //         selectedView.setFitHeight(95);
-            //         selectedCardsBox.getChildren().add(selectedView);
-            //     }else if (card.isAdded()) {
-            //         selectedCards.remove(card);
-            //         card.setAdded(false);
-            //         selectedCardsBox.getChildren().remove(selectedView);
-            //         System.out.println("removed card: ");
-            //     }
-            // });
-
             cardView.setOnMouseClicked(e -> {
                 if (selectedCards.size() < 6 && !card.isAdded()) {
                     selectedCards.add(card);
@@ -387,6 +366,10 @@ public class Main extends Application {
         });
     }
 
+    private void setZombieGif(){
+        String path = "/Zombies/0/";
+    }
+
     public void Game(){
         Stage primaryStage = new Stage();
         String imagePath = isNight
@@ -428,9 +411,6 @@ public class Main extends Application {
         sunLabel.setLayoutX(110);
         sunLabel.setLayoutY(7);
         pane.getChildren().add(sunLabel);
-        GameManager.addPlant(new PuffShroom(0 , 0));
-        GameManager.addPlant(new ScaredyShroom(1 ,1));
-        GameManager.addPlant(new HypenoShroom(3 , 2));
 
         Scene scene = new Scene(pane);
 
