@@ -113,7 +113,7 @@ public class GameManager {
         if (online){
             data = Client.data;
             sunData = Client.dataSuns;
-            graveData = Client.dataGrave;
+//            graveData = Client.dataGrave;
         }
 
         if (night){
