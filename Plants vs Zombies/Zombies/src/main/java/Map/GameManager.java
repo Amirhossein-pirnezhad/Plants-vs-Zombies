@@ -186,7 +186,7 @@ public class GameManager {
     private void updatePeas(){
         updatePeas = new Timeline(new KeyFrame(Duration.millis(10) , event -> {
             List<Pea> copy = new ArrayList<>(peas);
-            for (Pea p : peas)
+            for (Pea p : copy)
                 p.update();
         }));
         updatePeas.setCycleCount(Animation.INDEFINITE);
@@ -672,12 +672,10 @@ public class GameManager {
 
     public static void win(){
         pauseGame();
-        String musicPath = GameManager.class.getResource("/sounds/winmusic.mp3").toExternalForm();
-        Media media = new Media(musicPath);
-        winMedia = new MediaPlayer(media);
-        winMedia.setCycleCount(1);
-        winMedia.setVolume(2);
-        winMedia.play();
+
+        stopAllSfx();
+        winMedia = playOneShot("/sounds/winmusic.mp3");
+
         ImageView win= new ImageView(new Image(GameManager.class.getResourceAsStream("/Screen/win.png")));
         if (overlayPaneOfLose != null && background.getChildren().contains(overlayPaneOfLose)) return;
 
@@ -686,28 +684,29 @@ public class GameManager {
         overlayPaneOfLose.prefHeightProperty().bind(background.heightProperty());
         overlayPaneOfLose.setStyle("-fx-background-color: rgba(0,0,0,0.5);");
         overlayPaneOfLose.setPickOnBounds(true);
+
+        overlayPaneOfLose.getChildren().add(win);
+        StackPane.setAlignment(win, Pos.CENTER);
+        background.getChildren().add(overlayPaneOfLose);
+        overlayPaneOfLose.requestFocus();
+
         win.setOnMouseClicked(e -> {
             if (overlayPaneOfLose != null && background.getChildren().contains(overlayPaneOfLose)) {
                 background.getChildren().remove(overlayPaneOfLose);
                 overlayPaneOfLose = null;
             }
+            stopAllSfx();
+            Platform.exit();
             System.exit(0);
+
         });
-        overlayPaneOfLose.getChildren().add(win);
-        StackPane.setAlignment(win, Pos.CENTER);
-        background.getChildren().add(overlayPaneOfLose);
-        overlayPaneOfLose.requestFocus();
     }
 
     public static void lose(){
         pauseGame();
 
-        String musicPath = GameManager.class.getResource("/sounds/losemusic.mp3").toExternalForm();
-        Media media = new Media(musicPath);
-        loseMedia = new MediaPlayer(media);
-        loseMedia.setCycleCount(1);
-        loseMedia.setVolume(2);
-        loseMedia.play();
+        stopAllSfx();
+        loseMedia = playOneShot("/sounds/losemusic.mp3");
 
 
         ImageView lose= new ImageView(new Image(GameManager.class.getResourceAsStream("/Screen/LoseAnim.png")));
@@ -723,6 +722,8 @@ public class GameManager {
                 background.getChildren().remove(overlayPaneOfLose);
                 overlayPaneOfLose = null;
             }
+            stopAllSfx();
+            Platform.exit();
             System.exit(0);
         });
         overlayPaneOfLose.getChildren().add(lose);
@@ -810,6 +811,36 @@ public class GameManager {
         StackPane.setAlignment(vbox, Pos.CENTER);
         background.getChildren().add(overlayPane);
         overlayPane.requestFocus();
+    }
+
+    private static void stopAndDispose(MediaPlayer mp) {
+        if (mp != null) {
+            try {
+                mp.stop();
+            } catch (Exception ignored) {}
+            try {
+                mp.dispose();
+            } catch (Exception ignored) {}
+        }
+    }
+
+    private static MediaPlayer playOneShot(String resourcePath) {
+        Media media = new Media(GameManager.class.getResource(resourcePath).toExternalForm());
+        MediaPlayer mp = new MediaPlayer(media);
+
+        mp.setOnEndOfMedia(() -> {
+            stopAndDispose(mp);
+        });
+        mp.setCycleCount(1);
+        mp.play();
+        return mp;
+    }
+
+    private static void stopAllSfx() {
+        stopAndDispose(winMedia);
+        stopAndDispose(loseMedia);
+        winMedia = null;
+        loseMedia = null;
     }
 
 
