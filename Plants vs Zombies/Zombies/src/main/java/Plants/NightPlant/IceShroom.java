@@ -1,10 +1,7 @@
 package Plants.NightPlant;
 
 import Map.GameManager;
-import Map.Sizes;
-import Plants.CherryBomb;
 import Zombies.Zombie;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;

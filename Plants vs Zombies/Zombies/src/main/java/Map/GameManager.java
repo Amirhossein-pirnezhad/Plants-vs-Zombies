@@ -469,7 +469,6 @@ public class GameManager {
             if (cells[i][j].getPlant() != null) {
                 if (cells[i][j].getPlant().getClass() != Grave.class) {
                     cells[i][j].getPlant().dead();
-                    removePlant(cells[i][j].getPlant());
                     shovel.setClicked(false);
                 }
             }
