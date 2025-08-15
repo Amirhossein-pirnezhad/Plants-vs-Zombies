@@ -63,7 +63,7 @@ public class GameManager {
     private StackPane overlayPane;
     private static StackPane overlayPaneOfLose;
     private List<BorderPane> cartView_recharge = new ArrayList<>();
-    private ArrayList<String> data , sunData;
+    private ArrayList<String> data , sunData , graveData;
     private Shovel shovel;
     private int howMuch = 0;
     private static MediaPlayer loseMedia;
@@ -110,25 +110,38 @@ public class GameManager {
             p.resume();
         }
 
-        if (night){
-            Plant plant = null;
-            for (Plant p : plants){
-                if (p instanceof Grave){
-                    plant = p;
-                }
-            }
-            if (plant == null) {//if load game and have grave
-                for (int i = 0; i < 3; i++) { //random grave in map
-                    int r = (int) (Math.random() * 100) % 5 + 3;
-                    int c = (int) (Math.random() * 100) % 4;
-                    addPlant(new Grave(r, c));
-                }
-            }
-            buildMeh();
-        }
         if (online){
             data = Client.data;
             sunData = Client.dataSuns;
+            graveData = Client.dataGrave;
+        }
+
+        if (night){
+            if (online){
+                if (graveData != null)
+                    for (int i = 0; i < 3; i++) {
+                        String data = graveData.get(i);
+                        String[] rowAndCol = data.split(",");
+                        int row = Integer.parseInt(rowAndCol[0]);
+                        int col = Integer.parseInt(rowAndCol[1]);
+                        addPlant(new Grave(row , col));
+                    }
+            }else {
+                Plant plant = null;
+                for (Plant p : plants) {
+                    if (p instanceof Grave) {
+                        plant = p;
+                    }
+                }
+                if (plant == null) {//if load game and have grave
+                    for (int i = 0; i < 3; i++) { //random grave in map
+                        int r = (int) (Math.random() * 100) % 5 + 3;
+                        int c = (int) (Math.random() * 100) % 4;
+                        addPlant(new Grave(r, c));
+                    }
+                }
+            }
+            buildMeh();
         }
 
         menuButton = new Button("menu");
