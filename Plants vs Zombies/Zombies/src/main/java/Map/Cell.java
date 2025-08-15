@@ -66,7 +66,7 @@ public class Cell extends StackPane {
 
         if (hasGrave) {
             if (newPlantClass == GraveBuster.class){
-                removePlant();
+                GameManager.removePlant(plant);
                 return true;
             }
             return false;

@@ -457,7 +457,7 @@ public class GameManager {
         if (savedCart == null && shovel.isClicked()){
             if (cells[i][j].getPlant() != null) {
                 if (cells[i][j].getPlant().getClass() != Grave.class) {
-                    cells[i][j].getPlant().setHP(0);
+                    cells[i][j].getPlant().dead();
                     removePlant(cells[i][j].getPlant());
                     shovel.setClicked(false);
                 }
@@ -590,19 +590,23 @@ public class GameManager {
         }
         return choose.get((int)(Math.random() * choose.size()));
     }
+
     private void mainAttack(int timeAttack , int type , int more){
-        for (Plant p : plants){
-            if (p instanceof Grave){
-                ImageView animZombieBurn = new ImageView(new Image(getClass().getResourceAsStream("/Screen/Boom.gif")));
-                cells[p.getRow()][p.getCol()].getChildren().add(animZombieBurn);
-                Zombie z = new Zombie(p.getCol());
-                z.getZombieView().setLayoutX(Sizes.START_X_GRID + (p.getRow()) * Sizes.CELL_SIZE);
-                addZombie(z);
-                Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
-                    cells[p.getRow()][p.getCol()].getChildren().remove(animZombieBurn);
-                }));
-                tl.setCycleCount(1);
-                tl.play();
+        if (night) {
+            for (Plant p : plants) {
+                System.out.println(p.toString());
+                if (p instanceof Grave) {
+                    ImageView animZombieBurn = new ImageView(new Image(getClass().getResourceAsStream("/Screen/Boom.gif")));
+                    cells[p.getRow()][p.getCol()].getChildren().add(animZombieBurn);
+                    Zombie z = new Zombie(p.getCol());
+                    z.getZombieView().setLayoutX(Sizes.START_X_GRID + (p.getRow()) * Sizes.CELL_SIZE);
+                    addZombie(z);
+                    Timeline tl = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+                        cells[p.getRow()][p.getCol()].getChildren().remove(animZombieBurn);
+                    }));
+                    tl.setCycleCount(1);
+                    tl.play();
+                }
             }
         }
         mainAttack = new Timeline(new KeyFrame(Duration.seconds(1) , e -> {
@@ -625,10 +629,10 @@ public class GameManager {
             if (timeLevel == timeLevel1){
                 checkWin();
             }
-            if(timeLevel == timeLevel1 / 2.3){
+            if(timeLevel == 26){
                 mainAttack(5 , 2 , 2);
             }
-            if (timeLevel == timeLevel1 / 1.3){
+            if (timeLevel == 47){
                 mainAttack(5 , 4 , 3);
             }
             if(timeLevel > 3 && timeLevel <=15){

@@ -1,14 +1,13 @@
 package Plants.NightPlant;
 
 import Map.GameManager;
-import Plants.Plant;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import static Map.Cell.cell_size;
 
-public class GraveBuster extends Plant {
+public class GraveBuster extends CoffeeBean {
     private int counter = 0 , more = (3 * 1000) / GameManager.timeUpdatePlants;
 
     public GraveBuster(int row, int col) {
@@ -17,15 +16,10 @@ public class GraveBuster extends Plant {
         plantView.setFitHeight(cell_size);
         plantView.setFitWidth(cell_size);
         plantView.setLayoutY(plantView.getLayoutY() - 100);
+        System.out.println("GRAVEBUSTER");
+        GameManager.getCells()[row][col].setHasGrave(false);
     }
 
-    @Override
-    public void dead() {
-        isAlive = false;
-        GameManager.removePlant(this);
-
-        plantView.setOnMouseClicked(null);//don't click again
-    }
 
     @Override
     public void pause() {
@@ -49,8 +43,9 @@ public class GraveBuster extends Plant {
 
     @Override
     public void update() {
-        if (counter == more)
-            dead();
         counter ++;
+        if (counter % more == 0) {
+            dead();
+        }
     }
 }

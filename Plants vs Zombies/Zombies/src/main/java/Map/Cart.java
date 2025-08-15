@@ -19,8 +19,10 @@ public class Cart implements Serializable {
     private boolean isAdded;
     public transient BorderPane borderPane;
     private transient Rectangle border;
+    private double currentWidth , valueForIncrease;
     private double x;
     private double width = 160;
+    private int cycle;
     private int counter = 0 , more = 1000/GameManager.timeUpdatePlants;
 
 
@@ -71,20 +73,23 @@ public class Cart implements Serializable {
                 if (timer == rechargeTime) {
                     timer = 0;
                     isReady = true;
+                    border.setWidth(imageView.getFitWidth());
                 }
             }
         }
-        if (!isReady){
-            double currentWidth = (timer / (double) rechargeTime) * imageView.getFitWidth();
-            if (!isStart){
+        if (!isReady) {
+            if (!isStart) {
+                currentWidth = (timer / (double) rechargeTime) * imageView.getFitWidth();
                 border.setWidth(currentWidth);
+                int remainTime = rechargeTime - timer;
+                cycle = remainTime * 1000 / GameManager.timeUpdatePlants;
+                valueForIncrease = (imageView.getFitWidth() - currentWidth) / (double) cycle;
                 isStart = true;
             }
-            int remainTime = rechargeTime - timer;
-            int cycle = (int)remainTime * 1000 / GameManager.timeUpdatePlants;
-            double valueForIncrease = (imageView.getFitWidth() - currentWidth) / cycle;
-            border.setWidth(border.getWidth() + valueForIncrease);
+            border.setWidth(Math.min(border.getWidth() + valueForIncrease, imageView.getFitWidth()));
         }
+
+
 
         if (isReady && GameManager.sunPoint >= price){
             border.setFill(Color.GREEN);
@@ -99,14 +104,31 @@ public class Cart implements Serializable {
         imageView.setFitHeight(image.getHeight() * (width / image.getWidth()));
         imageView.setPreserveRatio(true);
 
-        border= new Rectangle(width * (timer / rechargeTime), 10);
-        border.setY(imageView.getFitHeight() );
+        if (isReady){
+            border = new Rectangle(width , 10);
+        }else {
+            border = new Rectangle(width * ((double) timer / rechargeTime), 10);
+        }
         border.setFill(Color.RED);
         border.setStroke(Color.BLACK);
+
+        isStart = false;
 
         borderPane = new BorderPane(imageView);
         this.borderPane.setBottom(border);
     }
+
+//    public void animCharging() {
+//        border.setWidth(0);
+//        border.setFill(Color.RED);
+//        int cycle = (int)rechargeTime * 1000 / timeForEachFrame;
+//        double valueForIncrease = imageView.getFitWidth() / cycle;
+//        recharge = new Timeline(new KeyFrame(Duration.millis(timeForEachFrame) , event -> {
+//            border.setWidth(border.getWidth() + valueForIncrease);
+//        }));
+//        recharge.setCycleCount(cycle);
+//        recharge.play();
+//    }
 
 
     public ImageView getCardImageView() {
